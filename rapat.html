@@ -372,6 +372,37 @@
 
     /* Confirm box */
     .confirm-box { background: var(--cream); border: 1px solid rgba(201,151,58,.2); border-radius: 22px; padding: 28px; text-align: center; max-width: 340px; width: 100%; }
+
+    /* ── Dashboard / Chart ───────────────────────────────────────────────────── */
+    .dash-card {
+      background: var(--cream); border: 1px solid rgba(201,151,58,.2);
+      border-radius: 18px; padding: 20px;
+      box-shadow: 0 2px 12px rgba(26,18,8,.05);
+    }
+    .stat-card {
+      background: var(--cream); border: 1px solid rgba(201,151,58,.18);
+      border-radius: 16px; padding: 18px 20px; text-align: center;
+      flex: 1; min-width: 0;
+    }
+    .stat-num { font-family:'Playfair Display',serif; font-size: 32px; font-weight: 700; color: var(--rust); line-height: 1; }
+    .stat-label { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #9c8060; margin-top: 4px; }
+    .toggle-wrap { display:flex; background:rgba(201,151,58,.08); border-radius: 12px; padding: 3px; gap: 3px; }
+    .toggle-btn {
+      flex: 1; padding: 8px 12px; border: none; border-radius: 10px;
+      font-family:'DM Sans',sans-serif; font-size: var(--fs-xs); font-weight: 700;
+      cursor: pointer; transition: all .2s; color: #9c8060; background: transparent;
+    }
+    .toggle-btn.on { background: var(--cream); color: var(--rust); box-shadow: 0 2px 8px rgba(26,18,8,.08); }
+    .bar-row { margin-bottom: 14px; }
+    .bar-label { display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px; }
+    .bar-label-text { font-size: var(--fs-xs); font-weight: 700; color: var(--ink); }
+    .bar-label-pct { font-size: var(--fs-xxs); font-weight: 700; color: #9c8060; }
+    .bar-track { background: rgba(201,151,58,.1); border-radius: 20px; height: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 20px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+    .bar-sub { font-size: var(--fs-xxs); color: #9c8060; margin-top: 3px; }
+    .rapat-select { width:100%; padding:10px 14px; background:var(--sand); border:1.5px solid rgba(201,151,58,.25); border-radius:12px; font-size:var(--fs-sm); color:var(--ink); outline:none; }
+    .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  
   </style>
 </head>
 <body>
@@ -405,6 +436,35 @@
       </div>
 
       <!-- Panitia view -->
+      <!-- Dashboard (mobile) -->
+      <div id="mob-dash" style="display:none;flex-direction:column;gap:16px">
+        <div style="text-align:center;margin-bottom:4px">
+          <p style="color:var(--gold);font-size:var(--fs-xxs);letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:4px">Evaluasi Kehadiran</p>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--ink)">Dashboard</h2>
+          <div class="gold-line" style="width:60px;margin:10px auto 0"></div>
+        </div>
+        <!-- Stat cards -->
+        <div style="display:flex;gap:10px" id="mob-dash-stats"></div>
+        <!-- Toggle -->
+        <div class="dash-card" style="padding:16px">
+          <div class="toggle-wrap" id="mob-dash-toggle">
+            <button class="toggle-btn on" data-mode="akumulasi">Semua Rapat</button>
+            <button class="toggle-btn" data-mode="perrapat">Per Rapat</button>
+          </div>
+        </div>
+        <!-- Per rapat select -->
+        <div id="mob-dash-select-wrap" style="display:none">
+          <select id="mob-dash-select" class="rapat-select"></select>
+        </div>
+        <!-- Chart area -->
+        <div class="dash-card" id="mob-dash-chart">
+          <div style="text-align:center;padding:30px;color:#9c8060">
+            <div class="spinner" style="margin:0 auto 12px"></div>
+            <p style="font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.1em">Memuat data...</p>
+          </div>
+        </div>
+      </div>
+
       <div id="mob-panitia" style="display:flex;flex-direction:column;gap:16px">
         <div class="card" style="padding:24px">
           <div style="margin-bottom:18px"><span class="badge badge-rust"><i class="fas fa-user-check" style="margin-right:5px"></i>Presensi Mandiri</span></div>
@@ -510,6 +570,7 @@
         <div class="sidebar-hdr-title" id="desk-mode-label">Panitia</div>
       </div>
       <div class="sidebar-nav">
+        <button id="desk-nav-dash" class="sidebar-nav-btn"><i class="fas fa-chart-bar"></i> Dashboard</button>
         <button id="desk-nav-panitia" class="sidebar-nav-btn active"><i class="fas fa-user-check"></i> Presensi</button>
         <button id="desk-nav-notul" class="sidebar-nav-btn"><i class="fas fa-book-open"></i> Notulensi</button>
         <button id="desk-nav-admin" class="sidebar-nav-btn"><i class="fas fa-file-signature"></i> Sekretaris</button>
@@ -533,6 +594,35 @@
 
     <!-- Main area -->
     <div class="desk-main" id="desk-main">
+
+      <!-- Dashboard (desktop) -->
+      <div id="desk-dash" style="display:none;padding:32px 36px">
+        <div style="margin-bottom:24px">
+          <p style="color:var(--gold);font-size:var(--fs-xxs);letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:4px">Evaluasi Kehadiran</p>
+          <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--ink);margin-bottom:4px">Dashboard</h2>
+          <p style="font-size:var(--fs-base);color:#9c8060">Analisis kehadiran panitia per seksi</p>
+          <div class="gold-line" style="width:60px;margin-top:14px"></div>
+        </div>
+        <!-- Stat cards -->
+        <div style="display:flex;gap:14px;margin-bottom:20px" id="desk-dash-stats"></div>
+        <!-- Toggle + select -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
+          <div class="toggle-wrap" id="desk-dash-toggle" style="max-width:280px">
+            <button class="toggle-btn on" data-mode="akumulasi">Semua Rapat</button>
+            <button class="toggle-btn" data-mode="perrapat">Per Rapat</button>
+          </div>
+          <div id="desk-dash-select-wrap" style="display:none;flex:1">
+            <select id="desk-dash-select" class="rapat-select"></select>
+          </div>
+        </div>
+        <!-- Chart -->
+        <div class="dash-card" id="desk-dash-chart" style="max-width:720px">
+          <div style="text-align:center;padding:40px;color:#9c8060">
+            <div class="spinner" style="margin:0 auto 12px"></div>
+            <p style="font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.1em">Memuat data...</p>
+          </div>
+        </div>
+      </div>
 
       <!-- Presensi (desktop) -->
       <div id="desk-panitia" class="desk-content">
@@ -721,6 +811,7 @@
   </div>
 
   <div class="bottom-nav" id="bottom-nav">
+    <button id="nav-dash" class="nav-btn"><i class="fas fa-chart-bar"></i><span>Dashboard</span></button>
     <button id="nav-panitia" class="nav-btn active"><i class="fas fa-user-check"></i><span>Hadir</span></button>
     <button id="nav-notul" class="nav-btn"><i class="fas fa-book-open"></i><span>Notulensi</span></button>
     <button id="nav-admin" class="nav-btn"><i class="fas fa-file-signature"></i><span>Sekretaris</span></button>
@@ -780,9 +871,11 @@
     loadActiveMeetings();
 
     // Bind events
+    document.getElementById('nav-dash').addEventListener('click', function(){ nav('dashboard'); });
     document.getElementById('nav-panitia').addEventListener('click', function(){ nav('panitia'); });
     document.getElementById('nav-notul').addEventListener('click', function(){ nav('notulensi'); });
     document.getElementById('nav-admin').addEventListener('click', function(){ nav('admin'); });
+    document.getElementById('desk-nav-dash').addEventListener('click', function(){ deskNav('dashboard'); });
     document.getElementById('desk-nav-panitia').addEventListener('click', function(){ deskNav('panitia'); });
     document.getElementById('desk-nav-notul').addEventListener('click', function(){ deskNav('notulensi'); });
     document.getElementById('desk-nav-admin').addEventListener('click', function(){ deskNav('admin'); });
@@ -834,16 +927,21 @@
 
   // ── Navigation ────────────────────────────────────────────────────────────
   function nav(mode) {
+    var mD=document.getElementById('mob-dash');
     var mP=document.getElementById('mob-panitia');
     var mA=document.getElementById('mob-admin');
     var mN=document.getElementById('mob-notul-pub');
+    var nD=document.getElementById('nav-dash');
     var nP=document.getElementById('nav-panitia');
     var nA=document.getElementById('nav-admin');
     var nN=document.getElementById('nav-notul');
-    // Reset semua
-    mP.style.display='none'; mA.style.display='none'; mN.style.display='none';
-    nP.classList.remove('active'); nA.classList.remove('active'); nN.classList.remove('active');
-    if (mode==='admin') {
+    mD.style.display='none'; mP.style.display='none'; mA.style.display='none'; mN.style.display='none';
+    nD.classList.remove('active'); nP.classList.remove('active'); nA.classList.remove('active'); nN.classList.remove('active');
+    if (mode==='dashboard') {
+      mD.style.display='flex'; nD.classList.add('active');
+      document.getElementById('role-label').textContent='Dashboard';
+      loadDashboard('mobile');
+    } else if (mode==='admin') {
       if (!isAuth) { showAuth(); return; }
       mA.style.display='flex'; nA.classList.add('active');
       document.getElementById('role-label').textContent='Sekretaris';
@@ -860,19 +958,25 @@
   }
 
   function deskNav(mode) {
+    var dD=document.getElementById('desk-dash');
     var dP=document.getElementById('desk-panitia');
     var dA=document.getElementById('desk-admin');
     var dNP=document.getElementById('desk-notul-pub');
     var dN=document.getElementById('desk-notul');
+    var bnD=document.getElementById('desk-nav-dash');
     var bnP=document.getElementById('desk-nav-panitia');
     var bnA=document.getElementById('desk-nav-admin');
     var bnN=document.getElementById('desk-nav-notul');
-    // Reset semua
-    dP.style.display='none'; dA.style.display='none'; dNP.style.display='none'; dN.style.display='none';
-    bnP.classList.remove('active'); bnA.classList.remove('active'); bnN.classList.remove('active');
+    dD.style.display='none'; dP.style.display='none'; dA.style.display='none'; dNP.style.display='none'; dN.style.display='none';
+    bnD.classList.remove('active'); bnP.classList.remove('active'); bnA.classList.remove('active'); bnN.classList.remove('active');
     document.getElementById('sidebar-rapat-area').style.display='none';
     document.getElementById('sidebar-form').style.display='none';
-    if (mode==='admin') {
+    if (mode==='dashboard') {
+      dD.style.display='block'; bnD.classList.add('active');
+      document.getElementById('desk-mode-label').textContent='Dashboard';
+      document.getElementById('role-label').textContent='Dashboard';
+      loadDashboard('desktop');
+    } else if (mode==='admin') {
       if (!isAuth) { showAuth(); return; }
       dA.style.display='block'; bnA.classList.add('active');
       document.getElementById('sidebar-rapat-area').style.display='block';
@@ -1496,6 +1600,157 @@
         c.appendChild(ep);
       }
     );
+  }
+
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────────
+  var dashData = null;
+  var dashMode = { mobile: 'akumulasi', desktop: 'akumulasi' };
+  var dashRapatIdx = { mobile: 0, desktop: 0 };
+
+  function loadDashboard(ctx) {
+    if (dashData) { renderDashboard(ctx, dashData); return; }
+    apiGet({ action: 'getDashboard' }, function(data) {
+      dashData = data;
+      renderDashboard(ctx, data);
+    }, function(err) {
+      showToast('Gagal memuat data dashboard: ' + err, 'error');
+    });
+  }
+
+  function renderDashboard(ctx, data) {
+    var pfx = ctx === 'desktop' ? 'desk-' : 'mob-';
+
+    // Stat cards
+    var statsEl = document.getElementById(pfx + 'dash-stats');
+    if (statsEl) {
+      statsEl.innerHTML = '';
+      var stats = [
+        { num: data.totalRapat, label: 'Total Rapat' },
+        { num: data.totalPanitia, label: 'Total Panitia' },
+        { num: data.akumulasi.filter(function(s){ return s.persen === 100; }).length, label: 'Seksi Hadir Penuh' },
+        { num: data.akumulasi.filter(function(s){ return s.persen === 0; }).length, label: 'Seksi Absen' }
+      ];
+      var colors = ['var(--rust)', 'var(--sage)', '#4a7a5a', '#c05000'];
+      stats.forEach(function(s, i) {
+        var card = document.createElement('div');
+        card.className = 'stat-card';
+        card.innerHTML = '<div class="stat-num" style="color:' + colors[i] + '">' + s.num + '</div>'
+          + '<div class="stat-label">' + s.label + '</div>';
+        statsEl.appendChild(card);
+      });
+    }
+
+    // Toggle buttons
+    var toggleEl = document.getElementById(pfx + 'dash-toggle');
+    if (toggleEl) {
+      var btns = toggleEl.querySelectorAll('.toggle-btn');
+      btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          btns.forEach(function(b) { b.classList.remove('on'); });
+          btn.classList.add('on');
+          dashMode[ctx] = btn.getAttribute('data-mode');
+          var selectWrap = document.getElementById(pfx + 'dash-select-wrap');
+          if (selectWrap) selectWrap.style.display = dashMode[ctx] === 'perrapat' ? 'block' : 'none';
+          renderChart(ctx, data);
+        });
+      });
+    }
+
+    // Rapat select dropdown
+    var selectEl = document.getElementById(pfx + 'dash-select');
+    if (selectEl && data.rapat && data.rapat.length > 0) {
+      selectEl.innerHTML = '';
+      data.rapat.forEach(function(r, i) {
+        var opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = r.agenda + ' (' + r.tanggal + ')';
+        selectEl.appendChild(opt);
+      });
+      selectEl.addEventListener('change', function() {
+        dashRapatIdx[ctx] = parseInt(this.value);
+        renderChart(ctx, data);
+      });
+    }
+
+    renderChart(ctx, data);
+  }
+
+  function renderChart(ctx, data) {
+    var pfx    = ctx === 'desktop' ? 'desk-' : 'mob-';
+    var chart  = document.getElementById(pfx + 'dash-chart');
+    if (!chart) return;
+    chart.innerHTML = '';
+
+    var isAkum  = dashMode[ctx] === 'akumulasi';
+    var seksiList;
+    var chartTitle;
+
+    if (isAkum) {
+      seksiList  = data.akumulasi;
+      chartTitle = 'Kehadiran Per Seksi — Semua Rapat';
+    } else {
+      var idx    = dashRapatIdx[ctx] || 0;
+      var rapat  = data.rapat[idx];
+      if (!rapat) return;
+      seksiList  = rapat.seksi;
+      chartTitle = 'Kehadiran — ' + rapat.agenda;
+    }
+
+    // Sort: tertinggi di atas
+    var sorted = seksiList.slice().sort(function(a, b) { return b.persen - a.persen; });
+
+    // Title
+    var titleEl = document.createElement('p');
+    titleEl.style.cssText = 'font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9c8060;margin-bottom:16px';
+    titleEl.textContent = chartTitle;
+    chart.appendChild(titleEl);
+
+    // Legend
+    var legendEl = document.createElement('div');
+    legendEl.style.cssText = 'display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap';
+    var legends = [
+      { color: '#4a7a5a', label: '75–100%' },
+      { color: 'var(--gold)', label: '50–74%' },
+      { color: 'var(--rust)', label: '1–49%' },
+      { color: '#e0d0c0', label: '0% (Absen)' }
+    ];
+    legends.forEach(function(l) {
+      var item = document.createElement('div');
+      item.style.cssText = 'display:flex;align-items:center;gap:5px';
+      item.innerHTML = '<div class="legend-dot" style="background:' + l.color + '"></div>'
+        + '<span style="font-size:var(--fs-xxs);color:#9c8060;font-weight:600">' + l.label + '</span>';
+      legendEl.appendChild(item);
+    });
+    chart.appendChild(legendEl);
+
+    // Bar chart
+    var chartWrap = document.createElement('div');
+    sorted.forEach(function(s) {
+      var pct   = s.persen || 0;
+      var color = pct >= 75 ? '#4a7a5a' : pct >= 50 ? 'var(--gold)' : pct > 0 ? 'var(--rust)' : '#e0d0c0';
+      var detail = isAkum
+        ? s.hadir + ' dari ' + s.totalKesempatan + ' kesempatan (' + s.totalAnggota + ' anggota, ' + s.totalRapat + ' rapat)'
+        : s.hadir + ' dari ' + s.total + ' anggota hadir';
+
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = '<div class="bar-label">'
+        + '<span class="bar-label-text">' + s.nama + '</span>'
+        + '<span class="bar-label-pct" style="color:' + color + '">' + pct + '%</span>'
+        + '</div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:0%;background:' + color + '" data-width="' + pct + '%"></div></div>'
+        + '<div class="bar-sub">' + detail + '</div>';
+      chartWrap.appendChild(row);
+    });
+    chart.appendChild(chartWrap);
+
+    // Animasi bar setelah render
+    setTimeout(function() {
+      chart.querySelectorAll('.bar-fill').forEach(function(bar) {
+        bar.style.width = bar.getAttribute('data-width');
+      });
+    }, 50);
   }
 
   // ── Notulensi Publik ─────────────────────────────────────────────────────────
