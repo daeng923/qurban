@@ -1338,7 +1338,7 @@
   }
 
   // ── Finalisasi ────────────────────────────────────────────────────────────
-  async function doFinalize() {
+  function doFinalize() {
     if(!currentRapat) return;
     var json=buildDraft(), draft=JSON.parse(json);
     if(!draft.poin.length&&!draft.catatanBebas&&!draft.tindakLanjut.length&&!draft.logPercakapan.length){
@@ -1358,15 +1358,15 @@
     var aspTeks='(Tidak ada)';
     if(notulData&&notulData.daftarHadir){ var as2=notulData.daftarHadir.filter(function(h){return h.catatan&&h.catatan.trim();}); if(as2.length>0) aspTeks=as2.map(function(h){return '- '+h.nama+': "'+h.catatan+'"';}).join('\n'); }
     var prompt='Notulis profesional rapat Idul Adha 1447H UMM.\n\nSusun notulensi resmi:\nAgenda: '+(notulData?notulData.agenda:'')+'\nTanggal: '+(notulData?notulData.tanggal:'')+'\nLokasi: '+(notulData?notulData.lokasi:'')+'\nHadir: '+(notulData?notulData.daftarHadir.length:0)+' orang\n\nLOG PERCAKAPAN:\n'+logTeks+'\n\nPOIN KEPUTUSAN:\n'+(draft.poin.length?draft.poin.map(function(p,i){return (i+1)+'. '+p.teks;}).join('\n'):'(Tidak ada)')+'\n\nTINDAK LANJUT:\n'+(draft.tindakLanjut.length?draft.tindakLanjut.map(function(t){return '- '+t.teks+(t.pic?' [PIC: '+t.pic+']':'');}).join('\n'):'(Tidak ada)')+'\n\nPIC DARI LOG:\n'+picTeks+'\n\nASPIRASI:\n'+aspTeks+'\n\nCATATAN: '+(draft.catatanBebas||'(Tidak ada)')+'\n\nFormat: 1.PEMBUKAAN 2.JALANNYA RAPAT 3.POIN KEPUTUSAN 4.TINDAK LANJUT & PIC 5.PENUTUP\nBahasa formal.';
-    await callGemini(prompt);
+    callGemini(prompt);
   }
 
-  async function rangkumAI(index) {
+  function rangkumAI(index) {
     var m=reportCache[index]; if(!m) return;
     showAIModal();
     var asp=m.masukanPanitia&&m.masukanPanitia.length>0?m.masukanPanitia.map(function(x){return '- '+x.nama+': "'+x.teks+'"';}).join('\n'):'(Tidak ada)';
     var prompt='Notulis profesional Idul Adha 1447H UMM.\nAgenda: '+m.agenda+'\nTanggal: '+m.tanggal+'\nNotulensi: '+(m.notulenUtama||'(kosong)')+'\nAspirasi:\n'+asp+'\nFormat: 1.POIN KEPUTUSAN 2.TINDAK LANJUT 3.CATATAN PENTING\nBahasa formal.';
-    await callGemini(prompt);
+    callGemini(prompt);
   }
 
   function showAIModal() {
@@ -1378,47 +1378,32 @@
     lw.appendChild(sp); lw.appendChild(lt); c.appendChild(lw);
   }
 
-  async function callGemini(prompt) {
+  function callGemini(prompt) {
+    // Gemini dipanggil lewat GAS (UrlFetchApp) bukan langsung dari browser
+    // agar API key free tier bisa berfungsi tanpa billing
     var c = document.getElementById('ai-content');
-    if (!geminiKey || geminiKey === '') {
-      c.innerHTML = ''; c.innerText = 'API Key Gemini belum dikonfigurasi di sheet CONFIG.'; return;
-    }
-    var models = ['gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-flash-8b'];
-    var BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
-    var body  = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
-    var lastErr = '';
-    for (var i = 0; i < models.length; i++) {
-      var model = models[i];
-      var lt = c.querySelector('p');
-      if (lt) lt.textContent = 'Mencoba ' + model + '...';
-      try {
-        var res = await fetch(BASE + model + ':generateContent?key=' + geminiKey,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body });
-        if (res.status === 503 || res.status === 429 || res.status === 500) {
-          lastErr = 'Model ' + model + ' merespons ' + res.status;
-          console.warn(lastErr); continue;
-        }
-        var result = await res.json();
-        if (result.error) { lastErr = result.error.message || 'Error model ' + model; console.warn(lastErr); continue; }
-        var text = result.candidates && result.candidates[0] && result.candidates[0].content
-          && result.candidates[0].content.parts && result.candidates[0].content.parts[0]
-          ? result.candidates[0].content.parts[0].text : null;
-        if (!text) { lastErr = 'Response kosong dari ' + model; continue; }
-        c.innerHTML = ''; c.innerText = text;
-        if (i > 0) {
+
+    apiPost({ action: 'summarizeWithGemini', token: authToken, prompt: prompt },
+      function(result) {
+        // Sukses
+        c.innerHTML = '';
+        c.innerText = result.text || 'Tidak ada hasil.';
+        if (result.model) {
           var note = document.createElement('p');
           note.style.cssText = 'font-size:10px;color:#9c8060;margin-top:12px;font-style:italic';
-          note.textContent = 'Dirangkum menggunakan ' + model;
+          note.textContent = 'Dirangkum menggunakan ' + result.model + ' via Google Apps Script';
           c.appendChild(note);
         }
-        return;
-      } catch (err) { lastErr = 'Koneksi gagal ke ' + model + ': ' + err.message; console.warn(lastErr); }
-    }
-    c.innerHTML = '';
-    var ep = document.createElement('p');
-    ep.style.cssText = 'color:var(--rust);font-weight:700;text-align:center;padding:20px;line-height:1.7';
-    ep.innerHTML = 'Semua model Gemini sedang tidak tersedia.<br><span style="font-size:12px;font-weight:400;color:#9c8060">Coba lagi dalam beberapa menit.<br>' + lastErr + '</span>';
-    c.appendChild(ep);
+      },
+      function(err) {
+        // Gagal
+        c.innerHTML = '';
+        var ep = document.createElement('p');
+        ep.style.cssText = 'color:var(--rust);font-weight:700;text-align:center;padding:20px;line-height:1.7';
+        ep.innerHTML = 'Gagal merangkum.<br><span style="font-size:12px;font-weight:400;color:#9c8060">' + (err || 'Periksa API Key di sheet CONFIG.') + '</span>';
+        c.appendChild(ep);
+      }
+    );
   }
 
   // ── Toast ─────────────────────────────────────────────────────────────────
