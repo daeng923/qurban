@@ -1377,18 +1377,46 @@
   }
 
   async function callGemini(prompt) {
-    var c=document.getElementById('ai-content');
-    try {
-      if(!geminiKey||geminiKey==='') { c.innerHTML=''; c.innerText='API Key Gemini belum dikonfigurasi di sheet CONFIG.'; return; }
-      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+geminiKey,
-        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
-      var result=await res.json();
-      var text=result.candidates&&result.candidates[0]&&result.candidates[0].content&&result.candidates[0].content.parts&&result.candidates[0].content.parts[0]
-        ?result.candidates[0].content.parts[0].text:'Gagal menghasilkan rangkuman.';
-      c.innerHTML=''; c.innerText=text;
-    } catch(err) {
-      c.innerHTML=''; var ep=document.createElement('p'); ep.style.cssText='color:var(--rust);font-weight:700;text-align:center;padding:20px'; ep.textContent='Kesalahan: '+err.message; c.appendChild(ep);
+    var c = document.getElementById('ai-content');
+    if (!geminiKey || geminiKey === '') {
+      c.innerHTML = ''; c.innerText = 'API Key Gemini belum dikonfigurasi di sheet CONFIG.'; return;
     }
+    var models = ['gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-flash-8b'];
+    var BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+    var body  = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
+    var lastErr = '';
+    for (var i = 0; i < models.length; i++) {
+      var model = models[i];
+      var lt = c.querySelector('p');
+      if (lt) lt.textContent = 'Mencoba ' + model + '...';
+      try {
+        var res = await fetch(BASE + model + ':generateContent?key=' + geminiKey,
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body });
+        if (res.status === 503 || res.status === 429 || res.status === 500) {
+          lastErr = 'Model ' + model + ' merespons ' + res.status;
+          console.warn(lastErr); continue;
+        }
+        var result = await res.json();
+        if (result.error) { lastErr = result.error.message || 'Error model ' + model; console.warn(lastErr); continue; }
+        var text = result.candidates && result.candidates[0] && result.candidates[0].content
+          && result.candidates[0].content.parts && result.candidates[0].content.parts[0]
+          ? result.candidates[0].content.parts[0].text : null;
+        if (!text) { lastErr = 'Response kosong dari ' + model; continue; }
+        c.innerHTML = ''; c.innerText = text;
+        if (i > 0) {
+          var note = document.createElement('p');
+          note.style.cssText = 'font-size:10px;color:#9c8060;margin-top:12px;font-style:italic';
+          note.textContent = 'Dirangkum menggunakan ' + model;
+          c.appendChild(note);
+        }
+        return;
+      } catch (err) { lastErr = 'Koneksi gagal ke ' + model + ': ' + err.message; console.warn(lastErr); }
+    }
+    c.innerHTML = '';
+    var ep = document.createElement('p');
+    ep.style.cssText = 'color:var(--rust);font-weight:700;text-align:center;padding:20px;line-height:1.7';
+    ep.innerHTML = 'Semua model Gemini sedang tidak tersedia.<br><span style="font-size:12px;font-weight:400;color:#9c8060">Coba lagi dalam beberapa menit.<br>' + lastErr + '</span>';
+    c.appendChild(ep);
   }
 
   // ── Toast ─────────────────────────────────────────────────────────────────
