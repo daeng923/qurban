@@ -37,6 +37,7 @@
       user-select: none;
       min-height: 100vh;
       line-height: 1.5;
+      overflow-x: hidden;
     }
     input, textarea, select {
       user-select: auto !important;
@@ -1401,6 +1402,30 @@
     t.classList.remove('toast-hide'); t.classList.add('toast-show');
     clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('toast-show');t.classList.add('toast-hide');},3000);
   }
+
+  // ── postMessage auto-resize untuk iframe WordPress ────────────────────────
+  // Kirim tinggi dokumen ke parent setiap kali konten berubah
+  function sendHeight() {
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'iframeHeight', height: h + 32 }, '*');
+    }
+  }
+
+  // Kirim tinggi saat load, resize, dan setiap perubahan DOM
+  window.addEventListener('load', function() { sendHeight(); setTimeout(sendHeight, 800); });
+  window.addEventListener('resize', sendHeight);
+  // Observer untuk perubahan DOM (panel notulensi, modal, dsb)
+  if (window.MutationObserver) {
+    new MutationObserver(function() { sendHeight(); }).observe(document.body, { childList: true, subtree: true, attributes: true });
+  }
+  // Kirim berkala sebagai fallback
+  setInterval(sendHeight, 2000);
   </script>
 </body>
 </html>
