@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Panitia Idul Adha 1447 H / 2026 M — UMM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ─── Config ─────────────────────────────────────────────────────────────── */
+    :root {
+      --ink:      #1a1208;
+      --gold:     #c9973a;
+      --gold-lt:  #f0d9a8;
+      --sand:     #faf6ef;
+      --cream:    #fff9f0;
+      --rust:     #8b2500;
+      --rust-lt:  #fdf0eb;
+      --sage:     #2d4a3e;
+      --sidebar:  290px;
+      --fs-base:  15px;   /* base font — naikkan di sini kalau perlu lebih besar */
+      --fs-sm:    13px;
+      --fs-xs:    11px;
+      --fs-xxs:   10px;
+      --fs-label: 11px;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: var(--fs-base);
+      background: var(--sand);
+      color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    input, textarea, select {
+      user-select: auto !important;
+      font-family: 'DM Sans', sans-serif;
+      font-size: var(--fs-base);
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,151,58,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(139,37,0,.07) 0%, transparent 60%);
+    }
+
+    /* ─── Appbar ─────────────────────────────────────────────────────────────── */
+    .appbar {
+      background: linear-gradient(135deg, #6b1500 0%, #8b2500 60%, #a83000 100%);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 60px;
+      display: flex; align-items: center; padding: 0 20px;
+      box-shadow: 0 4px 24px rgba(139,37,0,.35);
+    }
+    .appbar::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,151,58,.6), transparent);
+    }
+    .appbar-brand { display: flex; align-items: center; gap: 12px; }
+    .appbar-icon {
+      background: rgba(201,151,58,.15); border: 1px solid rgba(201,151,58,.3);
+      border-radius: 10px; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--gold);
+    }
+    .appbar-title { font-family: 'Playfair Display', serif; color: white; font-size: 15px; font-weight: 700; line-height: 1.2; }
+    .appbar-sub { color: rgba(240,217,168,.7); font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    .appbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .timer-appbar { font-family: 'Playfair Display', serif; color: white; font-size: 18px; font-weight: 700; background: rgba(0,0,0,.2); padding: 4px 14px; border-radius: 8px; display: none; }
+    .autosave-appbar { display: none; align-items: center; gap: 5px; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(240,217,168,.7); }
+    .autosave-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* ─── Bottom Nav (mobile) ────────────────────────────────────────────────── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: var(--cream); border-top: 1px solid rgba(201,151,58,.2);
+      display: flex; justify-content: space-around;
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 20px rgba(26,18,8,.08);
+    }
+    .nav-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 8px; border: none; background: transparent; cursor: pointer;
+      border-radius: 12px; color: #b0987a; transition: background .15s, color .15s;
+    }
+    .nav-btn i { font-size: 22px; }
+    .nav-btn span { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .nav-btn.active { color: var(--rust); background: rgba(139,37,0,.06); }
+
+    /* ─── Layouts ────────────────────────────────────────────────────────────── */
+    #mobile-wrap { padding-top: 60px; padding-bottom: 80px; }
+    #desktop-wrap { display: none; height: calc(100vh - 60px); margin-top: 60px; }
+
+    @media (min-width: 900px) {
+      .bottom-nav { display: none !important; }
+      #mobile-wrap { display: none !important; }
+      #desktop-wrap { display: flex !important; }
+    }
+
+    /* ─── Desktop Sidebar ────────────────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar); flex-shrink: 0;
+      background: var(--cream); border-right: 1px solid rgba(201,151,58,.2);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 2px 0 16px rgba(26,18,8,.05);
+    }
+    .sidebar-hdr {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid rgba(201,151,58,.12);
+      background: linear-gradient(180deg, rgba(201,151,58,.04) 0%, transparent 100%);
+    }
+    .sidebar-hdr-sub { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: #9c8060; margin-bottom: 2px; }
+    .sidebar-hdr-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--ink); }
+    .sidebar-nav { padding: 8px; border-bottom: 1px solid rgba(201,151,58,.1); }
+    .sidebar-nav-btn {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 11px 13px; border: none; background: transparent; border-radius: 10px;
+      cursor: pointer; font-size: var(--fs-sm); font-weight: 600; color: #9c8060;
+      transition: background .15s, color .15s; text-align: left; margin-bottom: 2px;
+    }
+    .sidebar-nav-btn i { font-size: 15px; width: 18px; text-align: center; }
+    .sidebar-nav-btn.active { background: rgba(139,37,0,.08); color: var(--rust); font-weight: 700; }
+    .sidebar-nav-btn:hover:not(.active) { background: rgba(201,151,58,.06); }
+    .sidebar-scroll { flex: 1; overflow-y: auto; padding: 12px 8px; }
+    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--gold-lt); border-radius: 4px; }
+    .sidebar-form { padding: 12px 10px; border-top: 1px solid rgba(201,151,58,.1); }
+    .rapat-item {
+      padding: 10px 12px; border-radius: 10px; cursor: pointer; margin-bottom: 4px;
+      border: 1px solid transparent; transition: all .15s;
+    }
+    .rapat-item:hover { background: rgba(201,151,58,.06); border-color: rgba(201,151,58,.15); }
+    .rapat-item-title { font-size: var(--fs-sm); font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 2px; }
+    .rapat-item-meta { font-size: var(--fs-xxs); color: #9c8060; font-weight: 600; }
+    .section-label {
+      font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      color: #9c8060; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ─── Desktop Main ───────────────────────────────────────────────────────── */
+    .desk-main { flex: 1; overflow-y: auto; background: var(--sand); }
+    .desk-main::-webkit-scrollbar { width: 6px; }
+    .desk-main::-webkit-scrollbar-thumb { background: var(--gold-lt); border-radius: 4px; }
+    .desk-content { padding: 32px 36px; max-width: 780px; }
+
+    /* ─── Notulensi desktop layout ───────────────────────────────────────────── */
+    .notul-layout { display: flex; height: 100%; overflow: hidden; }
+    .notul-doc {
+      flex: 1; overflow-y: auto; background: white; padding: 36px 48px;
+      border-right: 1px solid rgba(201,151,58,.12);
+    }
+    .notul-doc::-webkit-scrollbar { width: 6px; }
+    .notul-doc::-webkit-scrollbar-thumb { background: #e8d9c0; border-radius: 4px; }
+    .notul-sidebar {
+      width: 270px; flex-shrink: 0; overflow-y: auto;
+      background: var(--cream); padding: 20px 14px;
+      border-left: 1px solid rgba(201,151,58,.12);
+    }
+    .notul-sidebar::-webkit-scrollbar { width: 4px; }
+    .notul-sidebar::-webkit-scrollbar-thumb { background: var(--gold-lt); border-radius: 4px; }
+
+    /* ─── Toolbar notulensi ──────────────────────────────────────────────────── */
+    .notul-toolbar {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      padding: 10px 16px; background: var(--cream);
+      border-bottom: 1px solid rgba(201,151,58,.12);
+      position: sticky; top: 0; z-index: 5;
+    }
+    .tb-btn {
+      padding: 7px 13px; border: 1.5px solid rgba(201,151,58,.25); border-radius: 8px;
+      background: transparent; font-size: var(--fs-xs); font-weight: 700;
+      letter-spacing: .04em; cursor: pointer; color: #7a6040;
+      transition: all .15s; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .tb-btn:hover { background: rgba(201,151,58,.08); color: var(--ink); }
+    .tb-btn.rust { background: linear-gradient(135deg,#8b2500,#a83000); color: white; border-color: transparent; }
+    .tb-btn.rust:hover { opacity: .9; }
+    .tb-btn.green { background: linear-gradient(135deg,#1a3a2e,#2d4a3e); color: #a8d5bb; border-color: transparent; }
+    .tb-btn.green:hover { opacity: .9; }
+    .tb-divider { width: 1px; height: 22px; background: rgba(201,151,58,.2); flex-shrink: 0; }
+
+    /* ─── Shared components ──────────────────────────────────────────────────── */
+    .card {
+      background: var(--cream); border: 1px solid rgba(201,151,58,.2);
+      border-radius: 20px; position: relative; overflow: hidden;
+      box-shadow: 0 2px 16px rgba(26,18,8,.06);
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(201,151,58,.5), transparent);
+    }
+    .field {
+      width: 100%; padding: 12px 16px; background: var(--sand);
+      border: 1.5px solid rgba(201,151,58,.25); border-radius: 12px;
+      font-size: var(--fs-base); color: var(--ink); outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,151,58,.12); }
+    .field-label {
+      display: block; font-size: var(--fs-label); font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; color: #9c8060; margin-bottom: 6px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 20px; border: none; border-radius: 14px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: var(--fs-base); font-weight: 700;
+      letter-spacing: .04em; transition: transform .15s, opacity .15s;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-full { width: 100%; }
+    .btn-rust { background: linear-gradient(135deg,#8b2500,#a83000); color: white; box-shadow: 0 4px 16px rgba(139,37,0,.3); }
+    .btn-dark { background: var(--ink); color: var(--gold-lt); box-shadow: 0 4px 16px rgba(26,18,8,.2); text-transform: uppercase; letter-spacing: .08em; }
+    .btn-green { background: linear-gradient(135deg,#1a3a2e,#2d4a3e); color: #a8d5bb; box-shadow: 0 3px 12px rgba(45,74,62,.3); font-size: var(--fs-sm); }
+    .btn-gold { background: linear-gradient(135deg,#b8832a,#c9973a); color: white; box-shadow: 0 4px 16px rgba(201,151,58,.35); }
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 16px; background: transparent; color: var(--rust);
+      border: 1.5px solid rgba(139,37,0,.25); border-radius: 12px;
+      font-size: var(--fs-sm); font-weight: 700; cursor: pointer; transition: background .15s;
+    }
+    .btn-outline:hover { background: var(--rust-lt); }
+    .btn-outline-gold {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 16px; background: transparent; color: #9a6e1a;
+      border: 1.5px solid rgba(201,151,58,.3); border-radius: 12px;
+      font-size: var(--fs-sm); font-weight: 700; cursor: pointer; transition: background .15s;
+    }
+    .btn-outline-gold:hover { background: rgba(201,151,58,.08); }
+    .btn-sm-danger {
+      padding: 6px 14px; background: transparent; color: var(--rust);
+      border: 1.5px solid rgba(139,37,0,.2); border-radius: 20px;
+      font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-sm-danger:hover { background: var(--rust-lt); }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px;
+      font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .badge-gold  { background: rgba(201,151,58,.12); color: #9a6e1a; border: 1px solid rgba(201,151,58,.3); }
+    .badge-rust  { background: var(--rust-lt); color: var(--rust); border: 1px solid rgba(139,37,0,.15); }
+    .badge-sage  { background: rgba(45,74,62,.08); color: var(--sage); border: 1px solid rgba(45,74,62,.2); }
+    .badge-done  { background: #f0f4f0; color: #4a7a5a; border: 1px solid #c5ddc5; }
+
+    /* Search */
+    .search-wrap { position: relative; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #b0987a; font-size: 13px; }
+    .search-field { padding-left: 40px !important; }
+    .search-results {
+      position: absolute; z-index: 60; width: 100%;
+      background: var(--cream); border: 1.5px solid rgba(201,151,58,.3);
+      border-radius: 14px; box-shadow: 0 8px 32px rgba(26,18,8,.15);
+      margin-top: 4px; max-height: 220px; overflow-y: auto;
+    }
+    .search-results::-webkit-scrollbar { width: 4px; }
+    .search-results::-webkit-scrollbar-thumb { background: var(--gold-lt); border-radius: 4px; }
+    .search-item { padding: 12px 16px; border-bottom: 1px solid rgba(201,151,58,.08); cursor: pointer; transition: background .1s; }
+    .search-item:last-child { border-bottom: none; }
+    .search-item:active { background: rgba(201,151,58,.08); }
+    .search-item-name { font-size: var(--fs-sm); font-weight: 700; color: var(--ink); }
+    .search-item-jabatan { font-size: var(--fs-xxs); font-weight: 700; color: #9c8060; letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+    .name-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: rgba(139,37,0,.06); border: 1.5px solid rgba(139,37,0,.15);
+      border-radius: 12px; margin-top: 8px;
+    }
+    .name-chip-text { font-size: var(--fs-sm); font-weight: 700; color: var(--rust); }
+    .info-box {
+      background: rgba(201,151,58,.06); border: 1px solid rgba(201,151,58,.2);
+      border-radius: 14px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .info-box p { font-size: var(--fs-sm); line-height: 1.7; color: #7a6040; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(26,18,8,.7);
+      backdrop-filter: blur(6px); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-card {
+      background: var(--cream); border: 1px solid rgba(201,151,58,.25);
+      border-radius: 24px; width: 100%; max-width: 380px;
+      box-shadow: 0 24px 64px rgba(26,18,8,.3);
+    }
+    .ai-header {
+      background: linear-gradient(135deg,#1a3a2e 0%,#0d2419 100%);
+      padding: 24px; border-radius: 24px 24px 0 0; position: relative; overflow: hidden;
+    }
+    .ai-header::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 80% 20%, rgba(168,213,187,.15) 0%, transparent 50%); }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: 72px; left: 16px; right: 16px; padding: 14px 20px;
+      border-radius: 14px; text-align: center; font-size: var(--fs-sm); font-weight: 700;
+      z-index: 300; box-shadow: 0 8px 24px rgba(26,18,8,.2);
+      transition: opacity .3s, transform .3s; pointer-events: none;
+    }
+    .toast-show { opacity: 1; transform: translateY(0); }
+    .toast-hide { opacity: 0; transform: translateY(-8px); }
+    .spinner { width: 34px; height: 34px; border: 3px solid rgba(168,213,187,.2); border-top-color: #a8d5bb; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
+    .fade-up { animation: fadeUp .3s ease forwards; }
+
+    /* Report card */
+    .report-card { background: var(--cream); border: 1px solid rgba(201,151,58,.18); border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(26,18,8,.05); margin-bottom: 16px; }
+    .report-hdr { padding: 18px 20px; border-bottom: 1px solid rgba(201,151,58,.1); background: linear-gradient(180deg, rgba(201,151,58,.04) 0%, transparent 100%); }
+    .report-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 4px; }
+    .report-meta { font-size: var(--fs-xs); font-weight: 700; color: #9c8060; letter-spacing: .06em; text-transform: uppercase; }
+
+    /* Mobile notul panel */
+    .mob-notul { position: fixed; inset: 0; z-index: 80; background: var(--sand); overflow-y: auto; padding-bottom: 130px; display: none; }
+    .mob-notul.open { display: block; }
+    .mob-notul-hdr {
+      background: linear-gradient(135deg,#1a3a2e 0%,#2d4a3e 100%);
+      padding: 14px 16px; position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 4px 20px rgba(45,74,62,.3);
+    }
+    .mob-timer { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .notul-fab { position: fixed; bottom: 20px; right: 16px; z-index: 85; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+    .fab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border: none; border-radius: 28px; cursor: pointer; font-size: var(--fs-sm); font-weight: 700; box-shadow: 0 4px 20px rgba(26,18,8,.2); transition: transform .15s; white-space: nowrap; }
+    .fab:active { transform: scale(.96); }
+
+    /* Notulensi sections */
+    .doc-section { margin-bottom: 28px; }
+    .doc-label { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #b0987a; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .doc-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,151,58,.15); }
+    .hadir-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(45,74,62,.06); border: 1px solid rgba(45,74,62,.15); border-radius: 20px; padding: 4px 12px; margin: 3px; font-size: var(--fs-sm); }
+    .poin-row { display: flex; align-items: flex-start; gap: 8px; background: var(--cream); border: 1px solid rgba(201,151,58,.15); border-radius: 11px; padding: 10px 12px; margin-bottom: 8px; }
+    .poin-num { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: rgba(201,151,58,.15); color: #9a6e1a; font-size: var(--fs-xxs); font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .poin-inp { flex: 1; border: none; background: transparent; outline: none; font-size: var(--fs-sm); color: var(--ink); resize: none; line-height: 1.6; min-height: 38px; }
+    .del-btn { width: 22px; height: 22px; border: none; background: transparent; cursor: pointer; color: #c0a080; font-size: 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all .15s; flex-shrink: 0; margin-top: 3px; }
+    .del-btn:hover { background: var(--rust-lt); color: var(--rust); }
+    .tl-row { display: flex; align-items: center; gap: 8px; background: var(--cream); border: 1px solid rgba(45,74,62,.15); border-radius: 11px; padding: 10px 12px; margin-bottom: 8px; }
+    .tl-inp { flex: 1; border: none; background: transparent; outline: none; font-size: var(--fs-sm); color: var(--ink); }
+
+    /* Log percakapan */
+    .log-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; background: var(--cream); border: 1px solid rgba(201,151,58,.12); position: relative; }
+    .log-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, rgba(201,151,58,.2), rgba(201,151,58,.35)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #9a6e1a; margin-top: 2px; }
+    .log-body { flex: 1; }
+    .log-sel { padding: 6px 10px; border: 1.5px solid rgba(201,151,58,.25); border-radius: 10px; background: var(--sand); font-size: var(--fs-sm); color: var(--ink); outline: none; cursor: pointer; }
+    .log-sel:focus { border-color: var(--gold); }
+    .log-custom-inp { display: none; padding: 6px 10px; border: 1.5px solid rgba(201,151,58,.25); border-radius: 10px; font-size: var(--fs-sm); color: var(--ink); outline: none; width: 160px; }
+    .log-ta { width: 100%; border: none; background: rgba(201,151,58,.04); border-radius: 8px; padding: 8px 10px; margin-top: 8px; font-size: var(--fs-sm); color: var(--ink); resize: none; outline: none; line-height: 1.6; min-height: 40px; }
+    .log-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .log-tag { padding: 4px 10px; border-radius: 20px; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; border: 1px solid; cursor: pointer; transition: all .15s; }
+    .tag-k { background: rgba(139,37,0,.06); color: var(--rust); border-color: rgba(139,37,0,.2); }
+    .tag-k.on { background: var(--rust); color: white; }
+    .tag-p { background: rgba(45,74,62,.06); color: var(--sage); border-color: rgba(45,74,62,.2); }
+    .tag-p.on { background: var(--sage); color: white; }
+    .log-del { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; border: none; background: transparent; cursor: pointer; color: #c0a080; font-size: 11px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all .15s; }
+    .log-del:hover { background: var(--rust-lt); color: var(--rust); }
+    .pic-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; background: rgba(45,74,62,.04); border: 1px solid rgba(45,74,62,.12); border-radius: 10px; margin-bottom: 6px; }
+    .pic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); flex-shrink: 0; margin-top: 5px; }
+    .pic-name { font-size: var(--fs-xs); font-weight: 700; color: var(--rust); margin-bottom: 2px; }
+    .pic-teks { font-size: var(--fs-xs); color: #5a4a30; line-height: 1.4; }
+
+    /* Gold line */
+    .gold-line { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+    /* Confirm box */
+    .confirm-box { background: var(--cream); border: 1px solid rgba(201,151,58,.2); border-radius: 22px; padding: 28px; text-align: center; max-width: 340px; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ APP BAR ═══════════════════════════════════════════════════════════════ -->
+  <nav class="appbar">
+    <div class="appbar-brand">
+      <div class="appbar-icon"><i class="fas fa-mosque"></i></div>
+      <div>
+        <div class="appbar-title">Panitia Idul Adha</div>
+        <div class="appbar-sub">1447 H / 2026 M &middot; UMM</div>
+      </div>
+    </div>
+    <div class="appbar-right">
+      <div id="timer-appbar" class="timer-appbar"></div>
+      <div id="autosave-appbar" class="autosave-appbar">
+        <div class="autosave-dot" style="background:rgba(168,213,187,.4)"></div>
+        <span>Tersimpan</span>
+      </div>
+      <span id="role-label" class="badge badge-gold">Panitia</span>
+    </div>
+  </nav>
+
+  <!-- ══ MOBILE ══════════════════════════════════════════════════════════════════ -->
+  <div id="mobile-wrap">
+    <div style="max-width:520px;margin:0 auto;padding:20px 16px">
+      <div style="text-align:center;margin-bottom:24px">
+        <p style="color:var(--gold);font-size:var(--fs-xxs);letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:4px">E-Notulen Rapat</p>
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--ink)">Universitas Muhammadiyah Malang</h2>
+        <div class="gold-line" style="width:80px;margin:12px auto 0"></div>
+      </div>
+
+      <!-- Panitia view -->
+      <div id="mob-panitia" style="display:flex;flex-direction:column;gap:16px">
+        <div class="card" style="padding:24px">
+          <div style="margin-bottom:18px"><span class="badge badge-rust"><i class="fas fa-user-check" style="margin-right:5px"></i>Presensi Mandiri</span></div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label class="field-label">Pilih Rapat Aktif</label>
+              <select id="p-rapat" class="field"><option value="">Memuat...</option></select>
+            </div>
+            <div>
+              <label class="field-label">Nama Anda <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#b0987a">(ketik min. 3 huruf)</span></label>
+              <div class="search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="p-nama-search" autocomplete="off" class="field search-field" placeholder="Ketik nama Anda...">
+                <div id="p-nama-results" class="search-results" style="display:none"></div>
+              </div>
+              <input type="hidden" id="p-nama-value">
+              <div id="p-nama-chip" class="name-chip" style="display:none">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <i class="fas fa-check-circle" style="color:var(--rust);font-size:14px"></i>
+                  <span id="p-nama-chip-text" class="name-chip-text"></span>
+                </div>
+                <button id="btn-clear-mob" class="btn-sm-danger">Ganti</button>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Catatan / Usul <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#b0987a">(opsional)</span></label>
+              <textarea id="p-catatan" rows="3" class="field" placeholder="Masukan atau catatan..."></textarea>
+            </div>
+            <button id="btn-hadir-mob" class="btn btn-rust btn-full"><i class="fas fa-check-circle"></i> Konfirmasi Kehadiran</button>
+          </div>
+        </div>
+        <div class="info-box">
+          <i class="fas fa-sparkles" style="color:var(--gold);font-size:14px;margin-top:2px"></i>
+          <p>Catatan Anda akan diolah oleh <strong>Gemini AI</strong> untuk merangkum keputusan rapat secara otomatis bagi sekretaris.</p>
+        </div>
+      </div>
+
+      <!-- Admin view -->
+      <div id="mob-admin" style="display:none;flex-direction:column;gap:16px">
+        <div class="card" style="padding:22px">
+          <div style="margin-bottom:16px"><span class="badge badge-gold"><i class="fas fa-file-signature" style="margin-right:5px"></i>Panel Sekretaris</span></div>
+          <p style="font-size:var(--fs-xs);font-weight:700;color:#9c8060;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Buat Rapat Baru</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label class="field-label">Agenda</label><input type="text" id="mob-agenda" class="field" placeholder="cth: Rapat Koordinasi Hewan Qurban"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div><label class="field-label">Tanggal</label><input type="date" id="mob-tanggal" class="field"></div>
+              <div><label class="field-label">Lokasi</label><input type="text" id="mob-lokasi" class="field" placeholder="R. Sidang"></div>
+            </div>
+            <button id="btn-simpan-mob" class="btn btn-dark btn-full"><i class="fas fa-bolt"></i> Aktifkan Rapat</button>
+          </div>
+        </div>
+        <div id="mob-reports" style="display:flex;flex-direction:column;gap:12px"></div>
+      </div>
+    </div>
+
+    <!-- Mobile notulensi panel -->
+    <div id="mob-notul" class="mob-notul">
+      <div class="mob-notul-hdr">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <button id="btn-notul-back-mob" style="background:rgba(168,213,187,.1);border:1px solid rgba(168,213,187,.2);color:#a8d5bb;border-radius:9px;padding:7px 12px;font-size:var(--fs-xs);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="fas fa-arrow-left"></i> Kembali</button>
+          <div id="mob-autosave" style="display:flex;align-items:center;gap:5px;font-size:var(--fs-xxs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(168,213,187,.6)">
+            <div class="autosave-dot" style="background:rgba(168,213,187,.3)"></div><span>Belum disimpan</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between">
+          <div>
+            <p style="color:rgba(168,213,187,.6);font-size:var(--fs-xxs);font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2px">Notulensi Rapat</p>
+            <h2 id="mob-notul-title" style="font-family:'Playfair Display',serif;color:white;font-weight:700;font-size:16px;line-height:1.3;max-width:230px"></h2>
+            <p id="mob-notul-meta" style="color:rgba(168,213,187,.5);font-size:var(--fs-xs);margin-top:2px"></p>
+          </div>
+          <div style="text-align:right">
+            <div class="mob-timer" id="mob-timer">00:00</div>
+            <p style="color:rgba(168,213,187,.4);font-size:var(--fs-xxs);font-weight:700;letter-spacing:.1em;text-transform:uppercase">Durasi</p>
+          </div>
+        </div>
+      </div>
+      <div id="mob-notul-body" style="max-width:520px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px"></div>
+      <div class="notul-fab">
+        <button id="mob-fab-save" class="fab" style="background:var(--ink);color:var(--gold-lt)"><i class="fas fa-save"></i> Simpan Draft</button>
+        <button id="mob-fab-final" class="fab btn-gold"><i class="fas fa-check-circle"></i> Finalisasi &amp; AI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DESKTOP ═════════════════════════════════════════════════════════════════ -->
+  <div id="desktop-wrap">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-hdr">
+        <div class="sidebar-hdr-sub">Mode</div>
+        <div class="sidebar-hdr-title" id="desk-mode-label">Panitia</div>
+      </div>
+      <div class="sidebar-nav">
+        <button id="desk-nav-panitia" class="sidebar-nav-btn active"><i class="fas fa-user-check"></i> Presensi</button>
+        <button id="desk-nav-admin" class="sidebar-nav-btn"><i class="fas fa-file-signature"></i> Sekretaris</button>
+      </div>
+      <div class="sidebar-scroll" id="sidebar-rapat-area" style="display:none">
+        <div class="section-label" style="margin-bottom:8px"><i class="fas fa-circle-dot" style="color:var(--rust);font-size:9px"></i> Rapat Aktif</div>
+        <div id="sidebar-aktif"></div>
+        <div class="section-label" style="margin:16px 0 8px"><i class="fas fa-history" style="color:#b0987a;font-size:9px"></i> Riwayat</div>
+        <div id="sidebar-history"></div>
+      </div>
+      <div class="sidebar-form" id="sidebar-form" style="display:none">
+        <div class="section-label" style="margin-bottom:10px">Buat Rapat Baru</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div><label class="field-label" style="font-size:10px">Agenda</label><input type="text" id="desk-agenda" class="field" style="padding:9px 12px;border-radius:10px;font-size:var(--fs-sm)" placeholder="Agenda rapat..."></div>
+          <div><label class="field-label" style="font-size:10px">Tanggal</label><input type="date" id="desk-tanggal" class="field" style="padding:9px 12px;border-radius:10px;font-size:var(--fs-sm)"></div>
+          <div><label class="field-label" style="font-size:10px">Lokasi</label><input type="text" id="desk-lokasi" class="field" style="padding:9px 12px;border-radius:10px;font-size:var(--fs-sm)" placeholder="Lokasi..."></div>
+          <button id="btn-simpan-desk" style="padding:10px;background:var(--ink);color:var(--gold-lt);border:none;border-radius:10px;font-size:var(--fs-sm);font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-bolt"></i> Aktifkan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main area -->
+    <div class="desk-main" id="desk-main">
+
+      <!-- Presensi (desktop) -->
+      <div id="desk-panitia" class="desk-content">
+        <div style="margin-bottom:28px">
+          <p style="color:var(--gold);font-size:var(--fs-xxs);letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:6px">E-Notulen Rapat</p>
+          <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--ink);margin-bottom:4px">Presensi Mandiri</h2>
+          <p style="font-size:var(--fs-base);color:#9c8060">Universitas Muhammadiyah Malang &mdash; Panitia Idul Adha 1447 H</p>
+          <div class="gold-line" style="width:60px;margin-top:14px"></div>
+        </div>
+        <div class="card" style="padding:28px;max-width:500px">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div>
+              <label class="field-label">Pilih Rapat Aktif</label>
+              <select id="desk-rapat" class="field"><option value="">Memuat...</option></select>
+            </div>
+            <div>
+              <label class="field-label">Nama Anda <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#b0987a">(ketik min. 3 huruf)</span></label>
+              <div class="search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="desk-nama-search" autocomplete="off" class="field search-field" placeholder="Ketik nama Anda...">
+                <div id="desk-nama-results" class="search-results" style="display:none"></div>
+              </div>
+              <input type="hidden" id="desk-nama-value">
+              <div id="desk-nama-chip" class="name-chip" style="display:none">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <i class="fas fa-check-circle" style="color:var(--rust);font-size:14px"></i>
+                  <span id="desk-nama-chip-text" class="name-chip-text"></span>
+                </div>
+                <button id="btn-clear-desk" class="btn-sm-danger">Ganti</button>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Catatan / Usul <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#b0987a">(opsional)</span></label>
+              <textarea id="desk-catatan" rows="3" class="field" placeholder="Masukan atau catatan Anda..."></textarea>
+            </div>
+            <button id="btn-hadir-desk" class="btn btn-rust btn-full"><i class="fas fa-check-circle"></i> Konfirmasi Kehadiran</button>
+          </div>
+        </div>
+        <div class="info-box" style="max-width:500px;margin-top:18px">
+          <i class="fas fa-sparkles" style="color:var(--gold);font-size:14px;margin-top:2px"></i>
+          <p>Catatan Anda akan diolah oleh <strong>Gemini AI</strong> untuk merangkum keputusan rapat secara otomatis bagi sekretaris.</p>
+        </div>
+      </div>
+
+      <!-- Laporan (desktop) -->
+      <div id="desk-admin" style="display:none;padding:32px 36px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+          <div>
+            <p style="color:var(--gold);font-size:var(--fs-xxs);letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-bottom:4px">Panel Sekretaris</p>
+            <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--ink)">Laporan Rapat</h2>
+          </div>
+          <button id="btn-refresh" style="padding:9px 16px;background:transparent;border:1.5px solid rgba(201,151,58,.3);border-radius:10px;font-size:var(--fs-sm);font-weight:700;color:#9c8060;cursor:pointer;display:flex;align-items:center;gap:7px"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+        <div id="desk-reports"></div>
+      </div>
+
+      <!-- Notulensi (desktop) -->
+      <div id="desk-notul" style="display:none;height:100%">
+        <div class="notul-layout">
+          <div class="notul-doc">
+            <div class="notul-toolbar">
+              <button id="btn-notul-back-desk" class="tb-btn"><i class="fas fa-arrow-left"></i> Kembali</button>
+              <div class="tb-divider"></div>
+              <button id="btn-add-log-desk" class="tb-btn"><i class="fas fa-comment-plus"></i> Tambah Log</button>
+              <button id="btn-add-poin-desk" class="tb-btn"><i class="fas fa-check-double"></i> Poin</button>
+              <button id="btn-add-tl-desk" class="tb-btn"><i class="fas fa-tasks"></i> Tindak Lanjut</button>
+              <div class="tb-divider"></div>
+              <button id="btn-save-desk" class="tb-btn"><i class="fas fa-save"></i> Simpan Draft</button>
+              <button id="btn-final-desk" class="tb-btn rust"><i class="fas fa-check-circle"></i> Finalisasi</button>
+              <button id="btn-ai-desk" class="tb-btn green"><i class="fas fa-robot"></i> Rangkum AI</button>
+            </div>
+            <div style="max-width:680px;margin:0 auto;padding:28px 0">
+              <div style="margin-bottom:28px">
+                <p style="font-size:var(--fs-xxs);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#b0987a;margin-bottom:6px">Notulensi Rapat Resmi</p>
+                <h1 id="desk-notul-title" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;margin-bottom:5px"></h1>
+                <p id="desk-notul-meta" style="font-size:var(--fs-base);color:#9c8060"></p>
+                <div class="gold-line" style="margin-top:14px"></div>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-users" style="color:var(--sage);font-size:10px"></i>Daftar Hadir</div>
+                <div id="desk-hadir-chips" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+                <p id="desk-hadir-empty" style="font-size:var(--fs-sm);color:#9c8060;font-style:italic"></p>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-comments" style="color:var(--gold);font-size:10px"></i>Log Percakapan Rapat</div>
+                <div id="desk-log-list"></div>
+                <button id="btn-add-log-inline" class="btn-outline" style="width:100%;justify-content:center"><i class="fas fa-plus"></i> Tambah Log</button>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-check-double" style="color:var(--rust);font-size:10px"></i>Poin Keputusan</div>
+                <div id="desk-poin-list"></div>
+                <button id="btn-add-poin-inline" class="btn-outline" style="width:100%;justify-content:center"><i class="fas fa-plus"></i> Tambah Poin</button>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-tasks" style="color:var(--gold);font-size:10px"></i>Tindak Lanjut</div>
+                <div id="desk-tl-list"></div>
+                <button id="btn-add-tl-inline" class="btn-outline-gold" style="width:100%;justify-content:center"><i class="fas fa-plus"></i> Tambah Tindak Lanjut</button>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-pen" style="color:#9c8060;font-size:10px"></i>Catatan Tambahan</div>
+                <textarea id="desk-notul-catatan" class="field" rows="4" placeholder="Catatan lain yang perlu diingat..."></textarea>
+              </div>
+              <div class="doc-section">
+                <div class="doc-label"><i class="fas fa-comment-dots" style="color:#9c8060;font-size:10px"></i>Aspirasi Panitia (dari presensi)</div>
+                <div id="desk-aspirasi"></div>
+              </div>
+            </div>
+          </div>
+          <div class="notul-sidebar">
+            <div style="margin-bottom:18px">
+              <div class="section-label" style="margin-bottom:5px"><i class="fas fa-clock" style="color:var(--sage)"></i> Durasi</div>
+              <div id="desk-timer" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--ink)">00:00</div>
+            </div>
+            <div style="height:1px;background:rgba(201,151,58,.15);margin-bottom:18px"></div>
+            <div style="margin-bottom:18px">
+              <div class="section-label"><i class="fas fa-users" style="color:var(--sage)"></i> Hadir <span id="desk-hadir-count" class="badge badge-sage" style="margin-left:4px">0</span></div>
+              <div id="desk-hadir-right" style="display:flex;flex-wrap:wrap;gap:3px"></div>
+            </div>
+            <div style="height:1px;background:rgba(201,151,58,.15);margin-bottom:18px"></div>
+            <div>
+              <div class="section-label"><i class="fas fa-user-check" style="color:var(--rust)"></i> Daftar PIC</div>
+              <div id="desk-pic-list"></div>
+              <p id="desk-pic-empty" style="font-size:var(--fs-sm);color:#9c8060;font-style:italic">Tandai log percakapan sebagai PIC.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MODALS ══════════════════════════════════════════════════════════════════ -->
+  <div id="modal-auth" class="modal-overlay" style="display:none">
+    <div class="modal-card" style="padding:32px;text-align:center">
+      <div style="width:60px;height:60px;background:rgba(139,37,0,.08);border:1px solid rgba(139,37,0,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><i class="fas fa-lock" style="color:var(--rust);font-size:22px"></i></div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:5px">Akses Sekretaris</h3>
+      <div class="gold-line" style="width:50px;margin:10px auto 18px"></div>
+      <label class="field-label" style="display:block;text-align:center;margin-bottom:8px">Masukkan Token Akses</label>
+      <input type="password" id="input-token" class="field" style="text-align:center;letter-spacing:.4em;font-size:20px;font-weight:700;margin-bottom:16px" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+      <div style="display:flex;gap:10px">
+        <button id="btn-auth-cancel" style="flex:1;padding:13px;background:transparent;border:1.5px solid rgba(201,151,58,.25);border-radius:12px;font-size:var(--fs-base);font-weight:600;color:#9c8060;cursor:pointer">Batal</button>
+        <button id="btn-auth-ok" class="btn btn-rust" style="flex:2"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-confirm" class="modal-overlay" style="display:none">
+    <div class="confirm-box">
+      <div style="width:50px;height:50px;background:rgba(139,37,0,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><i class="fas fa-exclamation-triangle" style="color:var(--rust);font-size:20px"></i></div>
+      <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px">Tutup Rapat?</h4>
+      <p style="font-size:var(--fs-sm);color:#7a6040;margin-bottom:20px;line-height:1.7">Rapat akan ditandai <strong>Selesai</strong> dan tidak muncul di daftar presensi.</p>
+      <div style="display:flex;gap:10px">
+        <button id="btn-confirm-cancel" style="flex:1;padding:13px;background:transparent;border:1.5px solid rgba(201,151,58,.25);border-radius:12px;font-size:var(--fs-base);font-weight:600;color:#9c8060;cursor:pointer">Batal</button>
+        <button id="btn-confirm-ok" class="btn btn-rust" style="flex:2"><i class="fas fa-check"></i> Ya, Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-ai" class="modal-overlay" style="display:none">
+    <div class="modal-card" style="max-width:540px;max-height:85vh;display:flex;flex-direction:column">
+      <div class="ai-header">
+        <div style="position:relative;z-index:1;display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;background:rgba(168,213,187,.15);border:1px solid rgba(168,213,187,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#a8d5bb"><i class="fas fa-robot"></i></div>
+          <div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:white;line-height:1.2">Gemini AI Resume</h3>
+            <p style="color:rgba(168,213,187,.7);font-size:var(--fs-xxs);font-weight:700;letter-spacing:.15em;text-transform:uppercase">Rangkuman Keputusan Rapat</p>
+          </div>
+        </div>
+      </div>
+      <div id="ai-content" style="padding:24px;overflow-y:auto;flex:1;font-size:var(--fs-base);color:var(--ink);line-height:1.85;white-space:pre-line"></div>
+      <div style="padding:16px 24px;border-top:1px solid rgba(201,151,58,.12)">
+        <button id="btn-ai-close" class="btn btn-dark btn-full"><i class="fas fa-times"></i> Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav" id="bottom-nav">
+    <button id="nav-panitia" class="nav-btn active"><i class="fas fa-user-check"></i><span>Hadir</span></button>
+    <button id="nav-admin" class="nav-btn"><i class="fas fa-file-signature"></i><span>Sekretaris</span></button>
+  </div>
+
+  <div id="toast" class="toast toast-hide"></div>
+
+  <script>
+  // ── CONFIG — ganti URL ini dengan URL GAS kamu ────────────────────────────
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbyJ1JnfUwV4O6NDwOkc__Fb9Qus-Efjb65pPXuZ8YoKEz36KurPce-S68wowqJgvdlwlg/exec';
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  var isAuth        = false;
+  var authToken     = '';
+  var geminiKey     = '';
+  var allPanitia    = [];
+  var reportCache   = [];
+  var logItems      = [];
+  var pendingClose  = null;
+  var currentRapat  = null;
+  var notulData     = null;
+  var timerSec      = 0;
+  var timerIv       = null;
+  var autoSaveIv    = null;
+  var lastHash      = '';
+  var isDesk        = false;
+
+  // ── REST API caller ───────────────────────────────────────────────────────
+  function apiGet(params, cb, errCb) {
+    var url = GAS_URL + '?' + Object.keys(params).map(function(k){ return k+'='+encodeURIComponent(params[k]); }).join('&');
+    fetch(url)
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if (j.ok) { if(cb) cb(j.data); } else { if(errCb) errCb(j.error); else console.error(j.error); } })
+      .catch(function(e){ if(errCb) errCb(e.message); else console.error(e); });
+  }
+
+  function apiPost(body, cb, errCb) {
+    fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // GAS butuh text/plain agar tidak trigger CORS preflight
+      body: JSON.stringify(body)
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if (j.ok) { if(cb) cb(j.data); } else { if(errCb) errCb(j.error); else console.error(j.error); } })
+      .catch(function(e){ if(errCb) errCb(e.message); else console.error(e); });
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  window.onload = function() {
+    isDesk = window.innerWidth >= 900;
+    window.addEventListener('resize', function(){ isDesk = window.innerWidth >= 900; });
+
+    // Load data awal
+    loadPanitia();
+    loadActiveMeetings();
+
+    // Bind events
+    document.getElementById('nav-panitia').addEventListener('click', function(){ nav('panitia'); });
+    document.getElementById('nav-admin').addEventListener('click', function(){ nav('admin'); });
+    document.getElementById('desk-nav-panitia').addEventListener('click', function(){ deskNav('panitia'); });
+    document.getElementById('desk-nav-admin').addEventListener('click', function(){ deskNav('admin'); });
+
+    // Mobile presensi
+    document.getElementById('p-nama-search').addEventListener('input', function(){ searchNama(this.value,'mob'); });
+    document.getElementById('btn-clear-mob').addEventListener('click', function(){ clearNama('mob'); });
+    document.getElementById('btn-hadir-mob').addEventListener('click', function(){ kirimPresensi('mob'); });
+    document.getElementById('mob-btn-simpan-rapat', document.getElementById('btn-simpan-mob')); // handled below
+    document.getElementById('btn-simpan-mob').addEventListener('click', function(){ simpanRapat('mob'); });
+
+    // Desktop presensi
+    document.getElementById('desk-nama-search').addEventListener('input', function(){ searchNama(this.value,'desk'); });
+    document.getElementById('btn-clear-desk').addEventListener('click', function(){ clearNama('desk'); });
+    document.getElementById('btn-hadir-desk').addEventListener('click', function(){ kirimPresensi('desk'); });
+    document.getElementById('btn-simpan-desk').addEventListener('click', function(){ simpanRapat('desk'); });
+    document.getElementById('btn-refresh').addEventListener('click', function(){ loadReports(); });
+
+    // Auth
+    document.getElementById('btn-auth-ok').addEventListener('click', doAuth);
+    document.getElementById('btn-auth-cancel').addEventListener('click', function(){ document.getElementById('modal-auth').style.display='none'; });
+    document.getElementById('input-token').addEventListener('keydown', function(e){ if(e.key==='Enter') doAuth(); });
+
+    // Confirm
+    document.getElementById('btn-confirm-ok').addEventListener('click', doCloseRapat);
+    document.getElementById('btn-confirm-cancel').addEventListener('click', function(){ document.getElementById('modal-confirm').style.display='none'; });
+
+    // AI modal
+    document.getElementById('btn-ai-close').addEventListener('click', function(){ document.getElementById('modal-ai').style.display='none'; });
+
+    // Notul mobile
+    document.getElementById('btn-notul-back-mob').addEventListener('click', closeNotul);
+    document.getElementById('mob-fab-save').addEventListener('click', function(){ saveDraft(true); });
+    document.getElementById('mob-fab-final').addEventListener('click', doFinalize);
+
+    // Notul desktop toolbar
+    document.getElementById('btn-notul-back-desk').addEventListener('click', closeNotul);
+    document.getElementById('btn-add-log-desk').addEventListener('click', function(){ addLog(); });
+    document.getElementById('btn-add-log-inline').addEventListener('click', function(){ addLog(); });
+    document.getElementById('btn-add-poin-desk').addEventListener('click', function(){ addPoin(); });
+    document.getElementById('btn-add-poin-inline').addEventListener('click', function(){ addPoin(); });
+    document.getElementById('btn-add-tl-desk').addEventListener('click', function(){ addTL(); });
+    document.getElementById('btn-add-tl-inline').addEventListener('click', function(){ addTL(); });
+    document.getElementById('btn-save-desk').addEventListener('click', function(){ saveDraft(true); });
+    document.getElementById('btn-final-desk').addEventListener('click', doFinalize);
+    document.getElementById('btn-ai-desk').addEventListener('click', function(){ if(notulData) openAI('rangkum'); });
+  };
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+  function nav(mode) {
+    var mP=document.getElementById('mob-panitia'), mA=document.getElementById('mob-admin');
+    var nP=document.getElementById('nav-panitia'), nA=document.getElementById('nav-admin');
+    if (mode==='admin') {
+      if (!isAuth) { showAuth(); return; }
+      mP.style.display='none'; mA.style.display='flex';
+      nA.classList.add('active'); nP.classList.remove('active');
+      document.getElementById('role-label').textContent='Sekretaris';
+      loadReports();
+    } else {
+      mA.style.display='none'; mP.style.display='flex';
+      nP.classList.add('active'); nA.classList.remove('active');
+      document.getElementById('role-label').textContent='Panitia';
+      loadActiveMeetings();
+    }
+  }
+
+  function deskNav(mode) {
+    var dP=document.getElementById('desk-panitia'), dA=document.getElementById('desk-admin'), dN=document.getElementById('desk-notul');
+    var bnP=document.getElementById('desk-nav-panitia'), bnA=document.getElementById('desk-nav-admin');
+    if (mode==='admin') {
+      if (!isAuth) { showAuth(); return; }
+      dP.style.display='none'; dA.style.display='block'; dN.style.display='none';
+      bnA.classList.add('active'); bnP.classList.remove('active');
+      document.getElementById('sidebar-rapat-area').style.display='block';
+      document.getElementById('sidebar-form').style.display='block';
+      document.getElementById('desk-mode-label').textContent='Sekretaris';
+      document.getElementById('role-label').textContent='Sekretaris';
+      loadReports();
+    } else {
+      dA.style.display='none'; dN.style.display='none'; dP.style.display='block';
+      bnP.classList.add('active'); bnA.classList.remove('active');
+      document.getElementById('sidebar-rapat-area').style.display='none';
+      document.getElementById('sidebar-form').style.display='none';
+      document.getElementById('desk-mode-label').textContent='Panitia';
+      document.getElementById('role-label').textContent='Panitia';
+      loadActiveMeetings();
+    }
+  }
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+  function showAuth() { document.getElementById('modal-auth').style.display='flex'; setTimeout(function(){ document.getElementById('input-token').focus(); },100); }
+
+  function doAuth() {
+    var token = document.getElementById('input-token').value.trim();
+    if (!token) return;
+    apiPost({ action:'verifyToken', inputToken:token }, function(valid) {
+      if (valid) {
+        isAuth=true; authToken=token;
+        document.getElementById('modal-auth').style.display='none';
+        document.getElementById('input-token').value='';
+        // Ambil gemini key
+        apiGet({ action:'getGeminiKey', token:token }, function(k){ geminiKey=k; }, null);
+        showToast('\u2713 Akses diterima','success');
+        if (isDesk) deskNav('admin'); else nav('admin');
+      } else {
+        showToast('\u2717 Token salah','error');
+        document.getElementById('input-token').value='';
+        document.getElementById('input-token').focus();
+      }
+    }, function(){ showToast('Gagal verifikasi.','error'); });
+  }
+
+  // ── Panitia & Search ──────────────────────────────────────────────────────
+  function loadPanitia() { apiGet({action:'getPanitia'}, function(d){ allPanitia=d||[]; }); }
+
+  function searchNama(val, ctx) {
+    var resultsId = ctx==='mob' ? 'p-nama-results' : 'desk-nama-results';
+    var box = document.getElementById(resultsId);
+    if (val.length<3) { box.style.display='none'; return; }
+    var filtered = allPanitia.filter(function(p){ return p.nama.toLowerCase().indexOf(val.toLowerCase())!==-1; });
+    box.innerHTML='';
+    if (filtered.length>0) {
+      filtered.forEach(function(p){
+        var item=document.createElement('div'); item.className='search-item';
+        var n=document.createElement('div'); n.className='search-item-name'; n.textContent=p.nama;
+        var j=document.createElement('div'); j.className='search-item-jabatan'; j.textContent=p.jabatan;
+        item.appendChild(n); item.appendChild(j);
+        (function(nama,c){ item.addEventListener('click', function(){ pilihNama(nama,c); }); })(p.nama,ctx);
+        box.appendChild(item);
+      });
+    } else {
+      var no=document.createElement('div'); no.className='search-item';
+      no.innerHTML='<div style="font-size:var(--fs-sm);color:#b0987a;font-style:italic">Tidak ditemukan...</div>';
+      box.appendChild(no);
+    }
+    box.style.display='block';
+  }
+
+  function pilihNama(nama, ctx) {
+    if (ctx==='mob') {
+      document.getElementById('p-nama-value').value=nama;
+      document.getElementById('p-nama-search').style.display='none';
+      document.getElementById('p-nama-results').style.display='none';
+      document.getElementById('p-nama-chip-text').textContent=nama;
+      document.getElementById('p-nama-chip').style.display='flex';
+    } else {
+      document.getElementById('desk-nama-value').value=nama;
+      document.getElementById('desk-nama-search').style.display='none';
+      document.getElementById('desk-nama-results').style.display='none';
+      document.getElementById('desk-nama-chip-text').textContent=nama;
+      document.getElementById('desk-nama-chip').style.display='flex';
+    }
+  }
+
+  function clearNama(ctx) {
+    if (ctx==='mob') {
+      document.getElementById('p-nama-value').value='';
+      document.getElementById('p-nama-search').value='';
+      document.getElementById('p-nama-search').style.display='block';
+      document.getElementById('p-nama-chip').style.display='none';
+      document.getElementById('p-nama-search').focus();
+    } else {
+      document.getElementById('desk-nama-value').value='';
+      document.getElementById('desk-nama-search').value='';
+      document.getElementById('desk-nama-search').style.display='block';
+      document.getElementById('desk-nama-chip').style.display='none';
+      document.getElementById('desk-nama-search').focus();
+    }
+  }
+
+  function loadActiveMeetings() {
+    var ids = ['p-rapat','desk-rapat'];
+    ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML='<option value="">Memuat...</option>'; });
+    apiGet({action:'getActiveMeetings'}, function(data) {
+      ids.forEach(function(id){
+        var sel=document.getElementById(id); if(!sel) return;
+        sel.innerHTML='';
+        if(!data||data.length===0){ var o=document.createElement('option');o.value='';o.textContent='Tidak ada rapat aktif';sel.appendChild(o); return; }
+        data.forEach(function(r){ var o=document.createElement('option');o.value=r.id;o.textContent=r.agenda+' ('+r.tanggal+')';sel.appendChild(o); });
+      });
+    });
+  }
+
+  function kirimPresensi(ctx) {
+    var rapatId = ctx==='mob' ? document.getElementById('p-rapat').value : document.getElementById('desk-rapat').value;
+    var nama    = ctx==='mob' ? document.getElementById('p-nama-value').value : document.getElementById('desk-nama-value').value;
+    var catatan = ctx==='mob' ? document.getElementById('p-catatan').value : document.getElementById('desk-catatan').value;
+    var btnId   = ctx==='mob' ? 'btn-hadir-mob' : 'btn-hadir-desk';
+    var btn     = document.getElementById(btnId);
+    if (!rapatId||!nama) { showToast('Pilih rapat & cari nama Anda.','error'); return; }
+    btn.disabled=true; btn.innerHTML='<div class="spinner" style="width:18px;height:18px;border-width:2px"></div> Mengirim...';
+    apiPost({action:'submitPresensiPanitia',data:{idRapat:rapatId,nama:nama,catatan:catatan}}, function(){
+      showToast('\u2713 Presensi berhasil dikirim!','success');
+      if(ctx==='mob') document.getElementById('p-catatan').value=''; else document.getElementById('desk-catatan').value='';
+      clearNama(ctx); btn.disabled=false; btn.innerHTML='<i class="fas fa-check-circle"></i> Konfirmasi Kehadiran';
+    }, function(err){ showToast(err||'Gagal.','error'); btn.disabled=false; btn.innerHTML='<i class="fas fa-check-circle"></i> Konfirmasi Kehadiran'; });
+  }
+
+  // ── Rapat ─────────────────────────────────────────────────────────────────
+  function simpanRapat(ctx) {
+    var agenda  = ctx==='mob' ? document.getElementById('mob-agenda').value.trim() : document.getElementById('desk-agenda').value.trim();
+    var tanggal = ctx==='mob' ? document.getElementById('mob-tanggal').value : document.getElementById('desk-tanggal').value;
+    var lokasi  = ctx==='mob' ? document.getElementById('mob-lokasi').value.trim() : document.getElementById('desk-lokasi').value.trim();
+    if (!agenda||!tanggal) { showToast('Lengkapi agenda & tanggal!','error'); return; }
+    apiPost({action:'createRapat',token:authToken,formData:{agenda:agenda,tanggal:tanggal,lokasi:lokasi}}, function(){
+      showToast('\u2713 Rapat diaktifkan!','success');
+      if(ctx==='mob'){ document.getElementById('mob-agenda').value=''; document.getElementById('mob-tanggal').value=''; document.getElementById('mob-lokasi').value=''; }
+      else { document.getElementById('desk-agenda').value=''; document.getElementById('desk-tanggal').value=''; document.getElementById('desk-lokasi').value=''; }
+      loadReports(); loadActiveMeetings();
+    }, function(err){ showToast(err||'Gagal.','error'); });
+  }
+
+  function doCloseRapat() {
+    if(!pendingClose) return;
+    var id=pendingClose; document.getElementById('modal-confirm').style.display='none'; pendingClose=null;
+    apiPost({action:'closeRapat',token:authToken,idRapat:id}, function(){
+      showToast('\u2713 Rapat ditutup.','success'); loadReports(); loadActiveMeetings();
+    }, function(err){ showToast(err||'Gagal.','error'); });
+  }
+
+  // ── Reports ───────────────────────────────────────────────────────────────
+  function loadReports() {
+    var dC=document.getElementById('desk-reports'), mC=document.getElementById('mob-reports');
+    var loading = '<div style="text-align:center;padding:40px;color:#9c8060"><div class="spinner" style="margin:0 auto 12px"></div><p style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase">Memuat...</p></div>';
+    if(dC) dC.innerHTML=loading;
+    if(mC) mC.innerHTML=loading;
+    var sA=document.getElementById('sidebar-aktif'), sH=document.getElementById('sidebar-history');
+    if(sA) sA.innerHTML=''; if(sH) sH.innerHTML='';
+
+    apiGet({action:'getFullReport',token:authToken}, function(data){
+      reportCache=data||[];
+      if(dC) dC.innerHTML=''; if(mC) mC.innerHTML='';
+      if(!data||data.length===0){
+        var empty='<div class="card" style="padding:40px;text-align:center;border-style:dashed"><i class="fas fa-folder-open" style="color:rgba(201,151,58,.4);font-size:32px;display:block;margin-bottom:12px"></i><p style="font-size:var(--fs-xs);color:#9c8060;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Belum ada riwayat</p></div>';
+        if(dC) dC.innerHTML=empty; if(mC) mC.innerHTML=empty; return;
+      }
+      data.forEach(function(r,i){
+        // Sidebar items
+        if(sA||sH) {
+          var si=document.createElement('div'); si.className='rapat-item';
+          var st=document.createElement('div'); st.className='rapat-item-title'; st.textContent=r.agenda;
+          var sm=document.createElement('div'); sm.className='rapat-item-meta'; sm.textContent=r.tanggal;
+          var sb=document.createElement('div'); sb.style.cssText='display:flex;gap:4px;margin-top:5px';
+          var sb1=document.createElement('span'); sb1.className='badge '+(r.status==='Aktif'?'badge-rust':'badge-done'); sb1.textContent=r.status;
+          var sb2=document.createElement('span'); sb2.className='badge badge-gold'; sb2.textContent=r.totalHadir+' hadir';
+          sb.appendChild(sb1); sb.appendChild(sb2);
+          si.appendChild(st); si.appendChild(sm); si.appendChild(sb);
+          (function(rid){ si.addEventListener('click', function(){ openNotul(rid); }); })(r.id);
+          if(r.status==='Aktif'&&sA) sA.appendChild(si); else if(sH) sH.appendChild(si);
+        }
+
+        // Main card — render to both containers
+        [dC,mC].forEach(function(container){
+          if(!container) return;
+          var card=document.createElement('div'); card.className='report-card fade-up'; card.style.animationDelay=(i*.05)+'s';
+
+          // Header
+          var hdr=document.createElement('div'); hdr.className='report-hdr';
+          var hRow=document.createElement('div'); hRow.style.cssText='display:flex;justify-content:space-between;align-items:flex-start;gap:12px';
+          var tCol=document.createElement('div'); tCol.style.flex='1';
+          var tEl=document.createElement('div'); tEl.className='report-title'; tEl.textContent=r.agenda;
+          var mEl=document.createElement('div'); mEl.className='report-meta'; mEl.textContent=r.tanggal+(r.lokasi?' \u00b7 '+r.lokasi:'');
+          tCol.appendChild(tEl); tCol.appendChild(mEl);
+          var bCol=document.createElement('div'); bCol.style.cssText='display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0';
+          var bs=document.createElement('span'); bs.className='badge '+(r.status==='Aktif'?'badge-rust':'badge-done'); bs.textContent=r.status;
+          var bh=document.createElement('span'); bh.className='badge badge-gold'; bh.textContent=r.totalHadir+' Hadir';
+          bCol.appendChild(bs); bCol.appendChild(bh);
+          hRow.appendChild(tCol); hRow.appendChild(bCol); hdr.appendChild(hRow); card.appendChild(hdr);
+
+          // Notulensi bar
+          var nBar=document.createElement('div'); nBar.style.cssText='padding:12px 20px;border-bottom:1px solid rgba(201,151,58,.1);display:flex;align-items:center;justify-content:space-between;gap:10px';
+          var nLeft=document.createElement('div'); nLeft.style.cssText='display:flex;align-items:center;gap:8px';
+          var nI=document.createElement('i'), nT=document.createElement('span'); nT.style.cssText='font-size:var(--fs-sm);font-weight:600;color:#9c8060';
+          if(r.statusNotulensi==='final'){nI.className='fas fa-check-circle';nI.style.color='#4a7a5a';nT.textContent='Notulensi selesai';}
+          else if(r.statusNotulensi==='draft'){nI.className='fas fa-file-alt';nI.style.color='#9a6e1a';nT.textContent='Draft tersimpan';}
+          else{nI.className='fas fa-file-circle-plus';nI.style.color='#b0987a';nT.textContent='Belum ada notulensi';}
+          nLeft.appendChild(nI); nLeft.appendChild(nT);
+          var nBtn=document.createElement('button'); nBtn.className='btn-outline'; nBtn.style.cssText='padding:7px 14px;font-size:var(--fs-xs)';
+          nBtn.innerHTML='<i class="fas fa-pen"></i> '+(r.statusNotulensi==='kosong'?'Tulis':'Buka');
+          (function(rid){ nBtn.addEventListener('click', function(){ openNotul(rid); }); })(r.id);
+          nBar.appendChild(nLeft); nBar.appendChild(nBtn); card.appendChild(nBar);
+
+          // Notulen utama
+          if(r.notulenUtama){
+            var nu=document.createElement('div'); nu.style.cssText='padding:12px 20px;border-bottom:1px solid rgba(201,151,58,.1)';
+            var nuI=document.createElement('div'); nuI.style.cssText='border-left:3px solid var(--gold);padding-left:12px';
+            var nuT=document.createElement('p'); nuT.style.cssText='font-size:var(--fs-sm);color:#4a3a20;line-height:1.7;font-style:italic'; nuT.textContent=r.notulenUtama;
+            nuI.appendChild(nuT); nu.appendChild(nuI); card.appendChild(nu);
+          }
+
+          // Aspirasi
+          if(r.masukanPanitia&&r.masukanPanitia.length>0){
+            var asp=document.createElement('div'); asp.style.cssText='padding:12px 20px;border-bottom:1px solid rgba(201,151,58,.1)';
+            var aspL=document.createElement('p'); aspL.style.cssText='font-size:var(--fs-xxs);font-weight:700;color:#9c8060;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px';
+            aspL.innerHTML='<i class="fas fa-comment-dots" style="margin-right:5px"></i>Aspirasi Panitia';
+            var aspList=document.createElement('div'); aspList.style.cssText='display:flex;flex-direction:column;gap:6px';
+            r.masukanPanitia.forEach(function(m){
+              var item=document.createElement('div'); item.style.cssText='background:rgba(201,151,58,.05);border:1px solid rgba(201,151,58,.1);border-radius:10px;padding:8px 12px';
+              var mN=document.createElement('p'); mN.style.cssText='font-size:var(--fs-xs);font-weight:700;color:var(--rust);margin-bottom:2px'; mN.textContent=m.nama;
+              var mT=document.createElement('p'); mT.style.cssText='font-size:var(--fs-sm);color:#5a4a30;line-height:1.5;font-style:italic'; mT.textContent='\u201c'+m.teks+'\u201d';
+              item.appendChild(mN); item.appendChild(mT); aspList.appendChild(item);
+            });
+            asp.appendChild(aspL); asp.appendChild(aspList); card.appendChild(asp);
+          }
+
+          // Actions
+          var act=document.createElement('div'); act.style.cssText='padding:14px 20px;display:flex;gap:10px;flex-wrap:wrap';
+          var aiB=document.createElement('button'); aiB.className='btn btn-green'; aiB.innerHTML='<i class="fas fa-robot"></i> Rangkum AI';
+          (function(idx){ aiB.addEventListener('click', function(){ rangkumAI(idx); }); })(i);
+          act.appendChild(aiB);
+          if(r.status==='Aktif'){
+            var clB=document.createElement('button'); clB.className='btn-sm-danger'; clB.style.cssText='padding:10px 16px';
+            clB.innerHTML='<i class="fas fa-lock" style="margin-right:5px"></i>Tutup Rapat';
+            (function(rid){ clB.addEventListener('click', function(){ pendingClose=rid; document.getElementById('modal-confirm').style.display='flex'; }); })(r.id);
+            act.appendChild(clB);
+          }
+          card.appendChild(act);
+          container.appendChild(card);
+        });
+      });
+    }, function(err){ showToast('Gagal memuat laporan: '+err,'error'); });
+  }
+
+  // ── Notulensi Panel ───────────────────────────────────────────────────────
+  function openNotul(idRapat) {
+    currentRapat=idRapat; logItems=[];
+    // Reset semua list
+    ['desk-log-list','desk-poin-list','desk-tl-list','mob-log-list','mob-poin-list','mob-tl-list'].forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML=''; });
+    ['desk-notul-catatan','mob-notul-catatan'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+
+    if(isDesk) {
+      document.getElementById('desk-admin').style.display='none';
+      document.getElementById('desk-panitia').style.display='none';
+      document.getElementById('desk-notul').style.display='block';
+      document.getElementById('timer-appbar').style.display='block';
+      document.getElementById('autosave-appbar').style.display='flex';
+    } else {
+      document.getElementById('mob-notul').classList.add('open');
+      document.getElementById('bottom-nav').style.display='none';
+    }
+    setAS('loading');
+
+    apiGet({action:'getNotulensiData',token:authToken,idRapat:idRapat}, function(data){
+      notulData=data;
+      // Set titles
+      ['desk-notul-title','mob-notul-title'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=data.agenda; });
+      var meta=data.tanggal+(data.lokasi?' \u00b7 '+data.lokasi:'');
+      ['desk-notul-meta','mob-notul-meta'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=meta; });
+
+      // Daftar hadir
+      var hadirList=data.daftarHadir||[];
+      var dH=document.getElementById('desk-hadir-chips'), dHR=document.getElementById('desk-hadir-right');
+      var dE=document.getElementById('desk-hadir-empty'), dC=document.getElementById('desk-hadir-count');
+      if(dH) dH.innerHTML=''; if(dHR) dHR.innerHTML='';
+      if(dC) dC.textContent=hadirList.length;
+      if(dE) dE.textContent=hadirList.length===0?'Belum ada yang presensi.':'';
+      hadirList.forEach(function(h){
+        if(dH){ var c=document.createElement('div');c.className='hadir-chip'; c.innerHTML='<i class="fas fa-check-circle" style="font-size:10px;color:var(--sage)"></i><span style="font-size:var(--fs-sm)">'+h.nama+'</span>'; dH.appendChild(c); }
+        if(dHR){ var c2=document.createElement('div');c2.className='hadir-chip'; c2.innerHTML='<i class="fas fa-check-circle" style="font-size:10px;color:var(--sage)"></i><span style="font-size:var(--fs-xs)">'+h.nama+'</span>'; dHR.appendChild(c2); }
+      });
+
+      // Aspirasi
+      var aspEl=document.getElementById('desk-aspirasi'); if(aspEl) aspEl.innerHTML='';
+      var aspData=hadirList.filter(function(h){ return h.catatan&&h.catatan.trim(); });
+      if(aspEl) {
+        if(aspData.length>0) {
+          aspData.forEach(function(h){
+            var item=document.createElement('div'); item.style.cssText='background:rgba(201,151,58,.05);border:1px solid rgba(201,151,58,.12);border-radius:11px;padding:10px 13px;margin-bottom:8px';
+            var nEl=document.createElement('p'); nEl.style.cssText='font-size:var(--fs-xs);font-weight:700;color:var(--rust);margin-bottom:2px'; nEl.textContent=h.nama;
+            var tEl=document.createElement('p'); tEl.style.cssText='font-size:var(--fs-sm);color:#5a4a30;line-height:1.6;font-style:italic'; tEl.textContent='\u201c'+h.catatan+'\u201d';
+            item.appendChild(nEl); item.appendChild(tEl); aspEl.appendChild(item);
+          });
+        } else { aspEl.innerHTML='<p style="font-size:var(--fs-sm);color:#9c8060;font-style:italic">Belum ada aspirasi dari presensi.</p>'; }
+      }
+
+      // Restore draft
+      if(data.draft) {
+        if(data.draft.catatanBebas){ ['desk-notul-catatan','mob-notul-catatan'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=data.draft.catatanBebas; }); }
+        if(data.draft.poin&&data.draft.poin.length>0) data.draft.poin.forEach(function(p){ addPoin(p.teks); });
+        if(data.draft.tindakLanjut&&data.draft.tindakLanjut.length>0) data.draft.tindakLanjut.forEach(function(t){ addTL(t.teks,t.pic); });
+        if(data.draft.logPercakapan&&data.draft.logPercakapan.length>0) data.draft.logPercakapan.forEach(function(l){ addLog(l.speaker,l.teks,l.isKeputusan,l.isPic); });
+        if(data.draft.jamMulai) { timerSec=Math.max(0,Math.floor((Date.now()-new Date(data.draft.jamMulai).getTime())/1000)); }
+        else { timerSec=0; }
+      }
+
+      // Mobile body
+      if(!isDesk) buildMobNotul(hadirList,aspData);
+
+      setAS('saved'); startTimer(); startAS();
+    }, function(err){ showToast('Gagal memuat notulensi: '+err,'error'); closeNotul(); });
+  }
+
+  function buildMobNotul(hadirList,aspData) {
+    var body=document.getElementById('mob-notul-body'); if(!body) return;
+    body.innerHTML='';
+    function makeCard(content){ var c=document.createElement('div'); c.className='card'; c.style.padding='18px'; c.appendChild(content); return c; }
+    function sLabel(icon,color,txt){ var d=document.createElement('div');d.className='section-label';d.style.marginBottom='10px'; d.innerHTML='<i class="'+icon+'" style="color:'+color+';font-size:10px"></i> '+txt; return d; }
+
+    // Hadir
+    var hDiv=document.createElement('div');
+    hDiv.appendChild(sLabel('fas fa-users','var(--sage)','Daftar Hadir ('+hadirList.length+' orang)'));
+    var hChips=document.createElement('div'); hChips.style.cssText='display:flex;flex-wrap:wrap;gap:4px';
+    if(hadirList.length>0){ hadirList.forEach(function(h){ var c=document.createElement('div');c.className='hadir-chip';c.innerHTML='<i class="fas fa-check-circle" style="font-size:10px;color:var(--sage)"></i><span style="font-size:var(--fs-sm)">'+h.nama+'</span>';hChips.appendChild(c); }); }
+    else { hChips.innerHTML='<p style="font-size:var(--fs-sm);color:#9c8060;font-style:italic">Belum ada.</p>'; }
+    hDiv.appendChild(hChips); body.appendChild(makeCard(hDiv));
+
+    // Log
+    var logDiv=document.createElement('div');
+    logDiv.appendChild(sLabel('fas fa-comments','var(--gold)','Log Percakapan'));
+    var mLogList=document.createElement('div'); mLogList.id='mob-log-list'; logDiv.appendChild(mLogList);
+    var mAddLog=document.createElement('button'); mAddLog.className='btn-outline'; mAddLog.style.cssText='width:100%;justify-content:center;margin-top:8px'; mAddLog.innerHTML='<i class="fas fa-plus"></i> Tambah Log';
+    mAddLog.addEventListener('click', function(){ addLog(); }); logDiv.appendChild(mAddLog); body.appendChild(makeCard(logDiv));
+
+    // Poin
+    var pDiv=document.createElement('div'); pDiv.appendChild(sLabel('fas fa-check-double','var(--rust)','Poin Keputusan'));
+    var mPoinList=document.createElement('div'); mPoinList.id='mob-poin-list'; pDiv.appendChild(mPoinList);
+    var mAddPoin=document.createElement('button'); mAddPoin.className='btn-outline'; mAddPoin.style.cssText='width:100%;justify-content:center;margin-top:8px'; mAddPoin.innerHTML='<i class="fas fa-plus"></i> Tambah Poin';
+    mAddPoin.addEventListener('click', function(){ addPoin(); }); pDiv.appendChild(mAddPoin); body.appendChild(makeCard(pDiv));
+
+    // TL
+    var tlDiv=document.createElement('div'); tlDiv.appendChild(sLabel('fas fa-tasks','var(--gold)','Tindak Lanjut'));
+    var mTlList=document.createElement('div'); mTlList.id='mob-tl-list'; tlDiv.appendChild(mTlList);
+    var mAddTl=document.createElement('button'); mAddTl.className='btn-outline-gold'; mAddTl.style.cssText='width:100%;justify-content:center;margin-top:8px'; mAddTl.innerHTML='<i class="fas fa-plus"></i> Tambah Tindak Lanjut';
+    mAddTl.addEventListener('click', function(){ addTL(); }); tlDiv.appendChild(mAddTl); body.appendChild(makeCard(tlDiv));
+
+    // Catatan
+    var cDiv=document.createElement('div'); cDiv.appendChild(sLabel('fas fa-pen','#9c8060','Catatan Tambahan'));
+    var cTa=document.createElement('textarea'); cTa.id='mob-notul-catatan'; cTa.className='field'; cTa.rows=3; cTa.placeholder='Catatan lain...'; cDiv.appendChild(cTa); body.appendChild(makeCard(cDiv));
+  }
+
+  function closeNotul() {
+    stopTimer(); stopAS();
+    document.getElementById('mob-notul').classList.remove('open');
+    document.getElementById('bottom-nav').style.display='';
+    document.getElementById('desk-notul').style.display='none';
+    document.getElementById('desk-admin').style.display='block';
+    document.getElementById('timer-appbar').style.display='none';
+    document.getElementById('autosave-appbar').style.display='none';
+    currentRapat=null; loadReports();
+  }
+
+  // ── Timer ─────────────────────────────────────────────────────────────────
+  function startTimer() {
+    stopTimer();
+    timerIv=setInterval(function(){
+      timerSec++;
+      var h=Math.floor(timerSec/3600),m=Math.floor((timerSec%3600)/60),s=timerSec%60;
+      var str=h>0?p2(h)+':'+p2(m)+':'+p2(s):p2(m)+':'+p2(s);
+      ['desk-timer','mob-timer','timer-appbar'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=str; });
+    },1000);
+  }
+  function stopTimer(){ if(timerIv){ clearInterval(timerIv); timerIv=null; } }
+  function p2(n){ return n<10?'0'+n:String(n); }
+
+  // ── Auto-save ─────────────────────────────────────────────────────────────
+  function startAS(){ stopAS(); autoSaveIv=setInterval(function(){ saveDraft(false); },30000); }
+  function stopAS(){ if(autoSaveIv){ clearInterval(autoSaveIv); autoSaveIv=null; } }
+
+  function buildDraft() {
+    var poin=[], tl=[], log=[];
+    document.querySelectorAll('.poin-inp').forEach(function(el){ if(el.value.trim()) poin.push({teks:el.value.trim()}); });
+    document.querySelectorAll('.tl-row').forEach(function(row){ var ins=row.querySelectorAll('input'); if(ins[0]&&ins[0].value.trim()) tl.push({teks:ins[0].value.trim(),pic:ins[1]?ins[1].value.trim():''}); });
+    log=logItems.map(function(l){ return {speaker:l.speaker,teks:l.teks,isKeputusan:l.isKeputusan,isPic:l.isPic}; });
+    var cat='';
+    var dC=document.getElementById('desk-notul-catatan'), mC=document.getElementById('mob-notul-catatan');
+    if(dC&&dC.value) cat=dC.value; else if(mC&&mC.value) cat=mC.value;
+    return JSON.stringify({poin:poin,tindakLanjut:tl,logPercakapan:log,catatanBebas:cat,
+      jamMulai:notulData&&notulData.draft&&notulData.draft.jamMulai?notulData.draft.jamMulai:new Date().toISOString()});
+  }
+
+  function saveDraft(manual) {
+    if(!currentRapat) return;
+    var json=buildDraft();
+    if(json===lastHash&&!manual) return;
+    setAS('saving');
+    apiPost({action:'saveNotulensiDraft',token:authToken,idRapat:currentRapat,draftJson:json}, function(){
+      lastHash=json; setAS('saved'); if(manual) showToast('\u2713 Draft tersimpan!','success');
+    }, function(){ setAS('error'); if(manual) showToast('Gagal simpan draft.','error'); });
+  }
+
+  function setAS(status) {
+    var els=[document.getElementById('mob-autosave'),document.getElementById('autosave-appbar')];
+    els.forEach(function(el){
+      if(!el) return;
+      var dot=el.querySelector('.autosave-dot'), txt=el.querySelector('span');
+      if(status==='saved'){ if(dot)dot.style.background='#a8d5bb'; if(txt)txt.textContent='Tersimpan'; el.style.color='rgba(168,213,187,.8)'; }
+      else if(status==='saving'){ if(dot)dot.style.background='#f0d9a8'; if(txt)txt.textContent='Menyimpan...'; el.style.color='rgba(240,217,168,.7)'; }
+      else if(status==='error'){ if(dot)dot.style.background='#f5a080'; if(txt)txt.textContent='Gagal'; el.style.color='rgba(245,160,128,.8)'; }
+      else { if(dot)dot.style.background='rgba(168,213,187,.3)'; if(txt)txt.textContent='Memuat...'; el.style.color='rgba(168,213,187,.4)'; }
+    });
+  }
+
+  // ── Log Percakapan ────────────────────────────────────────────────────────
+  function addLog(initSpeaker,initTeks,initK,initP) {
+    var id='log-'+Date.now();
+    var item={id:id,speaker:initSpeaker||'',teks:initTeks||'',isKeputusan:initK||false,isPic:initP||false};
+    logItems.push(item);
+    var hadirNames=(notulData&&notulData.daftarHadir)?notulData.daftarHadir.map(function(h){return h.nama;}):[]; 
+    ['desk-log-list','mob-log-list'].forEach(function(listId){
+      var container=document.getElementById(listId); if(!container) return;
+      var row=document.createElement('div'); row.className='log-row'; row.setAttribute('data-lid',id);
+      var avatar=document.createElement('div'); avatar.className='log-avatar'; avatar.textContent=item.speaker?item.speaker.charAt(0).toUpperCase():'?';
+      var body=document.createElement('div'); body.className='log-body';
+      var spRow=document.createElement('div'); spRow.style.cssText='display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+      var sel=document.createElement('select'); sel.className='log-sel';
+      var ob=document.createElement('option');ob.value='';ob.textContent='-- Pembicara --';sel.appendChild(ob);
+      hadirNames.forEach(function(n){ var o=document.createElement('option');o.value=n;o.textContent=n;if(n===item.speaker)o.selected=true;sel.appendChild(o); });
+      var oo=document.createElement('option');oo.value='__other__';oo.textContent='Lainnya...';sel.appendChild(oo);
+      var ci=document.createElement('input'); ci.className='log-custom-inp'; ci.placeholder='Nama pembicara...';
+      if(item.speaker&&hadirNames.indexOf(item.speaker)===-1&&item.speaker!==''){sel.value='__other__';ci.value=item.speaker;ci.style.display='block';}
+      sel.addEventListener('change',function(){ if(this.value==='__other__'){ci.style.display='block';ci.focus();item.speaker='';}else{ci.style.display='none';item.speaker=this.value;avatar.textContent=this.value?this.value.charAt(0).toUpperCase():'?';} });
+      ci.addEventListener('input',function(){item.speaker=this.value;avatar.textContent=this.value?this.value.charAt(0).toUpperCase():'?';});
+      spRow.appendChild(sel); spRow.appendChild(ci);
+      var ta=document.createElement('textarea'); ta.className='log-ta'; ta.placeholder='Isi percakapan / pernyataan...'; ta.value=item.teks||'';
+      ta.addEventListener('input',function(){item.teks=this.value;this.style.height='auto';this.style.height=this.scrollHeight+'px';});
+      var tags=document.createElement('div'); tags.className='log-tags';
+      var tagK=document.createElement('button'); tagK.className='log-tag tag-k'+(item.isKeputusan?' on':''); tagK.textContent='\u2713 Jadikan Poin Keputusan';
+      tagK.addEventListener('click',function(){ item.isKeputusan=!item.isKeputusan; tagK.className='log-tag tag-k'+(item.isKeputusan?' on':''); if(item.isKeputusan&&item.teks.trim()) addPoin(item.teks); });
+      var tagP=document.createElement('button'); tagP.className='log-tag tag-p'+(item.isPic?' on':''); tagP.textContent='\u2192 Jadikan PIC';
+      tagP.addEventListener('click',function(){ item.isPic=!item.isPic; tagP.className='log-tag tag-p'+(item.isPic?' on':''); updatePIC(); });
+      tags.appendChild(tagK); tags.appendChild(tagP);
+      body.appendChild(spRow); body.appendChild(ta); body.appendChild(tags);
+      var del=document.createElement('button'); del.className='log-del'; del.innerHTML='<i class="fas fa-times"></i>';
+      del.addEventListener('click',function(){ container.removeChild(row); logItems=logItems.filter(function(l){return l.id!==id;}); updatePIC(); });
+      row.appendChild(avatar); row.appendChild(body); row.appendChild(del);
+      container.appendChild(row);
+      if(!initTeks) ta.focus();
+    });
+  }
+
+  function updatePIC() {
+    var picList=document.getElementById('desk-pic-list'), picEmpty=document.getElementById('desk-pic-empty');
+    if(!picList) return;
+    picList.innerHTML='';
+    var pics=logItems.filter(function(l){return l.isPic&&(l.speaker||l.teks);});
+    if(picEmpty) picEmpty.style.display=pics.length===0?'block':'none';
+    pics.forEach(function(l){
+      var row=document.createElement('div'); row.className='pic-row';
+      var dot=document.createElement('div'); dot.className='pic-dot';
+      var col=document.createElement('div'); col.style.flex='1';
+      var sn=document.createElement('div'); sn.className='pic-name'; sn.textContent=l.speaker||'(Tidak diketahui)';
+      var st=document.createElement('div'); st.className='pic-teks'; st.textContent=l.teks.length>70?l.teks.substr(0,70)+'...':l.teks;
+      col.appendChild(sn); col.appendChild(st); row.appendChild(dot); row.appendChild(col); picList.appendChild(row);
+    });
+  }
+
+  // ── Poin & TL ─────────────────────────────────────────────────────────────
+  function addPoin(initTeks) {
+    ['desk-poin-list','mob-poin-list'].forEach(function(listId){
+      var c=document.getElementById(listId); if(!c) return;
+      var idx=c.children.length+1;
+      var row=document.createElement('div'); row.className='poin-row';
+      var num=document.createElement('div'); num.className='poin-num'; num.textContent=idx;
+      var inp=document.createElement('textarea'); inp.className='poin-inp'; inp.placeholder='Tulis poin keputusan...'; inp.rows=1;
+      if(initTeks) inp.value=initTeks;
+      inp.addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';renum(c);});
+      var del=document.createElement('button'); del.className='del-btn'; del.innerHTML='<i class="fas fa-times"></i>';
+      del.addEventListener('click',function(){c.removeChild(row);renum(c);});
+      row.appendChild(num); row.appendChild(inp); row.appendChild(del); c.appendChild(row);
+      if(!initTeks) inp.focus();
+    });
+  }
+  function renum(c){ var ns=c.querySelectorAll('.poin-num'); for(var i=0;i<ns.length;i++) ns[i].textContent=i+1; }
+
+  function addTL(initTeks,initPic) {
+    ['desk-tl-list','mob-tl-list'].forEach(function(listId){
+      var c=document.getElementById(listId); if(!c) return;
+      var row=document.createElement('div'); row.className='tl-row';
+      var ic=document.createElement('i'); ic.className='fas fa-arrow-right'; ic.style.cssText='color:var(--gold);font-size:11px;flex-shrink:0';
+      var col=document.createElement('div'); col.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1';
+      var i1=document.createElement('input'); i1.className='tl-inp'; i1.placeholder='Tindak lanjut yang harus dilakukan...'; if(initTeks) i1.value=initTeks;
+      var i2=document.createElement('input'); i2.className='tl-inp'; i2.style.cssText='font-size:var(--fs-xs);color:#9c8060'; i2.placeholder='PIC & deadline (cth: Luqman \u2014 H-7 Idul Adha)'; if(initPic) i2.value=initPic;
+      col.appendChild(i1); col.appendChild(i2);
+      var del=document.createElement('button'); del.className='del-btn'; del.innerHTML='<i class="fas fa-times"></i>';
+      del.addEventListener('click',function(){c.removeChild(row);});
+      row.appendChild(ic); row.appendChild(col); row.appendChild(del); c.appendChild(row);
+      if(!initTeks) i1.focus();
+    });
+  }
+
+  // ── Finalisasi ────────────────────────────────────────────────────────────
+  async function doFinalize() {
+    if(!currentRapat) return;
+    var json=buildDraft(), draft=JSON.parse(json);
+    if(!draft.poin.length&&!draft.catatanBebas&&!draft.tindakLanjut.length&&!draft.logPercakapan.length){
+      showToast('Isi minimal 1 poin, log, atau catatan sebelum finalisasi.','error'); return;
+    }
+    showAIModal();
+    var lines=[];
+    if(draft.poin.length){ lines.push('POIN KEPUTUSAN:'); draft.poin.forEach(function(p,i){lines.push((i+1)+'. '+p.teks);}); lines.push(''); }
+    if(draft.tindakLanjut.length){ lines.push('TINDAK LANJUT:'); draft.tindakLanjut.forEach(function(t){lines.push('- '+t.teks+(t.pic?' ['+t.pic+']':''));}); lines.push(''); }
+    if(draft.catatanBebas) lines.push('CATATAN: '+draft.catatanBebas);
+    var ringkasan=lines.join('\n');
+    apiPost({action:'finalizeNotulensi',token:authToken,idRapat:currentRapat,draftJson:json,ringkasanTeks:ringkasan}, function(){ showToast('\u2713 Notulensi difinalisasi!','success'); }, null);
+    var logTeks='(Tidak ada)';
+    if(draft.logPercakapan&&draft.logPercakapan.length>0) logTeks=draft.logPercakapan.map(function(l){return '['+( l.speaker||'?')+'] '+l.teks+(l.isKeputusan?' [KEPUTUSAN]':'')+(l.isPic?' [PIC]':'');}).join('\n');
+    var picTeks='(Tidak ada)'; var pics=logItems.filter(function(l){return l.isPic;});
+    if(pics.length>0) picTeks=pics.map(function(l){return l.speaker+': '+l.teks;}).join('\n');
+    var aspTeks='(Tidak ada)';
+    if(notulData&&notulData.daftarHadir){ var as2=notulData.daftarHadir.filter(function(h){return h.catatan&&h.catatan.trim();}); if(as2.length>0) aspTeks=as2.map(function(h){return '- '+h.nama+': "'+h.catatan+'"';}).join('\n'); }
+    var prompt='Notulis profesional rapat Idul Adha 1447H UMM.\n\nSusun notulensi resmi:\nAgenda: '+(notulData?notulData.agenda:'')+'\nTanggal: '+(notulData?notulData.tanggal:'')+'\nLokasi: '+(notulData?notulData.lokasi:'')+'\nHadir: '+(notulData?notulData.daftarHadir.length:0)+' orang\n\nLOG PERCAKAPAN:\n'+logTeks+'\n\nPOIN KEPUTUSAN:\n'+(draft.poin.length?draft.poin.map(function(p,i){return (i+1)+'. '+p.teks;}).join('\n'):'(Tidak ada)')+'\n\nTINDAK LANJUT:\n'+(draft.tindakLanjut.length?draft.tindakLanjut.map(function(t){return '- '+t.teks+(t.pic?' [PIC: '+t.pic+']':'');}).join('\n'):'(Tidak ada)')+'\n\nPIC DARI LOG:\n'+picTeks+'\n\nASPIRASI:\n'+aspTeks+'\n\nCATATAN: '+(draft.catatanBebas||'(Tidak ada)')+'\n\nFormat: 1.PEMBUKAAN 2.JALANNYA RAPAT 3.POIN KEPUTUSAN 4.TINDAK LANJUT & PIC 5.PENUTUP\nBahasa formal.';
+    await callGemini(prompt);
+  }
+
+  async function rangkumAI(index) {
+    var m=reportCache[index]; if(!m) return;
+    showAIModal();
+    var asp=m.masukanPanitia&&m.masukanPanitia.length>0?m.masukanPanitia.map(function(x){return '- '+x.nama+': "'+x.teks+'"';}).join('\n'):'(Tidak ada)';
+    var prompt='Notulis profesional Idul Adha 1447H UMM.\nAgenda: '+m.agenda+'\nTanggal: '+m.tanggal+'\nNotulensi: '+(m.notulenUtama||'(kosong)')+'\nAspirasi:\n'+asp+'\nFormat: 1.POIN KEPUTUSAN 2.TINDAK LANJUT 3.CATATAN PENTING\nBahasa formal.';
+    await callGemini(prompt);
+  }
+
+  function showAIModal() {
+    document.getElementById('modal-ai').style.display='flex';
+    var c=document.getElementById('ai-content'); c.innerHTML='';
+    var lw=document.createElement('div'); lw.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:16px';
+    var sp=document.createElement('div'); sp.className='spinner';
+    var lt=document.createElement('p'); lt.style.cssText='font-size:var(--fs-xs);font-weight:700;color:#6a9a7a;letter-spacing:.15em;text-transform:uppercase'; lt.textContent='Gemini sedang merangkum...';
+    lw.appendChild(sp); lw.appendChild(lt); c.appendChild(lw);
+  }
+
+  async function callGemini(prompt) {
+    var c=document.getElementById('ai-content');
+    try {
+      if(!geminiKey||geminiKey==='') { c.innerHTML=''; c.innerText='API Key Gemini belum dikonfigurasi di sheet CONFIG.'; return; }
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+geminiKey,
+        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+      var result=await res.json();
+      var text=result.candidates&&result.candidates[0]&&result.candidates[0].content&&result.candidates[0].content.parts&&result.candidates[0].content.parts[0]
+        ?result.candidates[0].content.parts[0].text:'Gagal menghasilkan rangkuman.';
+      c.innerHTML=''; c.innerText=text;
+    } catch(err) {
+      c.innerHTML=''; var ep=document.createElement('p'); ep.style.cssText='color:var(--rust);font-weight:700;text-align:center;padding:20px'; ep.textContent='Kesalahan: '+err.message; c.appendChild(ep);
+    }
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  var toastTimer;
+  function showToast(msg,type) {
+    type=type||'success';
+    var t=document.getElementById('toast');
+    var colors={success:{bg:'#1a3a1a',color:'#a8d5bb',border:'rgba(168,213,187,.3)'},error:{bg:'#3a1a1a',color:'#f5b8a0',border:'rgba(245,184,160,.3)'}};
+    var c=colors[type]||colors.success;
+    t.textContent=msg; t.style.background=c.bg; t.style.color=c.color; t.style.border='1px solid '+c.border;
+    t.classList.remove('toast-hide'); t.classList.add('toast-show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('toast-show');t.classList.add('toast-hide');},3000);
+  }
+  </script>
+</body>
+</html>
