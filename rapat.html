@@ -707,11 +707,13 @@
   <script>
   // ── CONFIG — ganti URL ini dengan URL GAS kamu ────────────────────────────
   var GAS_URL = 'https://script.google.com/macros/s/AKfycbyJ1JnfUwV4O6NDwOkc__Fb9Qus-Efjb65pPXuZ8YoKEz36KurPce-S68wowqJgvdlwlg/exec';
+  // API Key Gemini — disimpan di sini sebagai fallback jika GAS tidak bisa mengirimnya
+  var GEMINI_KEY = 'AIzaSyBJN2J-vEJLgR107oG8dT0hVgQ58YWEhcI';
 
   // ── State ─────────────────────────────────────────────────────────────────
   var isAuth        = false;
   var authToken     = '';
-  var geminiKey     = '';
+  var geminiKey     = GEMINI_KEY; // langsung diisi, tidak tunggu GAS
   var allPanitia    = [];
   var reportCache   = [];
   var logItems      = [];
@@ -856,7 +858,7 @@
         document.getElementById('modal-auth').style.display='none';
         document.getElementById('input-token').value='';
         // Ambil gemini key
-        apiGet({ action:'getGeminiKey', token:token }, function(k){ geminiKey=k; }, null);
+        apiGet({ action:'getGeminiKey', token:token }, function(k){ geminiKey = k || GEMINI_KEY; }, function(){ geminiKey = GEMINI_KEY; });
         showToast('\u2713 Akses diterima','success');
         if (isDesk) deskNav('admin'); else nav('admin');
       } else {
