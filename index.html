@@ -315,13 +315,25 @@ tailwind.config = {
                 <div class="flex items-start gap-3 md:gap-4">
                     <div class="w-11 h-11 md:w-14 md:h-14 bg-amber-600 rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl shrink-0 shadow-lg shadow-amber-100">🕌</div>
                     <div>
-                        <h2 class="text-base md:text-2xl font-black text-slate-800 mb-1">Qurban Berkemajuan UMM 1447 H</h2>
-                        <p id="info-penyelenggara-label" class="text-amber-700 text-[11px] font-semibold mb-2 leading-snug"></p>
+                        <h2 class="text-base md:text-2xl font-black text-slate-800 mb-0.5">Qurban Berkemajuan UMM 1447 H</h2>
+                        <p id="info-tema" class="text-amber-700 text-xs font-bold italic mb-2 leading-snug"></p>
+                        <p id="info-penyelenggara-label" class="text-slate-500 text-[11px] font-semibold mb-2 leading-snug"></p>
                         <p class="text-slate-600 text-xs md:text-base leading-relaxed">
-                            Program Qurban Berkemajuan diselenggarakan sebagai wujud implementasi nilai-nilai Islam dalam kehidupan akademik dan sosial kampus.
-                            Dana qurban bersumber dari anggaran kampus dan pemotongan gaji dosen serta karyawan, diperkuat dengan kerjasama sponsor eksternal
-                            dan partisipasi masyarakat umum melalui rekening UMM Peduli.
+                            Program Qurban Berkemajuan UMM diselenggarakan sebagai wujud implementasi nilai-nilai Islam dalam kehidupan akademik dan sosial kampus.
+                            Dana qurban bersumber dari anggaran kampus dan iuran dosen serta karyawan, diperkuat kerjasama mitra dan partisipasi masyarakat umum.
+                            Seluruh kegiatan dilaksanakan secara profesional, transparan, dan ramah lingkungan.
                         </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Go Green Qurban banner -->
+            <div class="bg-gradient-to-r from-emerald-700 to-green-700 text-white rounded-xl md:rounded-2xl p-4 mb-4 shadow-md">
+                <div class="flex items-start gap-3">
+                    <div class="text-2xl shrink-0">🌿</div>
+                    <div>
+                        <div class="font-black text-sm md:text-base mb-1">Go Green Qurban</div>
+                        <div id="info-konsep-sub" class="text-emerald-100 text-xs leading-relaxed"></div>
                     </div>
                 </div>
             </div>
@@ -680,6 +692,7 @@ async function loadData() {
 function renderAll(d) {
     renderHero(d.config);
     renderPenyelenggara(d.config);
+    renderGoGreen(d.config);
     renderLokasi(d.lokasi);
     renderLokasiHariH(d.lokasi);
     renderJadwal(d.jadwal);
@@ -693,7 +706,6 @@ function renderAll(d) {
     renderNotif(d.config);
     applyFormLinks(d.config);
     renderPendaftaranBanner(d.config);
-    renderFooter(d.config);
 }
 
 // ═══════════════════════════════════════════════════
@@ -720,24 +732,60 @@ function renderHero(cfg) {
 //  RENDER PENYELENGGARA
 // ═══════════════════════════════════════════════════
 function renderPenyelenggara(cfg) {
-    const unit  = cfg.identitas.penyelenggara_unit  || '';
-    const warek = cfg.identitas.penyelenggara_warek || '';
-    const univ  = cfg.identitas.penyelenggara_univ  || '';
+    const id   = cfg.identitas;
+    const unit  = id.penyelenggara_unit  || '';
+    const warek = id.penyelenggara_warek || '';
+    const namaWarek = id.penyelenggara_nama_warek || '';
+    const ketua = id.penyelenggara_ketua || '';
+    const univ  = id.penyelenggara_univ  || '';
+    const tema  = id.tema_kegiatan       || '';
+    const konsep = id.konsep_utama       || '';
+    const nomor = id.nomor_st            || '';
 
     set('info-penyelenggara-label', unit + (univ ? ' · ' + univ : ''));
-    set('banner-unit',  unit);
-    set('banner-warek', warek + (univ ? ' — ' + univ : ''));
 
+    // Banner penyelenggara diperkaya
+    const bannerUnit  = document.getElementById('banner-unit');
+    const bannerWarek = document.getElementById('banner-warek');
+    if (bannerUnit)  bannerUnit.textContent  = unit;
+    if (bannerWarek) bannerWarek.innerHTML   =
+        (warek ? `<span class="block">${esc(warek)}</span>` : '') +
+        (namaWarek ? `<span class="block text-amber-700 font-semibold">${esc(namaWarek)}</span>` : '') +
+        (ketua ? `<span class="block mt-1">Ketua Panitia: <strong>${esc(ketua)}</strong></span>` : '') +
+        (nomor ? `<span class="block text-[10px] text-slate-400 mt-0.5">ST ${esc(nomor)}</span>` : '');
+
+    // Laporan sub-label
     const lapSub = document.getElementById('laporan-sub');
     if (lapSub) lapSub.textContent = 'Penyelenggara: ' + unit;
 
+    // Kontak sub
     const kontakSub = document.getElementById('kontak-sub');
-    if (kontakSub) kontakSub.textContent = unit + (warek ? ' · ' + warek : '');
+    if (kontakSub) kontakSub.innerHTML =
+        esc(unit) +
+        (konsep ? ` &nbsp;·&nbsp; <span class="text-amber-200">🌿 ${esc(konsep)}</span>` : '');
+
+    // Footer
+    set('footer-unit',  unit);
+    set('footer-warek', warek + (namaWarek ? ' · ' + namaWarek : ''));
+
+    // Hero tema strip
+    const heroUnit  = document.getElementById('hero-unit');
+    const heroWarek = document.getElementById('hero-warek');
+    if (heroUnit)  heroUnit.textContent  = konsep ? '🌿 ' + konsep : unit;
+    if (heroWarek) heroWarek.textContent = tema || warek;
 }
 
 // ═══════════════════════════════════════════════════
-//  RENDER LOKASI (Tab Info)
+//  RENDER GO GREEN & TEMA
 // ═══════════════════════════════════════════════════
+function renderGoGreen(cfg) {
+    const id = cfg.identitas;
+    set('info-tema',       '"' + (id.tema_kegiatan || '') + '"');
+    set('info-konsep-sub', id.konsep_sub || 'Zero Plastic · Pengelolaan Limbah · Distribusi Efisien · Edukasi Halal-Thayyib-Green · Green Volunteer');
+    // Footer
+    set('footer-unit',  id.penyelenggara_unit  || '');
+    set('footer-warek', (id.penyelenggara_warek || '') + (id.penyelenggara_nama_warek ? ' · ' + id.penyelenggara_nama_warek : ''));
+}
 function renderLokasi(lokasiArr) {
     const el = document.getElementById('lokasi-container');
     if (!lokasiArr?.length) { el.innerHTML = ''; return; }
@@ -840,12 +888,18 @@ function renderKontak(cfg) {
 //  RENDER PARTISIPASI
 // ═══════════════════════════════════════════════════
 const CARD_STYLE = {
-    sponsor:    { border:'border-blue-200',   gradient:'from-blue-500 to-indigo-600',   icon:'🏦', btn:'bg-blue-600 hover:bg-blue-700 shadow-blue-100',   iconColor:'text-blue-500'  },
-    masyarakat: { border:'border-amber-200',  gradient:'from-amber-500 to-orange-600',  icon:'👥', btn:'bg-amber-600 hover:bg-amber-700 shadow-amber-100', iconColor:'text-amber-500' },
-    proposal:   { border:'border-teal-200',   gradient:'from-teal-500 to-emerald-600',  icon:'📝', btn:'bg-teal-600 hover:bg-teal-700 shadow-teal-100',   iconColor:'text-teal-500'  },
+    sponsor:    { border:'border-blue-200',   gradient:'from-blue-500 to-indigo-600',    icon:'🏦', btn:'bg-blue-600 hover:bg-blue-700 shadow-blue-100',    iconColor:'text-blue-500'   },
+    masyarakat: { border:'border-amber-200',  gradient:'from-amber-500 to-orange-600',   icon:'👥', btn:'bg-amber-600 hover:bg-amber-700 shadow-amber-100',  iconColor:'text-amber-500'  },
+    proposal:   { border:'border-teal-200',   gradient:'from-teal-500 to-emerald-600',   icon:'📝', btn:'bg-teal-600 hover:bg-teal-700 shadow-teal-100',    iconColor:'text-teal-500'   },
+    volunteer:  { border:'border-green-200',  gradient:'from-green-500 to-emerald-500',  icon:'🌿', btn:'bg-green-600 hover:bg-green-700 shadow-green-100',  iconColor:'text-green-500'  },
 };
-const FORM_KEY = { sponsor:'form_sponsor', masyarakat:'form_masyarakat', proposal:'form_proposal' };
-const FORM_BTN = { sponsor:'Ajukan Kerjasama Sponsor', masyarakat:'Konfirmasi Pembayaran & Daftar', proposal:'Ajukan Proposal Lembaga' };
+const FORM_KEY = { sponsor:'form_sponsor', masyarakat:'form_masyarakat', proposal:'form_proposal', volunteer:'form_volunteer' };
+const FORM_BTN = {
+    sponsor:    'Ajukan Kerjasama Sponsor',
+    masyarakat: 'Konfirmasi Pembayaran & Daftar',
+    proposal:   'Ajukan Proposal Lembaga',
+    volunteer:  'Daftar sebagai Green Volunteer',
+};
 
 function renderPartisipasi(arr, cfg) {
     const el = document.getElementById('partisipasi-container');
