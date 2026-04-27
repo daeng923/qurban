@@ -1,4 +1,28 @@
+<script>
+/* ── INJECT VIEWPORT META — wajib untuk mobile-first di WordPress HTML block ── */
+(function(){
+    if (!document.querySelector('meta[name="viewport"]')) {
+        var m = document.createElement('meta');
+        m.name = 'viewport';
+        m.content = 'width=device-width, initial-scale=1, maximum-scale=5';
+        document.head.appendChild(m);
+    }
+})();
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+/* ── TAILWIND CONFIG — breakpoints eksplisit ── */
+tailwind.config = {
+    theme: {
+        extend: {
+            screens: {
+                sm: '480px',
+            }
+        }
+    }
+};
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -86,6 +110,138 @@
         -webkit-touch-callout: none !important;
     }
     @media print { body { display: none !important; } }
+
+    /* ════════════════════════════════════════════════════
+       MOBILE-FIRST LAYOUT OVERRIDES
+       Ini CSS murni — tidak bergantung pada Tailwind CDN.
+       Default = mobile (<480px), lalu scale up.
+    ════════════════════════════════════════════════════ */
+
+    /* Root */
+    #qurban-root { padding: 12px !important; }
+
+    /* Hero */
+    #qurban-root .hero-pattern { border-radius: 16px !important; }
+    #qurban-root .hero-inner { padding: 24px 16px !important; }
+
+    /* Tab nav — 2 kolom di HP */
+    #qurban-root .tab-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px !important;
+        padding: 6px !important;
+    }
+
+    /* Grid 2 kolom → 1 kolom di HP */
+    #qurban-root .g-2col {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    /* Grid 3 kolom → 1 kolom di HP */
+    #qurban-root .g-3col {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Grid 4 kolom → 2 kolom di HP */
+    #qurban-root .g-4col {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+
+    /* Flex horizontal → vertikal di HP */
+    #qurban-root .f-stack {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    /* Tombol full width di HP */
+    #qurban-root .btn-full { width: 100% !important; }
+
+    /* Card padding lebih kecil di HP */
+    #qurban-root .card-sm { padding: 14px !important; }
+    #qurban-root .card-sm-r { border-radius: 14px !important; }
+
+    /* Stat box */
+    #qurban-root .stat-box { padding: 10px 6px !important; border-radius: 12px !important; }
+    #qurban-root .stat-num { font-size: 1.4rem !important; }
+
+    /* Sumber dana card — row di HP */
+    #qurban-root .sumber-card {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+    #qurban-root .sumber-icon {
+        width: 36px !important; height: 36px !important;
+        flex-shrink: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Kebijakan distribusi */
+    #qurban-root .kebijakan-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Penerima daging — badge di kanan lebih kecil */
+    #qurban-root .penerima-row { padding: 12px !important; border-radius: 12px !important; }
+    #qurban-root .penerima-icon { width: 36px !important; height: 36px !important; font-size: 16px !important; }
+
+    /* Kambing distribusi — row di HP */
+    #qurban-root .kambing-item {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    /* Kontak buttons */
+    #qurban-root .kontak-btns {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+    #qurban-root .kontak-btn { width: 100% !important; }
+
+    /* Rekening rows */
+    #qurban-root .rek-row { flex-direction: column !important; align-items: flex-start !important; gap: 2px !important; }
+
+    /* ── TABLET ke atas (≥ 480px) ── */
+    @media (min-width: 480px) {
+        #qurban-root { padding: 16px !important; }
+        #qurban-root .tab-grid { grid-template-columns: repeat(4, 1fr) !important; }
+        #qurban-root .g-2col { grid-template-columns: 1fr 1fr !important; }
+        #qurban-root .g-3col { grid-template-columns: repeat(3, 1fr) !important; }
+        #qurban-root .g-4col { grid-template-columns: repeat(4, 1fr) !important; }
+        #qurban-root .f-stack { flex-direction: row !important; justify-content: center !important; }
+        #qurban-root .btn-full { width: auto !important; }
+        #qurban-root .sumber-card { flex-direction: column !important; padding: 18px !important; }
+        #qurban-root .sumber-icon { width: 40px !important; height: 40px !important; margin-bottom: 12px !important; }
+        #qurban-root .kebijakan-grid { grid-template-columns: 1fr 1fr !important; }
+        #qurban-root .kambing-item { flex-direction: column !important; align-items: flex-start !important; }
+        #qurban-root .kontak-btns { flex-direction: row !important; }
+        #qurban-root .kontak-btn { width: auto !important; }
+        #qurban-root .stat-num { font-size: 1.8rem !important; }
+        #qurban-root .rek-row { flex-direction: row !important; align-items: center !important; }
+    }
+
+    /* ── DESKTOP (≥ 768px) ── */
+    @media (min-width: 768px) {
+        #qurban-root { padding: 20px !important; }
+        #qurban-root .hero-pattern { border-radius: 40px !important; }
+        #qurban-root .card-sm { padding: 20px !important; }
+        #qurban-root .card-sm-r { border-radius: 20px !important; }
+    }
 </style>
 
 <div id="qurban-root" class="max-w-5xl mx-auto px-3 py-3 md:px-5 md:py-5 bg-white text-slate-900">
@@ -132,7 +288,7 @@
 
         <!-- TAB NAV -->
         <div class="mb-5 md:mb-8">
-            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-stone-100 rounded-2xl md:grid-cols-4 md:gap-2 md:p-2 md:rounded-[1.5rem]">
+            <div class="tab-grid bg-stone-100 rounded-2xl">
                 <button onclick="switchTab('info')" id="btn-info" class="tab-btn active rounded-xl md:rounded-[1rem] py-2.5 px-2 text-[11px] font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1">
                     <span class="text-lg">🐄</span><span>Info Qurban</span>
                 </button>
@@ -184,17 +340,17 @@
 
             <!-- Sumber Dana -->
             <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Sumber Dana & Pengadaan Hewan</h3>
-            <div class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-3 md:gap-4 md:mb-8">
-                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
-                    <div class="w-9 h-9 md:w-10 md:h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">🏛️</div>
+            <div class="g-3col mb-4">
+                <div class="sumber-card bg-white border border-stone-100 shadow-sm card-hover">
+                    <div class="sumber-icon bg-amber-100 rounded-xl flex items-center justify-center text-lg">🏛️</div>
                     <div><div class="font-bold text-slate-800 text-sm mb-0.5">Anggaran Universitas</div><div class="text-slate-500 text-xs leading-relaxed">Dana resmi UMM dialokasikan setiap tahun untuk pengadaan sapi dan kambing qurban.</div></div>
                 </div>
-                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
-                    <div class="w-9 h-9 md:w-10 md:h-10 bg-orange-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">💼</div>
+                <div class="sumber-card bg-white border border-stone-100 shadow-sm card-hover">
+                    <div class="sumber-icon bg-orange-100 rounded-xl flex items-center justify-center text-lg">💼</div>
                     <div><div class="font-bold text-slate-800 text-sm mb-0.5">Iuran Dosen & Karyawan</div><div class="text-slate-500 text-xs leading-relaxed">Kontribusi sukarela melalui pemotongan gaji seluruh dosen dan tenaga kependidikan UMM.</div></div>
                 </div>
-                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
-                    <div class="w-9 h-9 md:w-10 md:h-10 bg-blue-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">🤝</div>
+                <div class="sumber-card bg-white border border-stone-100 shadow-sm card-hover">
+                    <div class="sumber-icon bg-blue-100 rounded-xl flex items-center justify-center text-lg">🤝</div>
                     <div><div class="font-bold text-slate-800 text-sm mb-0.5">Sponsor & Masyarakat Umum</div><div class="text-slate-500 text-xs leading-relaxed">Kerjasama dengan bank, lembaga, dan partisipasi masyarakat umum via rekening UMM Peduli.</div></div>
                 </div>
             </div>
@@ -225,14 +381,14 @@
 
             <!-- Lokasi -->
             <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Lokasi Penyembelihan</h3>
-            <div id="lokasi-container" class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-2 md:gap-4 md:mb-8">
+            <div id="lokasi-container" class="g-2col mb-4">
                 <div class="skeleton h-36 md:h-48"></div><div class="skeleton h-36 md:h-48"></div>
             </div>
 
             <!-- Kebijakan Distribusi -->
             <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Kebijakan Distribusi Hewan</h3>
             <div class="bg-stone-50 rounded-2xl md:rounded-[2rem] p-4 md:p-6 mb-5 md:mb-8">
-                <div class="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+                <div class="kebijakan-grid">
                     <div class="bg-white rounded-xl md:rounded-2xl p-4 border border-stone-100 shadow-sm">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="text-2xl">🐄</div>
@@ -274,7 +430,7 @@
                 <div class="text-3xl mb-2">📞</div>
                 <h3 class="font-black text-lg md:text-xl mb-1">Hubungi Panitia Qurban</h3>
                 <p id="kontak-sub" class="text-amber-100 text-xs mb-4 px-2 leading-snug"></p>
-                <div class="flex flex-col gap-2 md:flex-row md:justify-center" id="kontak-buttons"></div>
+                <div class="kontak-btns" id="kontak-buttons"></div>
             </div>
         </div>
 
@@ -315,9 +471,9 @@
             <div id="rekening-box" class="hidden bg-white rounded-xl md:rounded-2xl p-4 md:p-5 border-2 border-amber-200 mb-4">
                 <div class="text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-3">📍 Rekening UMM Peduli</div>
                 <div class="space-y-1.5 text-sm">
-                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">Bank</span><span id="rek-bank" class="font-semibold text-slate-800 text-xs text-right"></span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">No. Rekening</span><span id="rek-nomor" class="font-semibold text-slate-800 font-mono text-xs"></span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">Atas Nama</span><span id="rek-nama" class="font-semibold text-slate-800 text-xs"></span></div>
+                    <div class="rek-row flex justify-between items-start"><span class="text-slate-500 text-xs shrink-0">Bank</span><span id="rek-bank" class="font-semibold text-slate-800 text-xs text-right"></span></div>
+                    <div class="rek-row flex justify-between items-start"><span class="text-slate-500 text-xs shrink-0">No. Rekening</span><span id="rek-nomor" class="font-semibold text-slate-800 font-mono text-xs"></span></div>
+                    <div class="rek-row flex justify-between items-start"><span class="text-slate-500 text-xs shrink-0">Atas Nama</span><span id="rek-nama" class="font-semibold text-slate-800 text-xs"></span></div>
                 </div>
                 <div class="mt-3 bg-amber-50 rounded-xl p-3 text-xs text-amber-700 leading-snug">⚠️ Sertakan nama lengkap dan nomor HP pada berita transfer. Kirim bukti pembayaran melalui formulir konfirmasi.</div>
             </div>
@@ -348,7 +504,7 @@
             </div>
 
             <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-red-500 rounded-full inline-block"></span>Operasional di Dua Kampus</h3>
-            <div id="lokasi-hari-h" class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-2 md:gap-4 md:mb-8">
+            <div id="lokasi-hari-h" class="g-2col mb-4">
                 <div class="skeleton h-52 md:h-64"></div><div class="skeleton h-52 md:h-64"></div>
             </div>
 
@@ -369,10 +525,10 @@
                         <div class="text-teal-100 text-xs md:text-sm mt-0.5">Kambing dan domba 100% disalurkan ke masyarakat dan lembaga — tidak untuk kebutuhan internal kampus</div>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-3">
-                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏘️</div><div><div class="font-bold text-sm">Warga Sekitar Kampus</div><div class="text-teal-100 text-xs">Lingkungan Tlogomas, Lowokwaru, dan sekitarnya</div></div></div>
-                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏠</div><div><div class="font-bold text-sm">Warga yang Membutuhkan</div><div class="text-teal-100 text-xs">Keluarga prasejahtera yang terdata dan diverifikasi panitia</div></div></div>
-                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🕌</div><div><div class="font-bold text-sm">Lembaga Pengaju Proposal</div><div class="text-teal-100 text-xs">Panti asuhan, pesantren, masjid, komunitas warga</div></div></div>
+                <div class="grid grid-cols-1 gap-2 sm:grid-cols-3 md:gap-3">
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 sm:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏘️</div><div><div class="font-bold text-sm">Warga Sekitar Kampus</div><div class="text-teal-100 text-xs">Lingkungan Tlogomas, Lowokwaru, dan sekitarnya</div></div></div>
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 sm:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏠</div><div><div class="font-bold text-sm">Warga yang Membutuhkan</div><div class="text-teal-100 text-xs">Keluarga prasejahtera yang terdata dan diverifikasi panitia</div></div></div>
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 sm:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🕌</div><div><div class="font-bold text-sm">Lembaga Pengaju Proposal</div><div class="text-teal-100 text-xs">Panti asuhan, pesantren, masjid, komunitas warga</div></div></div>
                 </div>
             </div>
 
@@ -437,11 +593,11 @@
 
             <!-- Statistik -->
             <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Ringkasan Pelaksanaan <span id="stat-tahun-label" class="ml-1"></span></h3>
-            <div class="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3 mb-3">
-                <div class="bg-amber-50 border border-amber-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-sapi" class="text-2xl md:text-3xl font-black text-amber-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Sapi</div></div>
-                <div class="bg-teal-50 border border-teal-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-kambing" class="text-2xl md:text-3xl font-black text-teal-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Kambing / Domba</div></div>
-                <div class="bg-orange-50 border border-orange-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-paket" class="text-2xl md:text-3xl font-black text-orange-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Paket Daging</div></div>
-                <div class="bg-blue-50 border border-blue-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-penerima" class="text-2xl md:text-3xl font-black text-blue-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Penerima Manfaat</div></div>
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:gap-3 mb-3">
+                <div class="bg-amber-50 border border-amber-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-sapi" class="stat-num font-black text-amber-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Sapi</div></div>
+                <div class="bg-teal-50 border border-teal-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-kambing" class="stat-num font-black text-teal-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Kambing / Domba</div></div>
+                <div class="bg-orange-50 border border-orange-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-paket" class="stat-num font-black text-orange-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Paket Daging</div></div>
+                <div class="bg-blue-50 border border-blue-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-penerima" class="stat-num font-black text-blue-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Penerima Manfaat</div></div>
             </div>
             <div id="stat-catatan-box" class="hidden bg-amber-50 border border-dashed border-amber-300 rounded-xl p-3 mb-6 text-center text-xs md:text-sm text-amber-700"></div>
 
@@ -465,9 +621,9 @@
                 <div class="text-3xl mb-2">🔔</div>
                 <h3 class="font-black text-lg md:text-xl mb-2">Ingin Dinotifikasi saat Laporan Terbit?</h3>
                 <p class="text-slate-300 text-xs md:text-sm mb-4 max-w-xs mx-auto leading-relaxed">Daftarkan kontak Anda untuk mendapat laporan pertanggungjawaban lengkap segera setelah dipublikasikan</p>
-                <div class="flex flex-col gap-2 md:flex-row md:justify-center">
-                    <a id="link-notifikasi" href="#" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm transition-colors shadow-lg tap-target">📧 Daftar Notifikasi ↗</a>
-                    <a id="link-wa-grup" href="#" target="_blank" class="bg-white/10 border border-white/20 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-white/20 transition-colors tap-target">💬 <span id="wa-grup-label">Grup WhatsApp</span></a>
+                <div class="f-stack">
+                    <a id="link-notifikasi" href="#" target="_blank" class="btn-full bg-amber-500 hover:bg-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm transition-colors shadow-lg tap-target">📧 Daftar Notifikasi ↗</a>
+                    <a id="link-wa-grup" href="#" target="_blank" class="btn-full bg-white/10 border border-white/20 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-white/20 transition-colors tap-target">💬 <span id="wa-grup-label">Grup WhatsApp</span></a>
                 </div>
             </div>
         </div>
@@ -676,8 +832,8 @@ function renderKontak(cfg) {
     const btns = document.getElementById('kontak-buttons');
     if (!btns) return;
     btns.innerHTML = `
-        <a href="https://wa.me/${esc(cfg.kontak.wa_panitia)}" target="_blank" class="tap-target bg-white text-amber-800 py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-50 transition-colors w-full md:w-auto">💬 WhatsApp Panitia</a>
-        <a href="mailto:${esc(cfg.kontak.email_aik)}" class="tap-target bg-amber-600 border border-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-500 transition-colors w-full md:w-auto">✉️ Email SDM-AIK</a>`;
+        <a href="https://wa.me/${esc(cfg.kontak.wa_panitia)}" target="_blank" class="tap-target bg-white text-amber-800 py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-50 transition-colors w-full sm:w-auto">💬 WhatsApp Panitia</a>
+        <a href="mailto:${esc(cfg.kontak.email_aik)}" class="tap-target bg-amber-600 border border-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-500 transition-colors w-full sm:w-auto">✉️ Email SDM-AIK</a>`;
 }
 
 // ═══════════════════════════════════════════════════
@@ -778,7 +934,7 @@ function renderLaporan(arr) {
                         <div class="text-xs ${ok?'text-emerald-600':'text-amber-600'} font-semibold">${ok?'✅ Tersedia':'● '+( l.catatan||'Akan dipublikasikan')}</div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div class="g-4col">
                     ${badgeFn(l.url_dokumentasi,'Dokumentasi','📸')}
                     ${badgeFn(l.url_keuangan,'Keuangan','💰')}
                     ${badgeFn(l.url_distribusi,'Distribusi','📋')}
