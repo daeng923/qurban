@@ -6,9 +6,11 @@
     .elementor-page-title, .has-vivid-red-background-color { display: none !important; }
     .entry-content { padding-top: 0 !important; margin-top: 0 !important; }
 
+    /* ── BASE ── */
     #qurban-root, #qurban-root * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
     #qurban-root .font-display { font-family: 'Playfair Display', Georgia, serif; }
 
+    /* ── HERO ── */
     .hero-pattern {
         background-color: #1a0a00;
         background-image:
@@ -16,315 +18,466 @@
             url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b45309' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
 
+    /* ── TABS ── */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .tab-btn.active { background-color: #92400e; color: #fff; box-shadow: 0 4px 24px rgba(146,64,14,0.3); }
-    .tab-btn { transition: all 0.25s cubic-bezier(.4,0,.2,1); }
-    .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
-    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 48px -8px rgba(0,0,0,0.15); }
+    .tab-btn { transition: all 0.22s cubic-bezier(.4,0,.2,1); }
+    .tab-btn.active { background-color: #92400e; color: #fff; box-shadow: 0 4px 20px rgba(146,64,14,0.28); }
 
-    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
-    .pulse-dot { animation: pulse-dot 2s infinite; }
+    /* ── CARDS ── */
+    /* hover efek hanya aktif di pointer device (bukan touch) */
+    @media (hover: hover) {
+        .card-hover { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -8px rgba(0,0,0,0.13); }
+    }
 
-    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-    .accordion-body.open { max-height: 1200px; }
-    .accordion-icon { transition: transform 0.3s ease; }
+    /* ── ACCORDION ── */
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.38s ease; }
+    .accordion-body.open { max-height: 1400px; }
+    .accordion-icon { transition: transform 0.28s ease; }
     .accordion-icon.open { transform: rotate(45deg); }
 
+    /* ── TIMELINE ── */
     .timeline-line { position:absolute; left:19px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#b45309,#fcd34d,#b45309); }
 
-    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    /* ── ANIMATIONS ── */
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+    .pulse-dot { animation: pulse-dot 2s infinite; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     .fade-up { animation: fadeUp 0.5s ease both; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* Skeleton loading */
-    .skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 12px; }
+    /* ── SKELETON ── */
+    .skeleton { background: linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:12px; }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    .badge { display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:99px; }
+    /* ── BADGE ── */
+    .badge { display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:99px; }
 
-    /* Warna timeline dot */
-    .dot-amber   { background:#d97706; }
-    .dot-yellow  { background:#ca8a04; }
-    .dot-red     { background:#dc2626; }
-    .dot-emerald { background:#059669; }
-    .dot-blue    { background:#2563eb; }
-    .dot-teal    { background:#0d9488; }
-    .dot-purple  { background:#7c3aed; }
-    .dot-slate   { background:#475569; }
-    .label-amber  { color:#b45309; }
-    .label-yellow { color:#a16207; }
-    .label-red    { color:#dc2626; }
-    .label-emerald{ color:#059669; }
-    .label-blue   { color:#2563eb; }
-    .label-teal   { color:#0d9488; }
-    .label-purple { color:#7c3aed; }
-    .label-slate  { color:#475569; }
+    /* ── TIMELINE DOTS & LABELS ── */
+    .dot-amber{background:#d97706}.dot-yellow{background:#ca8a04}.dot-red{background:#dc2626}
+    .dot-emerald{background:#059669}.dot-blue{background:#2563eb}.dot-teal{background:#0d9488}
+    .dot-purple{background:#7c3aed}.dot-slate{background:#475569}
+    .label-amber{color:#b45309}.label-yellow{color:#a16207}.label-red{color:#dc2626}
+    .label-emerald{color:#059669}.label-blue{color:#2563eb}.label-teal{color:#0d9488}
+    .label-purple{color:#7c3aed}.label-slate{color:#475569}
+
+    /* ── MOBILE-FIRST: hero title skala ── */
+    .hero-title { font-size: clamp(2.2rem, 10vw, 5rem); line-height: 1.05; }
+
+    /* ── MOBILE-FIRST: tombol tap target min 44px ── */
+    .tap-target { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+
+    /* ── MOBILE: safe area bottom (notch HP) ── */
+    #qurban-root { padding-bottom: env(safe-area-inset-bottom, 8px); }
+
+    /* ── WORD BREAK agar teks panjang tidak overflow di HP ── */
+    #qurban-root p, #qurban-root div, #qurban-root span {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    /* ── PROTEKSI ── */
+    * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
+    }
+    @media print { body { display: none !important; } }
 </style>
 
-<div id="qurban-root" class="max-w-5xl mx-auto p-3 md:p-5 bg-white text-slate-900">
+<div id="qurban-root" class="max-w-5xl mx-auto px-3 py-3 md:px-5 md:py-5 bg-white text-slate-900">
 
-    <!-- LOADING STATE -->
+    <!-- LOADING -->
     <div id="loading-state" class="py-20 text-center">
-        <div class="w-16 h-16 border-4 border-amber-200 border-t-amber-600 rounded-full mx-auto mb-4" style="animation:spin 1s linear infinite"></div>
+        <div class="w-14 h-14 border-4 border-amber-200 border-t-amber-600 rounded-full mx-auto mb-4" style="animation:spin 1s linear infinite"></div>
         <p class="text-slate-400 text-sm">Memuat konten qurban...</p>
-        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
     </div>
 
-    <!-- ERROR STATE -->
-    <div id="error-state" class="hidden py-16 text-center">
+    <!-- ERROR -->
+    <div id="error-state" class="hidden py-16 text-center px-4">
         <div class="text-5xl mb-4">⚠️</div>
         <p class="text-slate-600 font-semibold mb-2">Gagal memuat konten</p>
         <p class="text-slate-400 text-sm mb-4" id="error-msg"></p>
-        <button onclick="loadData()" class="bg-amber-600 text-white px-6 py-2 rounded-xl font-semibold text-sm">Coba Lagi</button>
+        <button onclick="loadData()" class="bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold text-sm tap-target">Coba Lagi</button>
     </div>
 
-    <!-- MAIN CONTENT (hidden until data loaded) -->
+    <!-- MAIN CONTENT -->
     <div id="main-content" class="hidden">
 
         <!-- HERO -->
-        <div class="hero-pattern rounded-[2.5rem] overflow-hidden mb-10 shadow-2xl fade-up">
-            <div class="px-6 py-10 md:py-16 text-center">
+        <div class="hero-pattern rounded-2xl md:rounded-[2.5rem] overflow-hidden mb-6 md:mb-10 shadow-2xl fade-up">
+            <div class="px-4 py-8 md:px-8 md:py-16 text-center">
                 <img id="hero-logo" src="" alt="Logo UMM"
-                     class="mx-auto h-14 md:h-16 w-auto mb-6 opacity-90"
+                     class="mx-auto h-10 md:h-16 w-auto mb-4 md:mb-6 opacity-90"
                      onerror="this.style.display='none'">
-                <div class="inline-flex items-center gap-2 bg-amber-700/30 border border-amber-600/40 text-amber-300 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-5">
-                    <span class="pulse-dot w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                    <span id="hero-label">Idul Adha</span>
+                <div class="inline-flex items-center gap-2 bg-amber-700/30 border border-amber-600/40 text-amber-300 text-[11px] font-semibold tracking-widest uppercase px-3 py-1.5 rounded-full mb-4">
+                    <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span>
+                    <span id="hero-label">Idul Adha 1447 H</span>
                 </div>
-                <h1 class="font-display text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-3">
+                <h1 class="hero-title font-display font-black text-white mb-2">
                     Qurban<br><span class="text-amber-400">Berkemajuan</span>
                 </h1>
-                <p id="hero-tagline" class="text-amber-200/70 text-sm md:text-base italic font-medium mt-3 max-w-xl mx-auto"></p>
-                <div class="h-1 w-16 bg-amber-500 mx-auto mt-6 rounded-full"></div>
-                <div id="hero-stats" class="grid grid-cols-3 gap-3 mt-10 max-w-lg mx-auto"></div>
+                <p id="hero-tagline" class="text-amber-200/70 text-xs md:text-base italic font-medium mt-2 max-w-xs md:max-w-xl mx-auto leading-relaxed px-2"></p>
+                <div class="h-0.5 w-12 bg-amber-500 mx-auto mt-4 md:mt-5 rounded-full"></div>
+                <div class="mt-4 inline-flex flex-col items-center gap-0.5 px-4">
+                    <p id="hero-unit" class="text-amber-300 text-[11px] font-bold tracking-wide uppercase text-center leading-tight"></p>
+                    <p id="hero-warek" class="text-amber-200/50 text-[10px] text-center leading-tight"></p>
+                </div>
+                <div id="hero-stats" class="grid grid-cols-3 gap-2 mt-6 max-w-xs md:max-w-lg mx-auto"></div>
             </div>
         </div>
 
         <!-- TAB NAV -->
-        <div class="mb-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 bg-stone-100 rounded-[1.5rem]">
-                <button onclick="switchTab('info')" id="btn-info" class="tab-btn active rounded-[1rem] py-3 px-2 text-xs font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1.5"><span class="text-xl">🐄</span>Info Qurban</button>
-                <button onclick="switchTab('partisipasi')" id="btn-partisipasi" class="tab-btn rounded-[1rem] py-3 px-2 text-xs font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1.5"><span class="text-xl">🤝</span>Partisipasi</button>
-                <button onclick="switchTab('penyaluran')" id="btn-penyaluran" class="tab-btn rounded-[1rem] py-3 px-2 text-xs font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1.5"><span class="text-xl">📦</span>Hari H & Distribusi</button>
-                <button onclick="switchTab('laporan')" id="btn-laporan" class="tab-btn rounded-[1rem] py-3 px-2 text-xs font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1.5"><span class="text-xl">📊</span>Laporan</button>
+        <div class="mb-5 md:mb-8">
+            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-stone-100 rounded-2xl md:grid-cols-4 md:gap-2 md:p-2 md:rounded-[1.5rem]">
+                <button onclick="switchTab('info')" id="btn-info" class="tab-btn active rounded-xl md:rounded-[1rem] py-2.5 px-2 text-[11px] font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1">
+                    <span class="text-lg">🐄</span><span>Info Qurban</span>
+                </button>
+                <button onclick="switchTab('partisipasi')" id="btn-partisipasi" class="tab-btn rounded-xl md:rounded-[1rem] py-2.5 px-2 text-[11px] font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1">
+                    <span class="text-lg">🤝</span><span>Partisipasi</span>
+                </button>
+                <button onclick="switchTab('penyaluran')" id="btn-penyaluran" class="tab-btn rounded-xl md:rounded-[1rem] py-2.5 px-2 text-[11px] font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1">
+                    <span class="text-lg">📦</span><span class="leading-tight text-center">Hari H &amp; Distribusi</span>
+                </button>
+                <button onclick="switchTab('laporan')" id="btn-laporan" class="tab-btn rounded-xl md:rounded-[1rem] py-2.5 px-2 text-[11px] font-bold uppercase tracking-wide text-stone-600 flex flex-col items-center gap-1">
+                    <span class="text-lg">📊</span><span>Laporan</span>
+                </button>
             </div>
         </div>
 
 
-        <!-- TAB 1: INFO -->
+        <!-- ═══════════════════════════════ -->
+        <!-- TAB 1: INFO                    -->
+        <!-- ═══════════════════════════════ -->
         <div id="tab-info" class="tab-content active">
 
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-[2rem] p-7 md:p-10 mb-6 card-hover">
-                <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 bg-amber-600 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-lg shadow-amber-100">🕌</div>
+            <!-- Intro card -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-2xl md:rounded-[2rem] p-4 md:p-10 mb-4 card-hover">
+                <div class="flex items-start gap-3 md:gap-4">
+                    <div class="w-11 h-11 md:w-14 md:h-14 bg-amber-600 rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl shrink-0 shadow-lg shadow-amber-100">🕌</div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-2">Qurban Berkemajuan UMM</h2>
-                        <p class="text-slate-600 text-sm md:text-base leading-relaxed">Program Qurban Berkemajuan diselenggarakan oleh Biro AIK UMM sebagai wujud implementasi nilai-nilai Islam dalam kehidupan kampus. Dana qurban bersumber dari anggaran kampus dan pemotongan gaji dosen serta karyawan, diperkuat dengan kerjasama sponsor eksternal dan partisipasi masyarakat umum melalui rekening UMM Peduli.</p>
+                        <h2 class="text-base md:text-2xl font-black text-slate-800 mb-1">Qurban Berkemajuan UMM 1447 H</h2>
+                        <p id="info-penyelenggara-label" class="text-amber-700 text-[11px] font-semibold mb-2 leading-snug"></p>
+                        <p class="text-slate-600 text-xs md:text-base leading-relaxed">
+                            Program Qurban Berkemajuan diselenggarakan sebagai wujud implementasi nilai-nilai Islam dalam kehidupan akademik dan sosial kampus.
+                            Dana qurban bersumber dari anggaran kampus dan pemotongan gaji dosen serta karyawan, diperkuat dengan kerjasama sponsor eksternal
+                            dan partisipasi masyarakat umum melalui rekening UMM Peduli.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Sumber Dana — static -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Sumber Dana & Pengadaan Hewan</h3>
-            <div class="grid md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-xl mb-3">🏛️</div><div class="font-bold text-slate-800 text-sm mb-1">Anggaran Kampus</div><div class="text-slate-500 text-xs leading-relaxed">Dana resmi universitas dialokasikan untuk pengadaan sapi dan kambing qurban setiap tahunnya.</div></div>
-                <div class="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-xl mb-3">💼</div><div class="font-bold text-slate-800 text-sm mb-1">Iuran Dosen & Karyawan</div><div class="text-slate-500 text-xs leading-relaxed">Kontribusi sukarela melalui pemotongan gaji seluruh dosen dan tenaga kependidikan UMM.</div></div>
-                <div class="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-xl mb-3">🤝</div><div class="font-bold text-slate-800 text-sm mb-1">Sponsor & Masyarakat Umum</div><div class="text-slate-500 text-xs leading-relaxed">Kerjasama dengan bank, lembaga, dan partisipasi masyarakat umum via rekening UMM Peduli.</div></div>
-            </div>
-
-            <!-- Lokasi — dinamis dari sheet lokasi -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Lokasi Penyembelihan</h3>
-            <div id="lokasi-container" class="grid md:grid-cols-2 gap-4 mb-8">
-                <div class="skeleton h-48"></div><div class="skeleton h-48"></div>
-            </div>
-
-            <!-- Kebijakan Distribusi — static -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Kebijakan Distribusi Hewan</h3>
-            <div class="bg-stone-50 rounded-[2rem] p-6 mb-8">
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white rounded-2xl p-5 border border-stone-100 shadow-sm"><div class="flex items-center gap-3 mb-3"><div class="text-3xl">🐄</div><div><div class="font-black text-slate-800">Sapi / Kerbau</div><span class="badge bg-amber-100 text-amber-700">Kampus II & III</span></div></div><p class="text-slate-500 text-xs leading-relaxed">Disembelih di Kampus II dan III. Dagingnya dikemas menjadi paket untuk sivitas pemegang kupon, masyarakat sekitar, dan pihak lain sesuai kebijakan panitia.</p></div>
-                    <div class="bg-white rounded-2xl p-5 border border-stone-100 shadow-sm"><div class="flex items-center gap-3 mb-3"><div class="text-3xl">🐑</div><div><div class="font-black text-slate-800">Kambing / Domba</div><span class="badge bg-teal-100 text-teal-700">Eksternal Seluruhnya</span></div></div><p class="text-slate-500 text-xs leading-relaxed">Seluruh kambing dan domba disalurkan ke lingkungan sekitar kampus, warga yang membutuhkan, dan lembaga yang mengajukan proposal — tidak untuk internal kampus.</p></div>
+            <!-- Penyelenggara banner -->
+            <div class="bg-white border border-amber-200 rounded-xl md:rounded-2xl p-4 md:p-5 mb-4 shadow-sm">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 md:w-10 md:h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg shrink-0 mt-0.5">🏫</div>
+                    <div>
+                        <div class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-0.5">Penyelenggara</div>
+                        <div id="banner-unit" class="font-black text-slate-800 text-sm leading-snug"></div>
+                        <div id="banner-warek" class="text-slate-500 text-xs mt-0.5 leading-snug"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Jadwal — dinamis -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Jadwal Penting</h3>
-            <div class="bg-white border border-stone-100 rounded-[2rem] overflow-hidden shadow-sm mb-8">
-                <div class="relative pl-12 pr-5 py-6 space-y-6" id="jadwal-container">
+            <!-- Sumber Dana -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Sumber Dana & Pengadaan Hewan</h3>
+            <div class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-3 md:gap-4 md:mb-8">
+                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
+                    <div class="w-9 h-9 md:w-10 md:h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">🏛️</div>
+                    <div><div class="font-bold text-slate-800 text-sm mb-0.5">Anggaran Universitas</div><div class="text-slate-500 text-xs leading-relaxed">Dana resmi UMM dialokasikan setiap tahun untuk pengadaan sapi dan kambing qurban.</div></div>
+                </div>
+                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
+                    <div class="w-9 h-9 md:w-10 md:h-10 bg-orange-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">💼</div>
+                    <div><div class="font-bold text-slate-800 text-sm mb-0.5">Iuran Dosen & Karyawan</div><div class="text-slate-500 text-xs leading-relaxed">Kontribusi sukarela melalui pemotongan gaji seluruh dosen dan tenaga kependidikan UMM.</div></div>
+                </div>
+                <div class="bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm card-hover flex gap-3 md:flex-col md:gap-0">
+                    <div class="w-9 h-9 md:w-10 md:h-10 bg-blue-100 rounded-xl flex items-center justify-center text-lg shrink-0 md:mb-3">🤝</div>
+                    <div><div class="font-bold text-slate-800 text-sm mb-0.5">Sponsor & Masyarakat Umum</div><div class="text-slate-500 text-xs leading-relaxed">Kerjasama dengan bank, lembaga, dan partisipasi masyarakat umum via rekening UMM Peduli.</div></div>
+                </div>
+            </div>
+
+            <!-- Idul Adha 1447 H info box -->
+            <div class="bg-gradient-to-r from-red-700 to-red-800 text-white rounded-2xl md:rounded-[2rem] p-5 md:p-6 mb-6 md:mb-8 shadow-lg">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="text-4xl shrink-0">📅</div>
+                        <div>
+                            <div class="text-red-200 text-[10px] font-bold uppercase tracking-widest mb-0.5">Hari H Penyembelihan</div>
+                            <div class="font-display font-black text-xl md:text-3xl leading-tight">Rabu, 27 Mei 2026</div>
+                            <div class="text-red-100 text-xs md:text-sm mt-0.5">10 Zulhijah 1447 H · Idul Adha 1447 H</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-center">
+                            <div class="text-red-200 text-[10px] uppercase tracking-wider">Puasa Arafah</div>
+                            <div class="font-bold text-sm">Sel, 26 Mei 2026</div>
+                        </div>
+                        <div class="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-center">
+                            <div class="text-red-200 text-[10px] uppercase tracking-wider">Hari Tasyrik</div>
+                            <div class="font-bold text-sm">28 – 30 Mei 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lokasi -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Lokasi Penyembelihan</h3>
+            <div id="lokasi-container" class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-2 md:gap-4 md:mb-8">
+                <div class="skeleton h-36 md:h-48"></div><div class="skeleton h-36 md:h-48"></div>
+            </div>
+
+            <!-- Kebijakan Distribusi -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Kebijakan Distribusi Hewan</h3>
+            <div class="bg-stone-50 rounded-2xl md:rounded-[2rem] p-4 md:p-6 mb-5 md:mb-8">
+                <div class="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+                    <div class="bg-white rounded-xl md:rounded-2xl p-4 border border-stone-100 shadow-sm">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="text-2xl">🐄</div>
+                            <div><div class="font-black text-slate-800 text-sm">Sapi / Kerbau</div><span class="badge bg-amber-100 text-amber-700">Kampus II &amp; III</span></div>
+                        </div>
+                        <p class="text-slate-500 text-xs leading-relaxed">Disembelih di Kampus II dan III. Dagingnya dikemas menjadi paket untuk sivitas pemegang kupon, masyarakat sekitar, panitia, dan pimpinan universitas.</p>
+                    </div>
+                    <div class="bg-white rounded-xl md:rounded-2xl p-4 border border-stone-100 shadow-sm">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="text-2xl">🐑</div>
+                            <div><div class="font-black text-slate-800 text-sm">Kambing / Domba</div><span class="badge bg-teal-100 text-teal-700">Eksternal Seluruhnya</span></div>
+                        </div>
+                        <p class="text-slate-500 text-xs leading-relaxed">Seluruh kambing dan domba disalurkan ke lingkungan luar kampus — warga sekitar, keluarga yang membutuhkan, dan lembaga yang mengajukan proposal.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jadwal dinamis -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Jadwal Kegiatan 1447 H / 2026</h3>
+            <div class="bg-white border border-stone-100 rounded-2xl md:rounded-[2rem] overflow-hidden shadow-sm mb-5 md:mb-8">
+                <div class="relative pl-10 pr-4 py-5 space-y-5 md:pl-12 md:pr-5 md:py-6 md:space-y-6" id="jadwal-container">
                     <div class="timeline-line"></div>
-                    <div class="skeleton h-16 ml-4"></div>
-                    <div class="skeleton h-16 ml-4"></div>
-                    <div class="skeleton h-16 ml-4"></div>
+                    <div class="skeleton h-14 ml-2"></div>
+                    <div class="skeleton h-14 ml-2"></div>
+                    <div class="skeleton h-14 ml-2"></div>
                 </div>
             </div>
 
-            <!-- FAQ — dinamis -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Pertanyaan Umum</h3>
-            <div class="space-y-3 mb-8" id="faq-container">
-                <div class="skeleton h-14"></div>
-                <div class="skeleton h-14"></div>
-                <div class="skeleton h-14"></div>
+            <!-- FAQ dinamis -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Pertanyaan Umum</h3>
+            <div class="space-y-2 md:space-y-3 mb-5 md:mb-8" id="faq-container">
+                <div class="skeleton h-12 md:h-14"></div>
+                <div class="skeleton h-12 md:h-14"></div>
+                <div class="skeleton h-12 md:h-14"></div>
             </div>
 
-            <!-- Kontak — dinamis -->
-            <div id="kontak-container" class="bg-gradient-to-r from-amber-700 to-orange-700 rounded-[2rem] p-6 md:p-8 text-white text-center shadow-xl shadow-amber-100">
-                <div class="text-3xl mb-3">📞</div>
-                <h3 class="font-black text-xl mb-2">Hubungi Panitia Qurban</h3>
-                <p class="text-amber-100 text-sm mb-5">Koordinator: Biro AIK Universitas Muhammadiyah Malang</p>
-                <div class="flex flex-col sm:flex-row gap-3 justify-center" id="kontak-buttons"></div>
+            <!-- Kontak -->
+            <div class="bg-gradient-to-r from-amber-700 to-orange-700 rounded-2xl md:rounded-[2rem] p-5 md:p-8 text-white text-center shadow-xl shadow-amber-100">
+                <div class="text-3xl mb-2">📞</div>
+                <h3 class="font-black text-lg md:text-xl mb-1">Hubungi Panitia Qurban</h3>
+                <p id="kontak-sub" class="text-amber-100 text-xs mb-4 px-2 leading-snug"></p>
+                <div class="flex flex-col gap-2 md:flex-row md:justify-center" id="kontak-buttons"></div>
             </div>
         </div>
 
 
-        <!-- TAB 2: PARTISIPASI -->
+        <!-- ═══════════════════════════════ -->
+        <!-- TAB 2: PARTISIPASI            -->
+        <!-- ═══════════════════════════════ -->
         <div id="tab-partisipasi" class="tab-content">
 
             <div id="pendaftaran-banner" class="hidden bg-yellow-50 border border-yellow-300 rounded-2xl p-5 mb-6 flex gap-3 items-start">
                 <span class="text-2xl shrink-0">🔒</span>
                 <div><div class="font-bold text-yellow-800 text-sm">Pendaftaran Saat Ini Ditutup</div><div id="pendaftaran-pesan" class="text-yellow-700 text-xs mt-0.5"></div></div>
             </div>
+
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6 flex gap-3 items-start">
                 <span class="text-2xl shrink-0">💡</span>
-                <div><div class="font-bold text-amber-800 text-sm">3 Jalur Partisipasi Qurban UMM</div><div class="text-amber-700 text-xs mt-0.5">Kerjasama sponsor eksternal, partisipasi masyarakat umum via UMM Peduli, dan pengajuan proposal lembaga penerima kambing/domba.</div></div>
-            </div>
-
-            <!-- Kartu partisipasi — dinamis -->
-            <div id="partisipasi-container" class="space-y-4 mb-8">
-                <div class="skeleton h-20 rounded-[2rem]"></div>
-                <div class="skeleton h-20 rounded-[2rem]"></div>
-                <div class="skeleton h-20 rounded-[2rem]"></div>
-            </div>
-
-            <!-- Rekening — dinamis -->
-            <div id="rekening-box" class="hidden bg-white rounded-2xl p-5 border-2 border-amber-200 mb-6">
-                <div class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-3">📍 Rekening UMM Peduli</div>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between items-center"><span class="text-slate-500">Bank</span><span id="rek-bank" class="font-semibold text-slate-800"></span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-500">No. Rekening</span><span id="rek-nomor" class="font-semibold text-slate-800 font-mono"></span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-500">Atas Nama</span><span id="rek-nama" class="font-semibold text-slate-800"></span></div>
+                <div>
+                    <div class="font-bold text-amber-800 text-sm">3 Jalur Partisipasi Qurban Berkemajuan UMM 1447 H</div>
+                    <div class="text-amber-700 text-xs mt-0.5">Kerjasama sponsor eksternal, partisipasi masyarakat umum via UMM Peduli, dan pengajuan proposal lembaga penerima kambing/domba. Idul Adha: Rabu, 27 Mei 2026.</div>
                 </div>
-                <div class="mt-3 bg-amber-50 rounded-xl p-3 text-xs text-amber-700">⚠️ Sertakan nama lengkap dan nomor HP pada berita transfer. Kirim bukti pembayaran melalui formulir pendaftaran.</div>
+            </div>
+
+            <!-- Kartu partisipasi dinamis -->
+            <div id="partisipasi-container" class="space-y-3 mb-4">
+                <div class="skeleton h-16 rounded-2xl"></div>
+                <div class="skeleton h-16 rounded-2xl"></div>
+                <div class="skeleton h-16 rounded-2xl"></div>
             </div>
 
             <!-- Harga -->
-            <div id="harga-container" class="grid grid-cols-3 gap-3 mb-8 hidden">
-                <div class="bg-white rounded-2xl p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-2xl mb-1">🐄</div><div class="font-black text-slate-800 text-sm">Sapi</div><div id="harga-sapi" class="text-amber-700 font-black text-base mt-1"></div><div class="text-slate-400 text-[10px] mt-0.5">per saham (1/7)</div></div>
-                <div class="bg-white rounded-2xl p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-2xl mb-1">🐐</div><div class="font-black text-slate-800 text-sm">Kambing</div><div id="harga-kambing" class="text-amber-700 font-black text-base mt-1"></div><div class="text-slate-400 text-[10px] mt-0.5">per ekor</div></div>
-                <div class="bg-white rounded-2xl p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-2xl mb-1">🐑</div><div class="font-black text-slate-800 text-sm">Domba</div><div id="harga-domba" class="text-amber-700 font-black text-base mt-1"></div><div class="text-slate-400 text-[10px] mt-0.5">per ekor</div></div>
+            <div id="harga-container" class="grid grid-cols-3 gap-2 md:gap-3 mb-4 hidden">
+                <div class="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-xl md:text-2xl mb-0.5">🐄</div><div class="font-black text-slate-800 text-xs md:text-sm">Sapi</div><div id="harga-sapi" class="text-amber-700 font-black text-sm md:text-base mt-0.5"></div><div class="text-slate-400 text-[9px] md:text-[10px]">per saham (1/7)</div></div>
+                <div class="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-xl md:text-2xl mb-0.5">🐐</div><div class="font-black text-slate-800 text-xs md:text-sm">Kambing</div><div id="harga-kambing" class="text-amber-700 font-black text-sm md:text-base mt-0.5"></div><div class="text-slate-400 text-[9px] md:text-[10px]">per ekor</div></div>
+                <div class="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 border-2 border-amber-200 text-center shadow-sm"><div class="text-xl md:text-2xl mb-0.5">🐑</div><div class="font-black text-slate-800 text-xs md:text-sm">Domba</div><div id="harga-domba" class="text-amber-700 font-black text-sm md:text-base mt-0.5"></div><div class="text-slate-400 text-[9px] md:text-[10px]">per ekor</div></div>
+            </div>
+
+            <!-- Rekening -->
+            <div id="rekening-box" class="hidden bg-white rounded-xl md:rounded-2xl p-4 md:p-5 border-2 border-amber-200 mb-4">
+                <div class="text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-3">📍 Rekening UMM Peduli</div>
+                <div class="space-y-1.5 text-sm">
+                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">Bank</span><span id="rek-bank" class="font-semibold text-slate-800 text-xs text-right"></span></div>
+                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">No. Rekening</span><span id="rek-nomor" class="font-semibold text-slate-800 font-mono text-xs"></span></div>
+                    <div class="flex justify-between items-center"><span class="text-slate-500 text-xs">Atas Nama</span><span id="rek-nama" class="font-semibold text-slate-800 text-xs"></span></div>
+                </div>
+                <div class="mt-3 bg-amber-50 rounded-xl p-3 text-xs text-amber-700 leading-snug">⚠️ Sertakan nama lengkap dan nomor HP pada berita transfer. Kirim bukti pembayaran melalui formulir konfirmasi.</div>
             </div>
 
             <!-- Cek status -->
-            <div class="bg-slate-50 border border-slate-200 rounded-[2rem] p-6 text-center">
-                <div class="text-3xl mb-3">🔍</div>
-                <h3 class="font-black text-slate-800 text-lg mb-1">Cek Status Pengajuan</h3>
-                <p class="text-slate-500 text-sm mb-4">Sudah mendaftar? Pantau status pengajuan dengan nomor registrasi Anda</p>
-                <a id="link-cek-status" href="#" target="_blank" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-800 text-white py-3 px-8 rounded-2xl font-bold text-sm transition-colors">🔎 Cek Status Saya ↗</a>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-[2rem] p-5 md:p-6 text-center">
+                <div class="text-3xl mb-2">🔍</div>
+                <h3 class="font-black text-slate-800 text-base md:text-lg mb-1">Cek Status Pengajuan</h3>
+                <p class="text-slate-500 text-xs md:text-sm mb-4">Sudah mendaftar? Pantau status dengan nomor registrasi Anda</p>
+                <a id="link-cek-status" href="#" target="_blank" class="tap-target inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-800 text-white py-3 px-6 rounded-2xl font-bold text-sm transition-colors">🔎 Cek Status Saya ↗</a>
             </div>
         </div>
 
 
-        <!-- TAB 3: HARI H & DISTRIBUSI — mostly static -->
+        <!-- ═══════════════════════════════ -->
+        <!-- TAB 3: HARI H & DISTRIBUSI    -->
+        <!-- ═══════════════════════════════ -->
         <div id="tab-penyaluran" class="tab-content">
 
-            <div class="bg-gradient-to-br from-red-600 to-orange-700 text-white rounded-[2rem] p-6 md:p-8 mb-6 shadow-xl">
-                <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shrink-0">🗡️</div>
-                    <div><h2 class="text-xl font-black mb-1">Hari H Penyembelihan</h2><p class="text-red-100 text-sm leading-relaxed">Penyembelihan dilaksanakan serentak di Kampus II dan III UMM setelah Salat Idul Adha, dilanjutkan pengemasan dan distribusi paket daging kepada seluruh penerima yang berhak.</p></div>
+            <div class="bg-gradient-to-br from-red-600 to-orange-700 text-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 mb-5 shadow-xl">
+                <div class="flex items-start gap-3 md:gap-4">
+                    <div class="w-11 h-11 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl shrink-0">🗡️</div>
+                    <div>
+                        <h2 class="text-lg md:text-xl font-black mb-1">Hari H — Rabu, 27 Mei 2026</h2>
+                        <p class="text-red-100 text-xs md:text-sm leading-relaxed">Penyembelihan dilaksanakan serentak di Kampus II dan III UMM setelah Salat Idul Adha 1447 H, dilanjutkan pengemasan dan distribusi paket daging kepada seluruh penerima yang berhak.</p>
+                    </div>
                 </div>
             </div>
 
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-red-500 rounded-full inline-block"></span>Operasional di Dua Kampus</h3>
-            <div id="lokasi-hari-h" class="grid md:grid-cols-2 gap-4 mb-8">
-                <div class="skeleton h-64"></div><div class="skeleton h-64"></div>
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-red-500 rounded-full inline-block"></span>Operasional di Dua Kampus</h3>
+            <div id="lokasi-hari-h" class="grid grid-cols-1 gap-3 mb-5 md:grid-cols-2 md:gap-4 md:mb-8">
+                <div class="skeleton h-52 md:h-64"></div><div class="skeleton h-52 md:h-64"></div>
             </div>
 
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Penerima Paket Daging Sapi</h3>
-            <div class="space-y-3 mb-8">
-                <div class="flex gap-4 items-start bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-xl shrink-0">🎟️</div><div class="flex-1"><div class="font-bold text-slate-800 text-sm">Sivitas Akademika Pemegang Kupon</div><div class="text-slate-500 text-xs mt-0.5">Dosen, karyawan, dan mahasiswa yang telah menerima kupon distribusi sebelum hari H. Kupon diberikan panitia berdasarkan data kepegawaian dan kemahasiswaan UMM.</div></div><span class="badge bg-amber-100 text-amber-700 shrink-0">Internal</span></div>
-                <div class="flex gap-4 items-start bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-xl shrink-0">🏘️</div><div class="flex-1"><div class="font-bold text-slate-800 text-sm">Masyarakat Sekitar Kampus</div><div class="text-slate-500 text-xs mt-0.5">Warga di sekitar area Kampus II dan III yang belum mendapatkan daging dari sumber lain.</div></div><span class="badge bg-blue-100 text-blue-700 shrink-0">Eksternal</span></div>
-                <div class="flex gap-4 items-start bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-xl shrink-0">📋</div><div class="flex-1"><div class="font-bold text-slate-800 text-sm">Pengaju Proposal yang Dialihkan ke Paket Daging</div><div class="text-slate-500 text-xs mt-0.5">Lembaga yang mengajukan proposal hewan namun karena keterbatasan stok, panitia menggantinya dengan paket daging sapi.</div></div><span class="badge bg-purple-100 text-purple-700 shrink-0">Kebijakan</span></div>
-                <div class="flex gap-4 items-start bg-white border border-stone-100 rounded-2xl p-5 shadow-sm card-hover"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-xl shrink-0">🧑‍💼</div><div class="flex-1"><div class="font-bold text-slate-800 text-sm">Panitia & Pimpinan Universitas</div><div class="text-slate-500 text-xs mt-0.5">Seluruh panitia penyelenggara dan pimpinan universitas mendapatkan paket daging sebagai bagian dari distribusi resmi.</div></div><span class="badge bg-slate-100 text-slate-700 shrink-0">Internal</span></div>
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Penerima Paket Daging Sapi</h3>
+            <div class="space-y-2 md:space-y-3 mb-5 md:mb-8">
+                <div class="flex gap-3 items-start bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 shadow-sm card-hover"><div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg shrink-0">🎟️</div><div class="flex-1 min-w-0"><div class="font-bold text-slate-800 text-sm">Sivitas Akademika Pemegang Kupon</div><div class="text-slate-500 text-xs mt-0.5 leading-relaxed">Dosen, karyawan, dan mahasiswa UMM yang telah menerima kupon distribusi dari panitia SDM-AIK sebelum hari H.</div></div><span class="badge bg-amber-100 text-amber-700 shrink-0 self-start">Internal</span></div>
+                <div class="flex gap-3 items-start bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 shadow-sm card-hover"><div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-lg shrink-0">🏘️</div><div class="flex-1 min-w-0"><div class="font-bold text-slate-800 text-sm">Masyarakat Sekitar Kampus</div><div class="text-slate-500 text-xs mt-0.5 leading-relaxed">Warga di sekitar area Kampus II dan III yang belum mendapatkan daging dari sumber lain.</div></div><span class="badge bg-blue-100 text-blue-700 shrink-0 self-start">Eksternal</span></div>
+                <div class="flex gap-3 items-start bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 shadow-sm card-hover"><div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-lg shrink-0">📋</div><div class="flex-1 min-w-0"><div class="font-bold text-slate-800 text-sm">Pengaju Proposal yang Dialihkan ke Paket Daging</div><div class="text-slate-500 text-xs mt-0.5 leading-relaxed">Lembaga yang mengajukan proposal hewan namun karena keterbatasan stok kambing, panitia menggantinya dengan paket daging sapi.</div></div><span class="badge bg-purple-100 text-purple-700 shrink-0 self-start">Kebijakan</span></div>
+                <div class="flex gap-3 items-start bg-white border border-stone-100 rounded-xl md:rounded-2xl p-4 shadow-sm card-hover"><div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-lg shrink-0">🧑‍💼</div><div class="flex-1 min-w-0"><div class="font-bold text-slate-800 text-sm">Panitia SDM-AIK & Pimpinan Universitas</div><div class="text-slate-500 text-xs mt-0.5 leading-relaxed">Seluruh panitia penyelenggara SDM-AIK dan pimpinan universitas mendapatkan paket daging sebagai bagian dari distribusi resmi.</div></div><span class="badge bg-slate-100 text-slate-700 shrink-0 self-start">Internal</span></div>
             </div>
 
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-teal-500 rounded-full inline-block"></span>Distribusi Kambing / Domba</h3>
-            <div class="bg-teal-700 text-white rounded-[2rem] p-6 md:p-7 mb-8 shadow-lg">
-                <div class="flex gap-4 items-start mb-4"><div class="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center text-2xl shrink-0">🐑</div><div><div class="font-black text-lg">Seluruhnya untuk Masyarakat Luar Kampus</div><div class="text-teal-100 text-sm mt-0.5">Kambing dan domba 100% disalurkan ke masyarakat dan lembaga — tidak untuk internal kampus</div></div></div>
-                <div class="grid md:grid-cols-3 gap-3">
-                    <div class="bg-white/10 rounded-2xl p-4"><div class="text-xl mb-1">🏘️</div><div class="font-bold text-sm">Warga Sekitar Kampus</div><div class="text-teal-100 text-xs mt-0.5">Lingkungan Tlogomas, Lowokwaru, dan sekitarnya</div></div>
-                    <div class="bg-white/10 rounded-2xl p-4"><div class="text-xl mb-1">🏠</div><div class="font-bold text-sm">Warga yang Membutuhkan</div><div class="text-teal-100 text-xs mt-0.5">Keluarga prasejahtera yang terdata dan diverifikasi</div></div>
-                    <div class="bg-white/10 rounded-2xl p-4"><div class="text-xl mb-1">🕌</div><div class="font-bold text-sm">Lembaga Pengaju Proposal</div><div class="text-teal-100 text-xs mt-0.5">Panti asuhan, pesantren, masjid, komunitas warga</div></div>
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-teal-500 rounded-full inline-block"></span>Distribusi Kambing / Domba</h3>
+            <div class="bg-teal-700 text-white rounded-2xl md:rounded-[2rem] p-5 md:p-7 mb-6 shadow-lg">
+                <div class="flex gap-3 items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-white/15 rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl shrink-0">🐑</div>
+                    <div>
+                        <div class="font-black text-base md:text-lg leading-snug">Seluruhnya untuk Masyarakat Luar Kampus</div>
+                        <div class="text-teal-100 text-xs md:text-sm mt-0.5">Kambing dan domba 100% disalurkan ke masyarakat dan lembaga — tidak untuk kebutuhan internal kampus</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-3">
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏘️</div><div><div class="font-bold text-sm">Warga Sekitar Kampus</div><div class="text-teal-100 text-xs">Lingkungan Tlogomas, Lowokwaru, dan sekitarnya</div></div></div>
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🏠</div><div><div class="font-bold text-sm">Warga yang Membutuhkan</div><div class="text-teal-100 text-xs">Keluarga prasejahtera yang terdata dan diverifikasi panitia</div></div></div>
+                    <div class="bg-white/10 rounded-xl p-3 flex gap-2 md:flex-col md:gap-0"><div class="text-xl shrink-0 md:mb-1">🕌</div><div><div class="font-bold text-sm">Lembaga Pengaju Proposal</div><div class="text-teal-100 text-xs">Panti asuhan, pesantren, masjid, komunitas warga</div></div></div>
                 </div>
             </div>
 
-            <div class="bg-slate-50 border border-slate-200 rounded-[2rem] p-6 mb-8">
-                <div class="flex gap-4 items-start"><div class="w-12 h-12 bg-slate-200 rounded-2xl flex items-center justify-center text-xl shrink-0">🗺️</div><div><div class="font-bold text-slate-800 mb-1">Distribusi ke Lokasi Lain</div><p class="text-slate-500 text-sm leading-relaxed">Selain Kampus II dan III, sebagian daging qurban juga dapat didistribusikan ke lokasi lain sesuai kebijakan panitia — termasuk daerah yang membutuhkan di luar area kampus, lembaga mitra Muhammadiyah, maupun wilayah prioritas yang ditetapkan setiap tahunnya.</p></div></div>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-6 mb-6">
+                <div class="flex gap-3 items-start">
+                    <div class="w-10 h-10 bg-slate-200 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5">🗺️</div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm mb-1">Distribusi ke Lokasi Lain</div>
+                        <p class="text-slate-500 text-xs md:text-sm leading-relaxed">Selain Kampus II dan III, sebagian daging qurban juga dapat didistribusikan ke lokasi lain sesuai kebijakan panitia SDM-AIK — termasuk daerah yang membutuhkan, lembaga mitra Muhammadiyah, maupun wilayah prioritas yang ditetapkan Wakil Rektor V setiap tahunnya.</p>
+                    </div>
+                </div>
             </div>
 
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-red-500 rounded-full inline-block"></span>Alur Kegiatan Hari H</h3>
-            <div class="bg-stone-50 rounded-[2rem] p-6">
-                <div class="space-y-4">
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-amber-700 bg-amber-100 rounded-xl px-2 py-1">06.00</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Salat Idul Adha</div><div class="text-slate-500 text-xs">Masjid AR. Fachruddin, Kampus III UMM</div></div></div>
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-red-700 bg-red-100 rounded-xl px-2 py-1">07.30</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Penyembelihan Mulai — Kampus II & III</div><div class="text-slate-500 text-xs">Serentak, dipimpin oleh tim penyembelih dan veteriner</div></div></div>
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-orange-700 bg-orange-100 rounded-xl px-2 py-1">09.00</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Pengemasan Paket Daging</div><div class="text-slate-500 text-xs">Tim sukarelawan membantu proses pengemasan per paket</div></div></div>
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-amber-700 bg-amber-100 rounded-xl px-2 py-1">13.30</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Distribusi Paket Daging Sapi</div><div class="text-slate-500 text-xs">Pemegang kupon, masyarakat sekitar, panitia & pimpinan universitas</div></div></div>
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-teal-700 bg-teal-100 rounded-xl px-2 py-1">14.00</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Distribusi Kambing / Domba</div><div class="text-slate-500 text-xs">Penyerahan ke lembaga dan warga penerima proposal</div></div></div>
-                    <div class="flex gap-4 items-center"><div class="w-16 text-center shrink-0"><div class="text-xs font-black text-blue-700 bg-blue-100 rounded-xl px-2 py-1">H+1–3</div></div><div class="flex-1 bg-white rounded-2xl p-4 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Distribusi Lanjutan</div><div class="text-slate-500 text-xs">Penyaluran ke lokasi lain sesuai kebijakan panitia qurban</div></div></div>
+            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-red-500 rounded-full inline-block"></span>Alur Kegiatan Hari H — 27 Mei 2026</h3>
+            <div class="bg-stone-50 rounded-[2rem] p-4 md:p-6">
+                <div class="space-y-3">
+                    <!-- H-1 -->
+                    <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3 mb-1">
+                        <div class="text-[10px] font-black text-teal-600 uppercase tracking-widest mb-2">Selasa, 26 Mei 2026 — H-1 (Puasa Arafah)</div>
+                        <div class="flex gap-3 items-center">
+                            <div class="shrink-0 text-center">
+                                <div class="text-[11px] font-black text-teal-700 bg-teal-100 rounded-lg px-2 py-1 whitespace-nowrap">Sore H-1</div>
+                            </div>
+                            <div class="flex-1 bg-white rounded-xl p-3 border border-teal-100">
+                                <div class="font-bold text-slate-800 text-sm">Distribusi Kambing & Domba ke Penerima</div>
+                                <div class="text-slate-500 text-xs mt-0.5">Penyerahan hewan kambing dan domba hidup kepada lembaga dan warga penerima proposal — dilaksanakan sehari sebelum Idul Adha agar penerima dapat menyembelih sendiri pada hari H</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- H (Hari H) -->
+                    <div class="bg-red-50 border border-red-100 rounded-2xl p-3">
+                        <div class="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2">Rabu, 27 Mei 2026 — Idul Adha 1447 H</div>
+                        <div class="space-y-3">
+                            <div class="flex gap-3 items-center"><div class="shrink-0"><div class="text-[11px] font-black text-amber-700 bg-amber-100 rounded-lg px-2 py-1 whitespace-nowrap w-16 text-center">06.00</div></div><div class="flex-1 bg-white rounded-xl p-3 border border-stone-100"><div class="font-bold text-slate-800 text-sm">Salat Idul Adha 1447 H</div><div class="text-slate-500 text-xs">Masjid AR. Fachruddin, Kampus III UMM</div></div></div>
+                            <div class="flex gap-3 items-center"><div class="shrink-0"><div class="text-[11px] font-black text-red-700 bg-red-100 rounded-lg px-2 py-1 whitespace-nowrap w-16 text-center">07.30</div></div><div class="flex-1 bg-white rounded-xl p-3 border border-stone-100"><div class="font-bold text-slate-800 text-sm">Penyembelihan Sapi — Kampus II & III</div><div class="text-slate-500 text-xs">Serentak, dipimpin tim penyembelih dan veteriner di bawah koordinasi SDM-AIK</div></div></div>
+                            <div class="flex gap-3 items-center"><div class="shrink-0"><div class="text-[11px] font-black text-orange-700 bg-orange-100 rounded-lg px-2 py-1 whitespace-nowrap w-16 text-center">09.00</div></div><div class="flex-1 bg-white rounded-xl p-3 border border-stone-100"><div class="font-bold text-slate-800 text-sm">Pengemasan Paket Daging</div><div class="text-slate-500 text-xs">Tim sukarelawan membantu proses pengemasan daging per paket</div></div></div>
+                            <div class="flex gap-3 items-center"><div class="shrink-0"><div class="text-[11px] font-black text-amber-700 bg-amber-100 rounded-lg px-2 py-1 whitespace-nowrap w-16 text-center">13.30</div></div><div class="flex-1 bg-white rounded-xl p-3 border border-stone-100"><div class="font-bold text-slate-800 text-sm">Distribusi Paket Daging Sapi</div><div class="text-slate-500 text-xs">Pemegang kupon, masyarakat sekitar, panitia SDM-AIK & pimpinan universitas</div></div></div>
+                        </div>
+                    </div>
+                    <!-- Tasyrik -->
+                    <div class="flex gap-3 items-center"><div class="shrink-0"><div class="text-[11px] font-black text-blue-700 bg-blue-100 rounded-lg px-2 py-1 whitespace-nowrap w-16 text-center">28–30</div></div><div class="flex-1 bg-white rounded-xl p-3 border border-stone-100 shadow-sm"><div class="font-bold text-slate-800 text-sm">Distribusi Lanjutan — Hari Tasyrik</div><div class="text-slate-500 text-xs">Penyaluran ke daerah lain sesuai kebijakan panitia (11–13 Zulhijah 1447 H)</div></div></div>
                 </div>
             </div>
         </div>
 
 
-        <!-- TAB 4: LAPORAN -->
+        <!-- ═══════════════════════════════ -->
+        <!-- TAB 4: LAPORAN                -->
+        <!-- ═══════════════════════════════ -->
         <div id="tab-laporan" class="tab-content">
 
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-[2rem] p-7 mb-6 shadow-xl">
-                <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-lg">📊</div>
-                    <div><h2 class="text-xl font-black mb-2">Laporan Pertanggungjawaban</h2><p class="text-slate-300 text-sm leading-relaxed">Transparansi adalah amanah. Seluruh kegiatan qurban UMM dilaporkan terbuka — untuk sivitas akademika, sponsor, maupun masyarakat yang berpartisipasi.</p></div>
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-2xl md:rounded-[2rem] p-5 md:p-7 mb-5 shadow-xl">
+                <div class="flex items-start gap-3 md:gap-4">
+                    <div class="w-11 h-11 md:w-14 md:h-14 bg-amber-500 rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl shrink-0 shadow-lg">📊</div>
+                    <div>
+                        <h2 class="text-lg md:text-xl font-black mb-1">Laporan Pertanggungjawaban</h2>
+                        <p id="laporan-sub" class="text-slate-400 text-xs mb-1.5"></p>
+                        <p class="text-slate-300 text-xs md:text-sm leading-relaxed">Transparansi adalah amanah. Seluruh kegiatan qurban UMM dilaporkan terbuka — untuk sivitas akademika, sponsor, dan masyarakat yang berpartisipasi.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Statistik — dinamis -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Ringkasan Pelaksanaan <span id="stat-tahun-label" class="ml-1"></span></h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-5 text-center card-hover"><div id="stat-sapi" class="text-3xl font-black text-amber-700 font-display">—</div><div class="text-slate-500 text-xs mt-1">Sapi</div></div>
-                <div class="bg-teal-50 border border-teal-100 rounded-2xl p-5 text-center card-hover"><div id="stat-kambing" class="text-3xl font-black text-teal-700 font-display">—</div><div class="text-slate-500 text-xs mt-1">Kambing / Domba</div></div>
-                <div class="bg-orange-50 border border-orange-100 rounded-2xl p-5 text-center card-hover"><div id="stat-paket" class="text-3xl font-black text-orange-700 font-display">—</div><div class="text-slate-500 text-xs mt-1">Paket Daging</div></div>
-                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 text-center card-hover"><div id="stat-penerima" class="text-3xl font-black text-blue-700 font-display">—</div><div class="text-slate-500 text-xs mt-1">Penerima Manfaat</div></div>
+            <!-- Statistik -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Ringkasan Pelaksanaan <span id="stat-tahun-label" class="ml-1"></span></h3>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3 mb-3">
+                <div class="bg-amber-50 border border-amber-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-sapi" class="text-2xl md:text-3xl font-black text-amber-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Sapi</div></div>
+                <div class="bg-teal-50 border border-teal-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-kambing" class="text-2xl md:text-3xl font-black text-teal-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Kambing / Domba</div></div>
+                <div class="bg-orange-50 border border-orange-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-paket" class="text-2xl md:text-3xl font-black text-orange-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Paket Daging</div></div>
+                <div class="bg-blue-50 border border-blue-100 rounded-xl md:rounded-2xl p-3 md:p-5 text-center card-hover"><div id="stat-penerima" class="text-2xl md:text-3xl font-black text-blue-700 font-display">—</div><div class="text-slate-500 text-[11px] md:text-xs mt-0.5">Penerima Manfaat</div></div>
             </div>
-            <div id="stat-catatan-box" class="hidden bg-amber-50 border border-dashed border-amber-300 rounded-2xl p-4 mb-8 text-center text-sm text-amber-700"></div>
+            <div id="stat-catatan-box" class="hidden bg-amber-50 border border-dashed border-amber-300 rounded-xl p-3 mb-6 text-center text-xs md:text-sm text-amber-700"></div>
 
-            <!-- Dokumen laporan — dinamis -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Dokumen Laporan</h3>
-            <div id="laporan-container" class="space-y-4 mb-8">
-                <div class="skeleton h-28 rounded-2xl"></div>
-                <div class="skeleton h-28 rounded-2xl"></div>
+            <!-- Dokumen laporan dinamis -->
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Dokumen Laporan</h3>
+            <div id="laporan-container" class="space-y-3 mb-5 md:mb-8">
+                <div class="skeleton h-24 md:h-28 rounded-2xl"></div>
+                <div class="skeleton h-24 md:h-28 rounded-2xl"></div>
             </div>
 
             <!-- Galeri -->
-            <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><span class="w-1 h-6 bg-amber-600 rounded-full inline-block"></span>Galeri Dokumentasi</h3>
-            <div class="grid grid-cols-3 gap-3 mb-8">
-                <div class="aspect-square bg-stone-100 rounded-2xl flex flex-col items-center justify-center text-center p-3 border border-stone-200"><div class="text-3xl mb-1">🖼️</div><div class="text-xs text-slate-400">Foto hadir</div></div>
-                <div class="aspect-square bg-stone-100 rounded-2xl flex flex-col items-center justify-center text-center p-3 border border-stone-200"><div class="text-3xl mb-1">🖼️</div><div class="text-xs text-slate-400">pasca-qurban</div></div>
-                <div class="aspect-square bg-stone-100 rounded-2xl flex flex-col items-center justify-center text-center p-3 border border-stone-200"><div class="text-3xl mb-1">🖼️</div><div class="text-xs text-slate-400">1447 H / 2026</div></div>
+            <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-amber-600 rounded-full inline-block"></span>Galeri Dokumentasi</h3>
+            <div class="grid grid-cols-3 gap-2 md:gap-3 mb-5 md:mb-8">
+                <div class="aspect-square bg-stone-100 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center p-2 border border-stone-200"><div class="text-2xl mb-1">🖼️</div><div class="text-[10px] md:text-xs text-slate-400">Foto hadir</div></div>
+                <div class="aspect-square bg-stone-100 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center p-2 border border-stone-200"><div class="text-2xl mb-1">🖼️</div><div class="text-[10px] md:text-xs text-slate-400">pasca-qurban</div></div>
+                <div class="aspect-square bg-stone-100 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center p-2 border border-stone-200"><div class="text-2xl mb-1">🖼️</div><div class="text-[10px] md:text-xs text-slate-400">1447 H / 2026</div></div>
             </div>
 
-            <!-- Notifikasi — dinamis -->
-            <div id="notif-container" class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-[2rem] p-6 md:p-8 text-white text-center shadow-xl">
-                <div class="text-3xl mb-3">🔔</div>
-                <h3 class="font-black text-xl mb-2">Ingin Dinotifikasi saat Laporan Terbit?</h3>
-                <p class="text-slate-300 text-sm mb-5 max-w-sm mx-auto">Daftarkan kontak Anda untuk mendapat laporan pertanggungjawaban lengkap segera setelah dipublikasikan</p>
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a id="link-notifikasi" href="#" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-white py-3 px-6 rounded-2xl font-bold text-sm transition-colors shadow-lg">📧 Daftar Notifikasi ↗</a>
-                    <a id="link-wa-grup" href="#" target="_blank" class="bg-white/10 border border-white/20 text-white py-3 px-6 rounded-2xl font-bold text-sm hover:bg-white/20 transition-colors">💬 <span id="wa-grup-label">Grup WhatsApp</span></a>
+            <!-- Notifikasi -->
+            <div class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 text-white text-center shadow-xl">
+                <div class="text-3xl mb-2">🔔</div>
+                <h3 class="font-black text-lg md:text-xl mb-2">Ingin Dinotifikasi saat Laporan Terbit?</h3>
+                <p class="text-slate-300 text-xs md:text-sm mb-4 max-w-xs mx-auto leading-relaxed">Daftarkan kontak Anda untuk mendapat laporan pertanggungjawaban lengkap segera setelah dipublikasikan</p>
+                <div class="flex flex-col gap-2 md:flex-row md:justify-center">
+                    <a id="link-notifikasi" href="#" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm transition-colors shadow-lg tap-target">📧 Daftar Notifikasi ↗</a>
+                    <a id="link-wa-grup" href="#" target="_blank" class="bg-white/10 border border-white/20 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-white/20 transition-colors tap-target">💬 <span id="wa-grup-label">Grup WhatsApp</span></a>
                 </div>
             </div>
         </div>
 
         <!-- FOOTER -->
-        <div class="mt-10 pt-6 border-t border-stone-100 text-center">
-            <p class="text-xs text-slate-400">Qurban Berkemajuan UMM · SDM-AIK</p>
-            <p class="text-xs text-stone-300 mt-1">Wakil Rektor V Bidang Pembinaan AIK dan Pengembangan SDM</p>
+        <div class="mt-8 pt-5 border-t border-stone-100 text-center space-y-0.5">
+            <p class="text-xs text-slate-400">Qurban Berkemajuan UMM 1447 H / 2026 M</p>
+            <p id="footer-unit" class="text-xs text-slate-400 px-4 leading-snug"></p>
+            <p id="footer-warek" class="text-[11px] text-stone-300 px-4 leading-snug"></p>
+            <p class="text-[11px] text-stone-300">sdm-aik.umm.ac.id/qurban</p>
         </div>
 
     </div><!-- /main-content -->
@@ -340,49 +493,39 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzm_eSkK2NWaDG9PuLWXq3n
 // ═══════════════════════════════════════════════════
 //  UTILS
 // ═══════════════════════════════════════════════════
-let _data = null;
 const COLOR_DOT = { amber:'dot-amber', yellow:'dot-yellow', red:'dot-red', emerald:'dot-emerald', blue:'dot-blue', teal:'dot-teal', purple:'dot-purple', slate:'dot-slate' };
 const COLOR_LBL = { amber:'label-amber', yellow:'label-yellow', red:'label-red', emerald:'label-emerald', blue:'label-blue', teal:'label-teal', purple:'label-purple', slate:'label-slate' };
 
-function esc(str) {
-    return String(str || "").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function show(id)  { document.getElementById(id)?.classList.remove('hidden'); }
-function hide(id)  { document.getElementById(id)?.classList.add('hidden'); }
-function set(id, v){ const el=document.getElementById(id); if(el) el.textContent=v; }
-function setHtml(id,v){ const el=document.getElementById(id); if(el) el.innerHTML=v; }
-
+function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function show(id){ document.getElementById(id)?.classList.remove('hidden'); }
+function hide(id){ document.getElementById(id)?.classList.add('hidden'); }
+function set(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
 
 // ═══════════════════════════════════════════════════
 //  FETCH DATA
 // ═══════════════════════════════════════════════════
 async function loadData() {
-    hide('error-state');
-    show('loading-state');
-    hide('main-content');
-
+    hide('error-state'); show('loading-state'); hide('main-content');
     try {
         const res  = await fetch(API_URL + "?action=all");
         const data = await res.json();
         if (data.error) throw new Error(data.error);
-        _data = data;
         renderAll(data);
-        hide('loading-state');
-        show('main-content');
+        hide('loading-state'); show('main-content');
     } catch(err) {
-        hide('loading-state');
-        show('error-state');
+        hide('loading-state'); show('error-state');
         set('error-msg', err.message || 'Tidak dapat terhubung ke server');
     }
 }
 
-
 // ═══════════════════════════════════════════════════
-//  RENDER SEMUA
+//  RENDER ALL
 // ═══════════════════════════════════════════════════
 function renderAll(d) {
     renderHero(d.config);
+    renderPenyelenggara(d.config);
     renderLokasi(d.lokasi);
+    renderLokasiHariH(d.lokasi);
     renderJadwal(d.jadwal);
     renderFaq(d.faq);
     renderKontak(d.config);
@@ -392,11 +535,10 @@ function renderAll(d) {
     renderStatistik(d.statistik);
     renderLaporan(d.laporan);
     renderNotif(d.config);
-    renderLokasiHariH(d.lokasi);
     applyFormLinks(d.config);
     renderPendaftaranBanner(d.config);
+    renderFooter(d.config);
 }
-
 
 // ═══════════════════════════════════════════════════
 //  RENDER HERO
@@ -404,70 +546,77 @@ function renderAll(d) {
 function renderHero(cfg) {
     const logo = document.getElementById('hero-logo');
     if (logo && cfg.identitas.logo_url) logo.src = cfg.identitas.logo_url;
-    set('hero-label',  cfg.identitas.label_hero);
-    set('hero-tagline', '"' + cfg.identitas.tagline + '"');
+    set('hero-label',   cfg.identitas.label_hero);
+    const tg = cfg.identitas.tagline;
+    set('hero-tagline', tg ? '"' + tg + '"' : '');
+    set('hero-unit',    cfg.identitas.penyelenggara_unit || '');
+    set('hero-warek',   cfg.identitas.penyelenggara_warek || '');
 
     const statsEl = document.getElementById('hero-stats');
     statsEl.innerHTML = cfg.identitas.stat_hero.map(s => `
-        <div class="bg-white/8 border border-white/10 rounded-2xl py-4 px-2 backdrop-blur-sm">
-            <div class="text-2xl md:text-3xl font-black text-amber-400 font-display">${esc(s.nilai)}</div>
-            <div class="text-amber-200/60 text-[10px] uppercase tracking-widest mt-1">${esc(s.label)}</div>
+        <div class="bg-white/8 border border-white/10 rounded-xl md:rounded-2xl py-3 px-1 md:py-4 md:px-2 backdrop-blur-sm">
+            <div class="text-base md:text-2xl font-black text-amber-400 font-display leading-tight">${esc(s.nilai)}</div>
+            <div class="text-amber-200/60 text-[9px] md:text-[10px] uppercase tracking-wider mt-0.5">${esc(s.label)}</div>
         </div>`).join('');
 }
 
+// ═══════════════════════════════════════════════════
+//  RENDER PENYELENGGARA
+// ═══════════════════════════════════════════════════
+function renderPenyelenggara(cfg) {
+    const unit  = cfg.identitas.penyelenggara_unit  || '';
+    const warek = cfg.identitas.penyelenggara_warek || '';
+    const univ  = cfg.identitas.penyelenggara_univ  || '';
+
+    set('info-penyelenggara-label', unit + (univ ? ' · ' + univ : ''));
+    set('banner-unit',  unit);
+    set('banner-warek', warek + (univ ? ' — ' + univ : ''));
+
+    const lapSub = document.getElementById('laporan-sub');
+    if (lapSub) lapSub.textContent = 'Penyelenggara: ' + unit;
+
+    const kontakSub = document.getElementById('kontak-sub');
+    if (kontakSub) kontakSub.textContent = unit + (warek ? ' · ' + warek : '');
+}
 
 // ═══════════════════════════════════════════════════
 //  RENDER LOKASI (Tab Info)
 // ═══════════════════════════════════════════════════
 function renderLokasi(lokasiArr) {
     const el = document.getElementById('lokasi-container');
-    if (!lokasiArr || !lokasiArr.length) { el.innerHTML = ''; return; }
-
+    if (!lokasiArr?.length) { el.innerHTML = ''; return; }
     el.innerHTML = lokasiArr.map(l => {
         const tagHewan  = (l.tag_hewan||[]).map(t=>`<span class="${l.is_utama?'bg-white/15 text-white':'bg-amber-50 text-amber-700 border border-amber-200'} text-[10px] font-semibold px-2 py-1 rounded-full">🐄 ${esc(t)}</span>`).join('');
         const tagEkstra = (l.tag_ekstra||[]).map(t=>`<span class="${l.is_utama?'bg-white/15 text-white':'bg-amber-50 text-amber-700 border border-amber-200'} text-[10px] font-semibold px-2 py-1 rounded-full">📦 ${esc(t)}</span>`).join('');
-
         if (l.is_utama) return `
             <div class="bg-gradient-to-br from-amber-600 to-orange-700 text-white rounded-[2rem] p-6 shadow-lg card-hover">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">⭐</div>
-                    <div><div class="font-black text-base">${esc(l.nama)}</div><div class="text-amber-100 text-xs">${esc(l.alamat)}</div></div>
-                </div>
+                <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">⭐</div><div><div class="font-black text-base">${esc(l.nama)}</div><div class="text-amber-100 text-xs">${esc(l.alamat)}</div></div></div>
                 <p class="text-amber-100 text-xs leading-relaxed mb-3">${esc(l.peran)}</p>
                 <div class="flex flex-wrap gap-2">${tagHewan}${tagEkstra}</div>
             </div>`;
-        else return `
+        return `
             <div class="bg-white border-2 border-amber-200 rounded-[2rem] p-6 card-hover">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-xl">🏫</div>
-                    <div><div class="font-black text-slate-800 text-base">${esc(l.nama)}</div><div class="text-slate-400 text-xs">${esc(l.alamat)}</div></div>
-                </div>
+                <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-xl">🏫</div><div><div class="font-black text-slate-800 text-base">${esc(l.nama)}</div><div class="text-slate-400 text-xs">${esc(l.alamat)}</div></div></div>
                 <p class="text-slate-600 text-xs leading-relaxed mb-3">${esc(l.peran)}</p>
                 <div class="flex flex-wrap gap-2">${tagHewan}${tagEkstra}</div>
             </div>`;
     }).join('');
 }
 
-
 // ═══════════════════════════════════════════════════
 //  RENDER LOKASI HARI H
 // ═══════════════════════════════════════════════════
 function renderLokasiHariH(lokasiArr) {
     const el = document.getElementById('lokasi-hari-h');
-    if (!lokasiArr || !lokasiArr.length) { el.innerHTML = ''; return; }
-
+    if (!lokasiArr?.length) { el.innerHTML = ''; return; }
     el.innerHTML = lokasiArr.map(l => {
-        const headerClass = l.is_utama
-            ? 'bg-gradient-to-r from-amber-700 to-orange-700'
-            : 'bg-gradient-to-r from-slate-600 to-slate-700';
-        const headerSub = l.is_utama
-            ? `<span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mr-1">UTAMA</span>`
-            : '';
-        const hewan = (l.tag_hewan||[]).join(' & ');
+        const hdrClass = l.is_utama ? 'bg-gradient-to-r from-amber-700 to-orange-700' : 'bg-gradient-to-r from-slate-600 to-slate-700';
+        const hdrSub   = l.is_utama ? `<span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mr-1">UTAMA</span>` : '';
+        const hewan    = (l.tag_hewan||[]).join(' & ');
         return `
             <div class="bg-white border border-stone-100 rounded-[2rem] overflow-hidden shadow-sm">
-                <div class="${headerClass} px-6 py-4">
-                    <div class="text-white font-black text-base">${headerSub}${esc(l.nama)}</div>
+                <div class="${hdrClass} px-6 py-4">
+                    <div class="text-white font-black text-base">${hdrSub}${esc(l.nama)}</div>
                     <div class="${l.is_utama?'text-amber-100':'text-slate-300'} text-xs mt-0.5">${esc(l.alamat)}</div>
                 </div>
                 <div class="p-5 space-y-3">
@@ -480,23 +629,21 @@ function renderLokasiHariH(lokasiArr) {
     }).join('');
 }
 
-
 // ═══════════════════════════════════════════════════
 //  RENDER JADWAL
 // ═══════════════════════════════════════════════════
 function renderJadwal(jadwal) {
     const el = document.getElementById('jadwal-container');
     el.innerHTML = '<div class="timeline-line"></div>';
-    if (!jadwal || !jadwal.length) { el.innerHTML += '<p class="text-slate-400 text-sm ml-4">Jadwal belum tersedia.</p>'; return; }
-
+    if (!jadwal?.length) { el.innerHTML += '<p class="text-slate-400 text-sm ml-4">Jadwal belum tersedia.</p>'; return; }
     jadwal.forEach(j => {
-        const dotClass = COLOR_DOT[j.warna] || 'dot-amber';
-        const lblClass = COLOR_LBL[j.warna] || 'label-amber';
+        const dc = COLOR_DOT[j.warna] || 'dot-amber';
+        const lc = COLOR_LBL[j.warna] || 'label-amber';
         el.innerHTML += `
             <div class="relative flex gap-4 items-start">
-                <div class="w-10 h-10 ${dotClass} rounded-full flex items-center justify-center text-white text-sm font-black shrink-0 shadow-md z-10">${j.urutan}</div>
+                <div class="w-10 h-10 ${dc} rounded-full flex items-center justify-center text-white text-sm font-black shrink-0 shadow-md z-10">${j.urutan}</div>
                 <div>
-                    <div class="text-xs font-bold ${lblClass} uppercase tracking-wider">${esc(j.tanggal_label)}</div>
+                    <div class="text-xs font-bold ${lc} uppercase tracking-wider">${esc(j.tanggal_label)}</div>
                     <div class="font-bold text-slate-800">${esc(j.judul)}</div>
                     <div class="text-slate-500 text-xs">${esc(j.deskripsi)}</div>
                 </div>
@@ -504,15 +651,13 @@ function renderJadwal(jadwal) {
     });
 }
 
-
 // ═══════════════════════════════════════════════════
 //  RENDER FAQ
 // ═══════════════════════════════════════════════════
 function renderFaq(faqArr) {
     const el = document.getElementById('faq-container');
-    if (!faqArr || !faqArr.length) { el.innerHTML = '<p class="text-slate-400 text-sm">FAQ belum tersedia.</p>'; return; }
-
-    el.innerHTML = faqArr.map((f, i) => `
+    if (!faqArr?.length) { el.innerHTML = '<p class="text-slate-400 text-sm">FAQ belum tersedia.</p>'; return; }
+    el.innerHTML = faqArr.map(f => `
         <div class="bg-white border border-stone-100 rounded-2xl overflow-hidden shadow-sm">
             <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-800 text-sm">
                 ${esc(f.pertanyaan)}
@@ -524,7 +669,6 @@ function renderFaq(faqArr) {
         </div>`).join('');
 }
 
-
 // ═══════════════════════════════════════════════════
 //  RENDER KONTAK
 // ═══════════════════════════════════════════════════
@@ -532,41 +676,33 @@ function renderKontak(cfg) {
     const btns = document.getElementById('kontak-buttons');
     if (!btns) return;
     btns.innerHTML = `
-        <a href="https://wa.me/${esc(cfg.kontak.wa_panitia)}" target="_blank" class="bg-white text-amber-800 py-3 px-6 rounded-2xl font-bold text-sm hover:bg-amber-50 transition-colors">💬 WhatsApp Panitia</a>
-        <a href="mailto:${esc(cfg.kontak.email_aik)}" class="bg-amber-600 border border-amber-400 text-white py-3 px-6 rounded-2xl font-bold text-sm hover:bg-amber-500 transition-colors">✉️ Email AIK UMM</a>`;
+        <a href="https://wa.me/${esc(cfg.kontak.wa_panitia)}" target="_blank" class="tap-target bg-white text-amber-800 py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-50 transition-colors w-full md:w-auto">💬 WhatsApp Panitia</a>
+        <a href="mailto:${esc(cfg.kontak.email_aik)}" class="tap-target bg-amber-600 border border-amber-400 text-white py-3 px-5 rounded-2xl font-bold text-sm hover:bg-amber-500 transition-colors w-full md:w-auto">✉️ Email SDM-AIK</a>`;
 }
-
 
 // ═══════════════════════════════════════════════════
 //  RENDER PARTISIPASI
 // ═══════════════════════════════════════════════════
 const CARD_STYLE = {
-    sponsor:    { border:'border-blue-200',   gradient:'from-blue-500 to-indigo-600',   icon:'🏦', btnClass:'bg-blue-600 hover:bg-blue-700 shadow-blue-100',   iconColor:'text-blue-500' },
-    masyarakat: { border:'border-amber-200',  gradient:'from-amber-500 to-orange-600',  icon:'👥', btnClass:'bg-amber-600 hover:bg-amber-700 shadow-amber-100', iconColor:'text-amber-500' },
-    proposal:   { border:'border-teal-200',   gradient:'from-teal-500 to-emerald-600',  icon:'📝', btnClass:'bg-teal-600 hover:bg-teal-700 shadow-teal-100',   iconColor:'text-teal-500' },
+    sponsor:    { border:'border-blue-200',   gradient:'from-blue-500 to-indigo-600',   icon:'🏦', btn:'bg-blue-600 hover:bg-blue-700 shadow-blue-100',   iconColor:'text-blue-500'  },
+    masyarakat: { border:'border-amber-200',  gradient:'from-amber-500 to-orange-600',  icon:'👥', btn:'bg-amber-600 hover:bg-amber-700 shadow-amber-100', iconColor:'text-amber-500' },
+    proposal:   { border:'border-teal-200',   gradient:'from-teal-500 to-emerald-600',  icon:'📝', btn:'bg-teal-600 hover:bg-teal-700 shadow-teal-100',   iconColor:'text-teal-500'  },
 };
 const FORM_KEY = { sponsor:'form_sponsor', masyarakat:'form_masyarakat', proposal:'form_proposal' };
+const FORM_BTN = { sponsor:'Ajukan Kerjasama Sponsor', masyarakat:'Konfirmasi Pembayaran & Daftar', proposal:'Ajukan Proposal Lembaga' };
 
 function renderPartisipasi(arr, cfg) {
     const el = document.getElementById('partisipasi-container');
-    if (!arr || !arr.length) { el.innerHTML = ''; return; }
-
-    const pendaftaranBuka = cfg.pendaftaran.buka;
-
+    if (!arr?.length) { el.innerHTML = ''; return; }
+    const buka = cfg.pendaftaran.buka;
     el.innerHTML = arr.map(p => {
         const s = CARD_STYLE[p.id] || CARD_STYLE.sponsor;
-        const formLink = cfg.form[FORM_KEY[p.id]] || '#';
-        const btnDisabled = !pendaftaranBuka ? 'opacity-50 pointer-events-none' : '';
-
-        const poinHtml = p.poin.map(pt => `<li class="flex gap-2"><span>✅</span> ${esc(pt)}</li>`).join('');
-
-        // Tampilkan rekening hanya untuk jalur masyarakat
-        const rekeningSuffix = p.id === 'masyarakat'
-            ? `<div id="rekening-inline-trigger" class="text-xs text-amber-600 font-semibold mt-2 mb-1">ℹ️ Lihat rekening di bawah kartu ini</div>` : '';
-
+        const link = cfg.form[FORM_KEY[p.id]] || '#';
+        const dis  = !buka ? 'opacity-50 pointer-events-none' : '';
+        const poin = p.poin.map(pt=>`<li class="flex gap-2"><span>✅</span> ${esc(pt)}</li>`).join('');
         return `
             <div class="bg-white border-2 ${s.border} rounded-[2rem] overflow-hidden shadow-sm card-hover">
-                <div class="flex items-center gap-4 p-6 cursor-pointer" onclick="toggleCard('pcard-${p.id}', '${p.id}')">
+                <div class="flex items-center gap-4 p-6 cursor-pointer" onclick="toggleCard('pcard-${p.id}','${p.id}')">
                     <div class="w-14 h-14 bg-gradient-to-br ${s.gradient} rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-md">${s.icon}</div>
                     <div class="flex-1">
                         <div class="font-black text-slate-800 text-base">${esc(p.judul)}</div>
@@ -574,46 +710,36 @@ function renderPartisipasi(arr, cfg) {
                     </div>
                     <div class="${s.iconColor} text-2xl font-bold" id="picon-${p.id}">＋</div>
                 </div>
-                <div id="pcard-${p.id}" class="accordion-body border-t ${s.border.replace('border-','border-').replace('-200','-100')} px-6 pb-0">
+                <div id="pcard-${p.id}" class="accordion-body border-t ${s.border.replace('-200','-100')} px-6 pb-0">
                     <div class="py-5">
                         <p class="text-slate-600 text-sm mb-4 leading-relaxed">${esc(p.deskripsi)}</p>
                         <div class="bg-white rounded-2xl p-4 border border-stone-100 mb-5">
-                            <ul class="text-slate-500 text-xs space-y-1.5">${poinHtml}</ul>
+                            <ul class="text-slate-500 text-xs space-y-1.5">${poin}</ul>
                         </div>
-                        ${rekeningSuffix}
-                        <a href="${esc(formLink)}" target="_blank"
-                           class="flex items-center justify-center gap-2 w-full ${s.btnClass} text-white py-4 rounded-2xl font-bold text-sm transition-colors mb-5 shadow-lg ${btnDisabled}">
-                            📋 ${p.id==='sponsor'?'Ajukan Kerjasama Sponsor':p.id==='masyarakat'?'Konfirmasi Pembayaran & Daftar':'Ajukan Proposal Lembaga'} ↗
+                        <a href="${esc(link)}" target="_blank"
+                           class="tap-target flex items-center justify-center gap-2 w-full ${s.btn} text-white py-3 rounded-2xl font-bold text-sm transition-colors mb-4 shadow-lg ${dis}">
+                            📋 ${FORM_BTN[p.id]||'Daftar'} ↗
                         </a>
                     </div>
                 </div>
             </div>`;
     }).join('');
-
-    // Inject harga ke dalam card masyarakat setelah render
-    renderHarga(cfg);
-    renderRekening(cfg);
 }
-
 
 // ═══════════════════════════════════════════════════
 //  RENDER REKENING & HARGA
 // ═══════════════════════════════════════════════════
 function renderRekening(cfg) {
     const r = cfg.rekening;
-    set('rek-bank',  r.bank);
-    set('rek-nomor', r.nomor);
-    set('rek-nama',  r.nama);
+    set('rek-bank', r.bank); set('rek-nomor', r.nomor); set('rek-nama', r.nama);
     if (r.bank || r.nomor) show('rekening-box');
 }
-
 function renderHarga(cfg) {
-    set('harga-sapi',    cfg.harga.sapi);
+    set('harga-sapi', cfg.harga.sapi);
     set('harga-kambing', cfg.harga.kambing);
-    set('harga-domba',   cfg.harga.domba);
+    set('harga-domba', cfg.harga.domba);
     if (cfg.harga.sapi) show('harga-container');
 }
-
 
 // ═══════════════════════════════════════════════════
 //  RENDER STATISTIK
@@ -622,120 +748,132 @@ function renderStatistik(stat) {
     if (!stat) return;
     const c = stat.current;
     set('stat-tahun-label', c.tahun);
-    set('stat-sapi',    c.jumlah_sapi);
-    set('stat-kambing', c.jumlah_kambing_domba);
-    set('stat-paket',   c.jumlah_paket_daging);
+    set('stat-sapi',     c.jumlah_sapi);
+    set('stat-kambing',  c.jumlah_kambing_domba);
+    set('stat-paket',    c.jumlah_paket_daging);
     set('stat-penerima', c.jumlah_penerima);
-
     if (c.catatan) {
         const box = document.getElementById('stat-catatan-box');
         if (box) { box.textContent = '📌 ' + c.catatan; box.classList.remove('hidden'); }
     }
 }
 
-
 // ═══════════════════════════════════════════════════
 //  RENDER LAPORAN
 // ═══════════════════════════════════════════════════
 function renderLaporan(arr) {
     const el = document.getElementById('laporan-container');
-    if (!arr || !arr.length) { el.innerHTML = '<p class="text-slate-400 text-sm">Belum ada laporan.</p>'; return; }
-
+    if (!arr?.length) { el.innerHTML = '<p class="text-slate-400 text-sm">Belum ada laporan.</p>'; return; }
     el.innerHTML = arr.map(l => {
-        const isAvail = l.status === 'available';
-        const iconCard = isAvail ? 'bg-slate-100' : 'bg-amber-100';
-        const iconEmoji = isAvail ? '📁' : '📄';
-        const statusBadge = isAvail
-            ? '<div class="text-xs text-emerald-600 font-semibold">✅ Tersedia</div>'
-            : `<div class="text-xs text-amber-600 font-semibold">● ${l.catatan || 'Akan dipublikasikan'}</div>`;
-
-        const btnFn = (url, label, icon) => isAvail && url
-            ? `<a href="${esc(url)}" target="_blank" class="bg-amber-50 hover:bg-amber-100 rounded-xl p-3 text-center text-xs text-amber-700 font-semibold transition-colors">${icon} ${label}</a>`
-            : `<div class="bg-stone-50 rounded-xl p-3 text-center text-xs text-slate-400">${icon} ${label}</div>`;
-
+        const ok = l.status === 'available';
+        const badgeFn = (url, lbl, ico) => ok && url
+            ? `<a href="${esc(url)}" target="_blank" class="bg-amber-50 hover:bg-amber-100 rounded-xl p-3 text-center text-xs text-amber-700 font-semibold transition-colors">${ico} ${lbl}</a>`
+            : `<div class="bg-stone-50 rounded-xl p-3 text-center text-xs text-slate-400">${ico} ${lbl}</div>`;
         return `
             <div class="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 ${iconCard} rounded-xl flex items-center justify-center text-lg">${iconEmoji}</div>
-                    <div><div class="font-bold text-slate-800 text-sm">Laporan Qurban ${esc(l.tahun)}</div>${statusBadge}</div>
+                    <div class="w-10 h-10 ${ok?'bg-slate-100':'bg-amber-100'} rounded-xl flex items-center justify-center text-lg">${ok?'📁':'📄'}</div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">Laporan Qurban ${esc(l.tahun)}</div>
+                        <div class="text-xs ${ok?'text-emerald-600':'text-amber-600'} font-semibold">${ok?'✅ Tersedia':'● '+( l.catatan||'Akan dipublikasikan')}</div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    ${btnFn(l.url_dokumentasi, 'Dokumentasi', '📸')}
-                    ${btnFn(l.url_keuangan,    'Keuangan',    '💰')}
-                    ${btnFn(l.url_distribusi,  'Distribusi',  '📋')}
-                    ${btnFn(l.url_data_hewan,  'Data Hewan',  '🐄')}
+                    ${badgeFn(l.url_dokumentasi,'Dokumentasi','📸')}
+                    ${badgeFn(l.url_keuangan,'Keuangan','💰')}
+                    ${badgeFn(l.url_distribusi,'Distribusi','📋')}
+                    ${badgeFn(l.url_data_hewan,'Data Hewan','🐄')}
                 </div>
             </div>`;
     }).join('');
 }
 
-
 // ═══════════════════════════════════════════════════
-//  RENDER NOTIFIKASI
+//  RENDER NOTIF & LINKS
 // ═══════════════════════════════════════════════════
 function renderNotif(cfg) {
-    const linkNotif = document.getElementById('link-notifikasi');
-    const linkGrup  = document.getElementById('link-wa-grup');
-    const lblGrup   = document.getElementById('wa-grup-label');
-    if (linkNotif) linkNotif.href = cfg.form.notifikasi || '#';
-    if (linkGrup)  linkGrup.href  = cfg.kontak.wa_grup_link || '#';
-    if (lblGrup)   lblGrup.textContent = cfg.kontak.wa_grup_label || 'Grup WhatsApp';
+    const ln = document.getElementById('link-notifikasi');
+    const lg = document.getElementById('link-wa-grup');
+    const ll = document.getElementById('wa-grup-label');
+    if (ln) ln.href = cfg.form.notifikasi || '#';
+    if (lg) lg.href = cfg.kontak.wa_grup_link || '#';
+    if (ll) ll.textContent = cfg.kontak.wa_grup_label || 'Grup WhatsApp';
 }
-
-
-// ═══════════════════════════════════════════════════
-//  APPLY FORM LINKS
-// ═══════════════════════════════════════════════════
 function applyFormLinks(cfg) {
-    const cekStatus = document.getElementById('link-cek-status');
-    if (cekStatus) cekStatus.href = cfg.form.cek_status || '#';
+    const cs = document.getElementById('link-cek-status');
+    if (cs) cs.href = cfg.form.cek_status || '#';
 }
-
-
-// ═══════════════════════════════════════════════════
-//  PENDAFTARAN BANNER
-// ═══════════════════════════════════════════════════
 function renderPendaftaranBanner(cfg) {
-    if (!cfg.pendaftaran.buka) {
-        show('pendaftaran-banner');
-        set('pendaftaran-pesan', cfg.pendaftaran.pesan);
-    }
+    if (!cfg.pendaftaran.buka) { show('pendaftaran-banner'); set('pendaftaran-pesan', cfg.pendaftaran.pesan); }
+}
+function renderFooter(cfg) {
+    set('footer-unit',  cfg.identitas.penyelenggara_unit  || '');
+    set('footer-warek', cfg.identitas.penyelenggara_warek || '');
 }
 
-
 // ═══════════════════════════════════════════════════
-//  INTERAKSI
+//  INTERAKSI TAB & ACCORDION
 // ═══════════════════════════════════════════════════
 function switchTab(name) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    document.getElementById('btn-' + name).classList.add('active');
-    document.getElementById('qurban-root').scrollIntoView({ behavior:'smooth', block:'start' });
+    document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    document.getElementById('btn-'+name).classList.add('active');
+    document.getElementById('qurban-root').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 function toggleFaq(btn) {
-    const body = btn.nextElementSibling;
-    const icon = btn.querySelector('.accordion-icon');
-    const isOpen = body.classList.contains('open');
-    document.querySelectorAll('#faq-container .accordion-body').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('#faq-container .accordion-icon').forEach(i => i.classList.remove('open'));
-    if (!isOpen) { body.classList.add('open'); icon.classList.add('open'); }
+    const body=btn.nextElementSibling, icon=btn.querySelector('.accordion-icon');
+    const isOpen=body.classList.contains('open');
+    document.querySelectorAll('#faq-container .accordion-body').forEach(b=>b.classList.remove('open'));
+    document.querySelectorAll('#faq-container .accordion-icon').forEach(i=>i.classList.remove('open'));
+    if(!isOpen){body.classList.add('open');icon.classList.add('open');}
 }
-
-function toggleCard(bodyId, cardId) {
-    const body   = document.getElementById(bodyId);
-    const icon   = document.getElementById('picon-' + cardId);
-    const isOpen = body.classList.contains('open');
-    // close all
-    document.querySelectorAll('[id^="pcard-"]').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('[id^="picon-"]').forEach(i => i.textContent = '＋');
-    if (!isOpen) { body.classList.add('open'); if(icon) icon.textContent = '－'; }
+function toggleCard(bodyId,cardId) {
+    const body=document.getElementById(bodyId), icon=document.getElementById('picon-'+cardId);
+    const isOpen=body.classList.contains('open');
+    document.querySelectorAll('[id^="pcard-"]').forEach(b=>b.classList.remove('open'));
+    document.querySelectorAll('[id^="picon-"]').forEach(i=>i.textContent='＋');
+    if(!isOpen){body.classList.add('open');if(icon)icon.textContent='－';}
 }
-
 
 // ═══════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════
 loadData();
+
+
+// ═══════════════════════════════════════════════════
+//  PROTEKSI HALAMAN
+// ═══════════════════════════════════════════════════
+(function() {
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+  document.addEventListener('keydown', function(e) {
+    const k=e.key, ctrl=e.ctrlKey||e.metaKey, shift=e.shiftKey;
+    if(k==='F12'){e.preventDefault();return false;}
+    if(ctrl&&shift&&'IiJjCc'.includes(k)){e.preventDefault();return false;}
+    if(ctrl&&'UuSsAaCcPp'.includes(k)){e.preventDefault();return false;}
+  });
+  document.addEventListener('selectstart', function(e){e.preventDefault();return false;});
+  document.addEventListener('dragstart',   function(e){e.preventDefault();return false;});
+
+  var _devOpen=false;
+  var _lockHtml=
+    '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#1a0a00;flex-direction:column;gap:16px;">' +
+    '<div style="font-size:48px;">🔒</div>' +
+    '<p style="color:#fbbf24;font-family:sans-serif;font-weight:700;font-size:18px;">Akses Dibatasi</p>' +
+    '<p style="color:#92400e;font-family:sans-serif;font-size:13px;">Tutup developer tools untuk melanjutkan.</p>' +
+    '</div>';
+
+  function _checkDevTools() {
+    var isOpen=(window.outerWidth-window.innerWidth)>160||(window.outerHeight-window.innerHeight)>160;
+    if(isOpen&&!_devOpen){_devOpen=true;document.body.innerHTML=_lockHtml;}
+    else if(!isOpen&&_devOpen){_devOpen=false;location.reload();}
+  }
+  setInterval(_checkDevTools,1000);
+
+  (function _trap(){
+    var d=new Date(); debugger;
+    if(new Date()-d>100){document.body.innerHTML=_lockHtml;}
+  })();
+})();
 </script>
