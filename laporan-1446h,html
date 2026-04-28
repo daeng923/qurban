@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPJ Idul Adha 1446 H - UMM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c', // UMM Red
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white !important; }
+            .print-break-inside-avoid { break-inside: avoid; }
+            .shadow-lg, .shadow-md, .shadow-sm { box-shadow: none !important; border: 1px solid #e5e7eb; }
+            .print-text-black { color: black !important; }
+            .print-bg-transparent { background: transparent !important; }
+        }
+        .table-header {
+            @apply bg-slate-800 text-white text-left text-xs font-semibold uppercase tracking-wider px-4 py-3;
+        }
+        .table-cell {
+            @apply px-4 py-3 whitespace-nowrap text-sm text-slate-700 border-b border-slate-200;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Navigation (No Print) -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-moon text-brand-700 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl text-slate-900 tracking-tight">LPJ Qurban UMM</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#muqaddimah" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition">Muqaddimah</a>
+                    <a href="#statistik" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition">Statistik</a>
+                    <a href="#distribusi-hewan" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition">Distribusi Hewan</a>
+                    <a href="#distribusi-daging" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition">Distribusi Daging</a>
+                    <a href="#evaluasi" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition">Evaluasi</a>
+                    <button onclick="window.print()" class="bg-brand-700 hover:bg-brand-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-md">
+                        <i class="fa-solid fa-print mr-2"></i> Cetak Laporan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header class="bg-slate-900 text-white pt-16 pb-20 border-b-4 border-brand-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-brand-500 font-semibold tracking-widest uppercase text-sm mb-3">Dokumen Resmi Audit Kepanitiaan</h2>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">Laporan Pertanggungjawaban<br>Idul Adha 1446 H</h1>
+            <p class="text-xl md:text-2xl text-slate-300 font-light mb-8 font-serif italic">"Berkurban: Tebar Manfaat Cerahkan Umat"</p>
+            <div class="inline-flex items-center bg-slate-800 rounded-full px-6 py-2 border border-slate-700 shadow-inner">
+                <i class="fa-solid fa-building-columns text-slate-400 mr-2"></i>
+                <span class="text-slate-200 font-medium">Universitas Muhammadiyah Malang</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- I. Muqaddimah -->
+        <section id="muqaddimah" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">I. Muqaddimah</h2>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <p class="text-center font-serif italic text-lg mb-6 text-slate-600">Bismillāhirraḥmānirraḥīm,</p>
+                <p class="text-slate-700 leading-relaxed mb-4 text-justify">
+                    Segala puji bagi Allah SWT, Tuhan semesta alam, yang telah memberikan kekuatan dan petunjuk sehingga seluruh rangkaian kegiatan Idul Adha 1446 H di lingkungan Universitas Muhammadiyah Malang (UMM) dapat terlaksana dengan khidmat dan tertib. Shalawat serta salam semoga senantiasa tercurah kepada uswah hasanah kita, Nabi Muhammad SAW.
+                </p>
+                <div class="my-8 border-l-4 border-brand-600 bg-brand-50 p-6 rounded-r-xl">
+                    <p class="font-serif italic text-slate-800 text-lg">"Daging-daging unta dan darahnya itu sekali-kali tidak dapat mencapai (keridhaan) Allah, tetapi ketakwaan darimulah yang dapat mencapainya..." <span class="text-sm font-sans font-bold text-brand-700 block mt-2">— QS. Al-Hajj: 37</span></p>
+                </div>
+                <p class="text-slate-700 leading-relaxed text-justify">
+                    Kegiatan Idul Adha bukan sekadar ritual penyembelihan hewan, melainkan sebuah manifestasi ketaatan spiritual dan kesalehan sosial. Atas dasar tersebut, UMM melalui kepanitiaan tahun ini mengusung tema <strong>"Berkurban: Tebar Manfaat Cerahkan Umat"</strong>. Tema ini merefleksikan komitmen universitas untuk menjadikan ibadah kurban sebagai instrumen pencerah bagi masyarakat, sekaligus mengedukasi masyarakat melalui praktik kurban yang ramah lingkungan (<strong>Go Green</strong>) dan memenuhi standar syariat (<strong>Halal Qurban</strong>). Laporan ini disusun sebagai bentuk transparansi dan akuntabilitas manajerial kepada pimpinan universitas dan seluruh pemangku kepentingan.
+                </p>
+            </div>
+        </section>
+
+        <!-- II. Shalat Idul Adha -->
+        <section id="shalat" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">II. Pelaksanaan Shalat Idul Adha</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Kampus 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start print-break-inside-avoid">
+                    <div class="bg-slate-100 p-4 rounded-full text-slate-600 mr-5">
+                        <i class="fa-solid fa-mosque text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Kampus 3 (Helipad UMM)</h3>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-regular fa-clock mr-1"></i> 10 Dzulhijjah 1446 H | 06.00 WIB</p>
+                        <div class="space-y-2">
+                            <p class="text-sm"><span class="font-semibold text-slate-700">Khatib:</span> Dr. M. Sholihin Fanani, M.PSDM <br><span class="text-xs text-slate-500">(Wakil Ketua PWM Jawa Timur)</span></p>
+                            <p class="text-sm"><span class="font-semibold text-slate-700">Imam:</span> Uwais Al Qorni</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Kampus 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start print-break-inside-avoid">
+                    <div class="bg-slate-100 p-4 rounded-full text-slate-600 mr-5">
+                        <i class="fa-solid fa-kaaba text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Kampus 2 (Masjid Ad Dakwah)</h3>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-regular fa-clock mr-1"></i> 10 Dzulhijjah 1446 H | 06.00 WIB</p>
+                        <div class="space-y-2">
+                            <p class="text-sm"><span class="font-semibold text-slate-700">Khatib:</span> Dr. Faridi, M.Si <br><span class="text-xs text-slate-500">(Dosen FAI UMM)</span></p>
+                            <p class="text-sm"><span class="font-semibold text-slate-700">Imam:</span> Fauzi Azmi Fisabilillah</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- III. Statistik Dashboard -->
+        <section id="statistik" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">III. Laporan Pelaksanaan & Statistik</h2>
+            </div>
+            
+            <!-- Highlight Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-lg print-break-inside-avoid">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-slate-300 font-medium">Total Sapi</h3>
+                        <i class="fa-solid fa-cow text-slate-400 text-xl"></i>
+                    </div>
+                    <p class="text-4xl font-extrabold mt-2">17 <span class="text-lg font-medium text-slate-400">Ekor</span></p>
+                    <p class="text-xs text-slate-400 mt-2">8 Internal | 9 Eksternal</p>
+                </div>
+                <div class="bg-gradient-to-br from-brand-700 to-brand-800 rounded-2xl p-6 text-white shadow-lg print-break-inside-avoid">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-red-200 font-medium">Total Kambing/Domba</h3>
+                        <i class="fa-solid fa-sheep text-red-300 text-xl"></i>
+                    </div>
+                    <p class="text-4xl font-extrabold mt-2">71 <span class="text-lg font-medium text-red-200">Ekor</span></p>
+                    <p class="text-xs text-red-200 mt-2">54 Internal | 17 Eksternal</p>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl p-6 text-white shadow-lg print-break-inside-avoid">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-emerald-100 font-medium">Total Paket Daging</h3>
+                        <i class="fa-solid fa-box-open text-emerald-200 text-xl"></i>
+                    </div>
+                    <p class="text-4xl font-extrabold mt-2">1.426 <span class="text-lg font-medium text-emerald-200">Paket</span></p>
+                    <p class="text-xs text-emerald-200 mt-2">Melampaui target (1.095)</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6 print-break-inside-avoid">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-slate-800">3.2 Statistik Realisasi Paket Daging (Potong Internal)</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="table-header">Jalur Distribusi</th>
+                                <th class="table-header text-center">Target (Draft)</th>
+                                <th class="table-header text-center">Realisasi (Riil)</th>
+                                <th class="table-header text-center">Deviasi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="table-cell font-medium text-slate-900">Kampus III (Sentral)</td>
+                                <td class="table-cell text-center text-slate-500">966</td>
+                                <td class="table-cell text-center font-bold text-slate-800">1.155</td>
+                                <td class="table-cell text-center text-emerald-600 font-medium">+189</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="table-cell font-medium text-slate-900">Kampus II (Sutami)</td>
+                                <td class="table-cell text-center text-slate-500">129</td>
+                                <td class="table-cell text-center font-bold text-slate-800">271</td>
+                                <td class="table-cell text-center text-emerald-600 font-medium">+142</td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="table-cell font-bold text-slate-900">TOTAL KESELURUHAN</td>
+                                <td class="table-cell text-center font-bold text-slate-600">1.095</td>
+                                <td class="table-cell text-center font-extrabold text-brand-700">1.426</td>
+                                <td class="table-cell text-center text-emerald-600 font-bold">+331</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- IV. Distribusi Hewan Kurban -->
+        <section id="distribusi-hewan" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">IV. Distribusi Hewan Kurban (Hidup & Potong)</h2>
+            </div>
+            
+            <!-- 4.1 Sapi -->
+            <h3 class="text-lg font-bold text-slate-800 mb-4 mt-8 border-b pb-2">4.1 Rekapitulasi Sapi Kurban (17 Ekor)</h3>
+            
+            <div class="grid lg:grid-cols-2 gap-6 mb-8">
+                <!-- Sapi Internal -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-100 px-4 py-3 border-b border-slate-200">
+                        <h4 class="font-semibold text-slate-800 text-sm"><i class="fa-solid fa-building mr-2 text-brand-600"></i>A. Sapi Internal UMM (Panitia) - 8 Ekor</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Jenis Ternak</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Asal/Sumber</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-center">Jml</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Distribusi/Pemotongan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi Limosin</td><td class="px-3 py-2">Greenfarm (500kg)</td><td class="px-3 py-2 text-center">2</td><td class="px-3 py-2">UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi Limosin</td><td class="px-3 py-2">Kandang UMM (500kg)</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi Limosin</td><td class="px-3 py-2">P. Alfan (475kg)</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi PO</td><td class="px-3 py-2">Pemuda Muhammadiyah</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">TRS Sengkaling</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi Blegon</td><td class="px-3 py-2">Pemuda Muhammadiyah</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">Kampus II UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sapi Bali</td><td class="px-3 py-2">Unit Usaha Lahan</td><td class="px-3 py-2 text-center">2</td><td class="px-3 py-2">RS AMF Sumbawa</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sapi Eksternal -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-100 px-4 py-3 border-b border-slate-200">
+                        <h4 class="font-semibold text-slate-800 text-sm"><i class="fa-solid fa-handshake mr-2 text-emerald-600"></i>B. Sapi Titipan Mitra/Shohibul - 9 Ekor</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Shohibul Kurban</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Asal</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-center">Jml</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Distribusi/Pemotongan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Prof. Dr. Nazarudin Malik</td><td class="px-3 py-2 text-slate-500">Exfarm</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">Masjid Pak Sobari</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Nadia binti Nazarudin</td><td class="px-3 py-2 text-slate-500">Venus F.</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">UMM Kampus 3</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Toni Dwi Wijaya</td><td class="px-3 py-2 text-slate-500">Venus F.</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">PA Kedungkandang</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Angga Kusnandi W.</td><td class="px-3 py-2 text-slate-500">Venus F.</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">LAPAS I</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Evi Dwi Whyni</td><td class="px-3 py-2 text-slate-500">Vatricia</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">Kampus II UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Ibu Hj. Sahema D.</td><td class="px-3 py-2 text-slate-500">Ridhanahut</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">RSAMF</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">RS AMF Sumbawa</td><td class="px-3 py-2 text-slate-500">Peternak</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">RSAMF</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">RS AMF Sumbawa</td><td class="px-3 py-2 text-slate-500">Peternak</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">MBS Maronge Sbw</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">RS AMF Sumbawa</td><td class="px-3 py-2 text-slate-500">Peternak</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2">SMA MU Sumbawa B.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.2 Kambing Domba -->
+            <h3 class="text-lg font-bold text-slate-800 mb-4 mt-12 border-b pb-2">4.2 Rekapitulasi Kambing dan Domba (71 Ekor)</h3>
+            
+            <div class="grid lg:grid-cols-2 gap-6">
+                 <!-- Kambing Internal -->
+                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-100 px-4 py-3 border-b border-slate-200">
+                        <h4 class="font-semibold text-slate-800 text-sm"><i class="fa-solid fa-building mr-2 text-brand-600"></i>A. Kambing/Domba Internal UMM - 54 Ekor</h4>
+                    </div>
+                    <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Asal/Sumber</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-center">Jml</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Distribusi Sasaran</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Suganto Londo (Kambing)</td><td class="px-3 py-2 text-center font-bold">6</td><td class="px-3 py-2">Malang Raya</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Nurkhozin Azis (Kambing)</td><td class="px-3 py-2 text-center font-bold">4</td><td class="px-3 py-2">Malang Raya</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Lawi Klandungan (Kambing)</td><td class="px-3 py-2 text-center font-bold">6</td><td class="px-3 py-2">Malang Raya</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Burja Lawang (Domba)</td><td class="px-3 py-2 text-center font-bold">20</td><td class="px-3 py-2">Malang Raya</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Borne Farm Filipina (Kambing)</td><td class="px-3 py-2 text-center font-bold">2</td><td class="px-3 py-2">PDA Filipina</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Manggarai NTT (Kambing)</td><td class="px-3 py-2 text-center font-bold">2</td><td class="px-3 py-2">PDM NTT</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">PDM Sampang (Domba)</td><td class="px-3 py-2 text-center font-bold">2</td><td class="px-3 py-2">PDM Sampang Madura</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">SMA M 3 Jember (Domba)</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">SMA M 3 Jember</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">SMA M 1 Jombang (Domba)</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">SMA M 1 Jombang</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Arif Perlengkapan (Kambing)</td><td class="px-3 py-2 text-center font-bold">3</td><td class="px-3 py-2">Malang Raya</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Sumbawa (Kambing)</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Sumbawa</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Lawi Klandungan (Kambing)</td><td class="px-3 py-2 text-center font-bold">6</td><td class="px-3 py-2">Malang Raya</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kambing Eksternal -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-100 px-4 py-3 border-b border-slate-200">
+                        <h4 class="font-semibold text-slate-800 text-sm"><i class="fa-solid fa-handshake mr-2 text-emerald-600"></i>B. Kambing/Domba Titipan - 17 Ekor</h4>
+                    </div>
+                    <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Shohibul Kurban</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-center">Jml</th>
+                                    <th class="bg-slate-800 text-white px-3 py-2 text-left">Distribusi Sasaran</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Bank CIMB (Cash 8 Juta)</td><td class="px-3 py-2 text-center font-bold">2</td><td class="px-3 py-2">Disalurkan Panitia UMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">P. Saiful Prof. Lily Zalizar</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Masjid Surya Gemilang</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Prof. drh. Lily Zalizar, M.Kes</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Padepokan Zibulwathan</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Ilma Visi Rahmani</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Padepokan Zibulwathan</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Prof. Noor Harini</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Panti Asuhan Bouring</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Fyona Binti Surahmat</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Masjid An-Nur Pujon Lor</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Zulfa Binti Sanusi</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Masjid Maron Pujon Kidul</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Wildan RS</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">RSUMM</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Dylan Arsenio B. Vany</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">BA Restu 1 (Sebelah MIN 1)</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Dwi Irawan</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Masjid Lawang</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">B. Venty Sucofindo</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">Jl. Letjen S Parman 3/9</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Kezia Novyta Binti Mahmud</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">SMP N 1 Batu</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Khanza Aqila Binti Mahmud</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">SDN Ngaglik 01 Batu</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Rusunawa</td><td class="px-3 py-2 text-center font-bold">2</td><td class="px-3 py-2">Rusunawa Pusdiklat</td></tr>
+                                <tr class="even:bg-slate-50"><td class="px-3 py-2">Adjar Kepegawaian</td><td class="px-3 py-2 text-center font-bold">1</td><td class="px-3 py-2">MURID UMM</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- V. Distribusi Paket Daging -->
+        <section id="distribusi-daging" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">V. Rincian Distribusi Paket Daging</h2>
+            </div>
+            
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mb-6">
+                <h3 class="font-bold text-indigo-900 mb-2"><i class="fa-solid fa-ticket mr-2"></i>5.1 Jalur Internal (Validasi Kupon - 832 Paket)</h3>
+                <p class="text-sm text-indigo-800">Meliputi seluruh Dosen, Karyawan Tetap, Capeg, THL, Satpam TRS, dan Cleaning Service (CS) di lingkungan Kampus II dan III.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Kampus 3 Data -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-800 px-5 py-4 border-b border-slate-700 flex justify-between items-center">
+                        <h4 class="font-semibold text-white text-sm">5.2 Jalur Eksternal Kampus III</h4>
+                        <span class="bg-brand-600 text-white text-xs font-bold px-2 py-1 rounded">429 Paket</span>
+                    </div>
+                    <div class="overflow-y-auto max-h-[600px]">
+                        <table class="w-full text-sm">
+                            <thead class="sticky top-0 bg-slate-100 z-10 shadow-sm">
+                                <tr>
+                                    <th class="text-left px-4 py-2 text-slate-600 font-semibold border-b">Penerima Manfaat</th>
+                                    <th class="text-center px-4 py-2 text-slate-600 font-semibold border-b w-24">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">IMM Tamaddun FAI-UMM</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">TK Aisyiyah BA 23</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">SD-SMP Negeri 2 Dau Satu Atap</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Polsek DAU</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">PPUT</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Mahasiswa Asing IRO</td><td class="px-4 py-2 text-center font-medium">26</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Argo Pulungan Wisnu</td><td class="px-4 py-2 text-center font-medium">1</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Yayasan Nurul Muttaqin</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">PPTQ Al Himah</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Panti Ulil Abshar</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Masjid Ainul Yaqin</td><td class="px-4 py-2 text-center font-medium">15</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Panti Yayasan Bani Dahlan</td><td class="px-4 py-2 text-center font-medium">15</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Media Liputan</td><td class="px-4 py-2 text-center font-medium">3</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Angga SHQ</td><td class="px-4 py-2 text-center font-medium">1</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Nadia SHQ</td><td class="px-4 py-2 text-center font-medium">1</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Pak Rektor SHQ</td><td class="px-4 py-2 text-center font-medium">1</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Tim Penyembelihan Luar</td><td class="px-4 py-2 text-center font-medium">9</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga Al Kautsar</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">KB Aisyiyah 2 DAU</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga Sekitar Rinjani</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Pimpinan Univ</td><td class="px-4 py-2 text-center font-medium">14</td></tr>
+                                <tr class="hover:bg-slate-50 bg-amber-50"><td class="px-4 py-2 text-slate-800 font-semibold">Panitia Kampus 3</td><td class="px-4 py-2 text-center font-bold text-amber-700">104</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga Rt 1 Rw 11 GPA, Karlos</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga Areng-areng</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga Tegalgondo Rt 24 Rw 06</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Ibu-Ibu Kebersihan</td><td class="px-4 py-2 text-center font-medium">40</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga dari panitia lain</td><td class="px-4 py-2 text-center font-medium">15</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Satpam</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Panitia PPUT</td><td class="px-4 py-2 text-center font-medium">20</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Tambahan untuk cs</td><td class="px-4 py-2 text-center font-medium">14</td></tr>
+                            </tbody>
+                            <tfoot class="bg-slate-50 border-t-2 border-slate-200">
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-right text-slate-800">Total Kampus III:</td>
+                                    <td class="px-4 py-3 font-bold text-center text-brand-700">429</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kampus 2 Data -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break-inside-avoid">
+                    <div class="bg-slate-800 px-5 py-4 border-b border-slate-700 flex justify-between items-center">
+                        <h4 class="font-semibold text-white text-sm">5.3 Jalur Eksternal Kampus II</h4>
+                        <span class="bg-brand-600 text-white text-xs font-bold px-2 py-1 rounded">165 Paket</span>
+                    </div>
+                    <div class="overflow-y-auto max-h-[600px]">
+                        <table class="w-full text-sm">
+                            <thead class="sticky top-0 bg-slate-100 z-10 shadow-sm">
+                                <tr>
+                                    <th class="text-left px-4 py-2 text-slate-600 font-semibold border-b">Penerima Manfaat</th>
+                                    <th class="text-center px-4 py-2 text-slate-600 font-semibold border-b w-24">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Bu Evi</td><td class="px-4 py-2 text-center font-medium">7</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Polsek Lowokwaru</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">PCM Tegalweru</td><td class="px-4 py-2 text-center font-medium">10</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Lapas Wanita</td><td class="px-4 py-2 text-center font-medium">50</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Kantin</td><td class="px-4 py-2 text-center font-medium">6</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Tim Hewan DINKES</td><td class="px-4 py-2 text-center font-medium">4</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Purna Satpam Kampus II</td><td class="px-4 py-2 text-center font-medium">2</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Pak RW</td><td class="px-4 py-2 text-center font-medium">2</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">Warga tidak mampu (sekitar)</td><td class="px-4 py-2 text-center font-medium">2</td></tr>
+                                <tr class="hover:bg-slate-50 bg-amber-50"><td class="px-4 py-2 text-slate-800 font-semibold">Jatah Panitia Qurban</td><td class="px-4 py-2 text-center font-bold text-amber-700">35</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">BEM (penyumbang Kambing+relawan)</td><td class="px-4 py-2 text-center font-medium">6</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-slate-700">(Panitia+BEM)</td><td class="px-4 py-2 text-center font-medium">31</td></tr>
+                            </tbody>
+                            <tfoot class="bg-slate-50 border-t-2 border-slate-200">
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-right text-slate-800">Total Kampus II:</td>
+                                    <td class="px-4 py-3 font-bold text-center text-brand-700">165</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VI. Evaluasi -->
+        <section id="evaluasi" class="scroll-mt-24">
+            <div class="flex items-center mb-6">
+                <div class="h-8 w-2 bg-brand-700 rounded-full mr-3"></div>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase">VI. Evaluasi dan Rekomendasi Strategis</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 italic">Penyajian data pada bagian ini merangkum kinerja kolektif kepanitiaan. Detail operasional teknis untuk setiap unit kerja dapat dikroscek pada lampiran laporan masing-masing Seksi (Sie).</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Point A & B -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl border-l-4 border-l-blue-500 shadow-sm print-break-inside-avoid">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center"><span class="bg-blue-100 text-blue-700 h-6 w-6 inline-flex items-center justify-center rounded-full text-xs mr-2">A</span> Rincian Pekerjaan</h3>
+                        <ul class="list-disc list-outside pl-5 space-y-1 text-sm text-slate-700">
+                            <li>Orkestrasi pelaksanaan ibadah ritual (Shalat Id) secara simultan di dua lokasi utama.</li>
+                            <li>Pengelolaan rantai pasok hewan kurban mulai dari pengadaan hingga pemeliharaan.</li>
+                            <li>Eksekusi teknis penyembelihan, pencacahan, serta pengemasan paket daging.</li>
+                            <li>Distribusi presisi hewan hidup dan paket daging kepada mustahik sasaran.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border-l-4 border-l-emerald-500 shadow-sm print-break-inside-avoid">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center"><span class="bg-emerald-100 text-emerald-700 h-6 w-6 inline-flex items-center justify-center rounded-full text-xs mr-2">B</span> Pelaksanaan Tugas</h3>
+                        <p class="text-sm text-slate-700 leading-relaxed text-justify">
+                            Secara umum, tugas dilaksanakan dengan integritas tinggi melalui koordinasi terpusat. Keberhasilan utama terletak pada sinergi antar unit yang mampu menangani manajemen <strong>88 ekor hewan hidup</strong> dan surplus realisasi paket daging (<strong>1.426 paket</strong>) tanpa mengganggu stabilitas logistik. Implementasi konsep <strong class="text-emerald-700">Go Green Qurban</strong> dan <strong class="text-emerald-700">Halal Qurban Management</strong> menjadi pilar utama.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Point C & D -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl border-l-4 border-l-amber-500 shadow-sm print-break-inside-avoid">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center"><span class="bg-amber-100 text-amber-700 h-6 w-6 inline-flex items-center justify-center rounded-full text-xs mr-2">C</span> Kendala dan Evaluasi</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li><strong>Logistik:</strong> Peningkatan volume sampah organik di titik Kampus 3 memerlukan penanganan ekstra cepat guna menjaga sterilitas.</li>
+                            <li><strong>Distribusi:</strong> Antrean pada jalur validasi kupon internal sempat mengalami kepadatan di jam puncak (13.30 - 15.00 WIB).</li>
+                            <li><strong>Data:</strong> Proposal warga yang masuk pada hari H memerlukan verifikasi ekstra cepat agar tepat sasaran.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border-l-4 border-l-purple-500 shadow-sm print-break-inside-avoid">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center"><span class="bg-purple-100 text-purple-700 h-6 w-6 inline-flex items-center justify-center rounded-full text-xs mr-2">D</span> Saran untuk Panitia Selanjutnya</h3>
+                        <ul class="list-decimal list-outside pl-5 space-y-1 text-sm text-slate-700">
+                            <li><strong>Digitalisasi Antrean:</strong> Penggunaan sistem <em>scan barcode</em> untuk validasi kupon.</li>
+                            <li><strong>Manajemen Limbah:</strong> Perluasan tim kebersihan khusus pada area pencucian jeroan.</li>
+                            <li><strong>Prakondisi Data:</strong> Penutupan jalur proposal minimal H-3 agar pemetaan distribusi lebih presisi.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Point E (Full width) -->
+                <div class="md:col-span-2 bg-white p-6 rounded-xl border-l-4 border-l-slate-800 shadow-sm print-break-inside-avoid">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center"><span class="bg-slate-200 text-slate-800 h-6 w-6 inline-flex items-center justify-center rounded-full text-xs mr-2">E</span> Penggunaan Dana</h3>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Seluruh alokasi dana telah digunakan secara efisien sesuai dengan Rencana Anggaran Biaya (RAB) yang disetujui. Prinsip akuntabilitas fiskal dijaga melalui verifikasi ganda antara Bendahara Panitia dan Biro Keuangan Universitas. Rincian penggunaan dana per seksi tersedia pada lampiran Laporan Keuangan masing-masing divisi.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VII. Ikhtitam -->
+        <section class="mt-16 border-t-2 border-dashed border-slate-300 pt-12 pb-24 print-break-inside-avoid">
+            <h2 class="text-2xl font-bold text-slate-900 uppercase text-center mb-6">VII. Ikhtitam</h2>
+            <p class="text-slate-700 text-center max-w-3xl mx-auto leading-relaxed mb-12">
+                Demikian laporan pertanggungjawaban ini disusun dengan data yang sebenar-benarnya sebagai bentuk akuntabilitas manajerial Panitia Idul Adha 1446 H. Keberhasilan ini adalah buah dari kerja keras kolektif yang dilandasi nilai keikhlasan. Semoga menjadi amal jariyah bagi seluruh civitas akademika Universitas Muhammadiyah Malang.
+            </p>
+            
+            <div class="flex justify-end">
+                <div class="text-center">
+                    <p class="text-slate-600 mb-1">Malang, 20 Dzulhijjah 1446 H</p>
+                    <p class="font-bold text-slate-900 mb-20">Ketua Panitia Idul Adha 1446 H,</p>
+                    <div class="border-b border-slate-800 mb-1 w-64 mx-auto"></div>
+                    <p class="font-bold text-slate-900 text-lg">Muhammad Sri Wahyudi S., M.E., Ph.D</p>
+                    <p class="text-sm text-slate-500">NIDN: 0731078701</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm no-print">
+        <p>&copy; 2025 Panitia Idul Adha UMM 1446 H. Dokumen Laporan Internal.</p>
+        <p class="mt-2 text-xs">Generated for GitHub Pages Hosting.</p>
+    </footer>
+
+</body>
+</html>
