@@ -5,113 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekap Panitia Tambahan Idul Adha 1447 H / 2026 M</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
-        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .transition-all { transition: all 0.3s ease-in-out; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            /* Tambahan keamanan: mencegah seleksi teks di seluruh halaman */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .card-shadow { 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); 
+        }
+        
+        .skeleton { 
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); 
+            background-size: 200% 100%; 
+            animation: loading 1.5s infinite; 
+        }
+        
+        @keyframes loading { 
+            0% { background-position: 200% 0; } 
+            100% { background-position: -200% 0; } 
+        }
+
+        .transition-rotate { transition: transform 0.3s ease; }
+        .rotate-180 { transform: rotate(180deg); }
+
+        /* Custom scrollbar for better mobile feel */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .wa-float {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            z-index: 100;
+        }
     </style>
 </head>
-<body class="bg-[#f8fafc] min-h-screen">
+<body class="bg-[#f8fafc] min-h-screen pb-24">
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 p-2 rounded-lg text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 p-2 rounded-lg text-white shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-base md:text-xl font-bold text-slate-800 leading-tight">Rekap Panitia Idul Adha 1447 H</h1>
+                        <p class="text-[10px] md:text-xs text-slate-500 font-medium uppercase tracking-wider" id="lastUpdated">Menghubungkan data...</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-xl font-bold text-slate-800 line-clamp-1">Rekap Panitia Tambahan Idul Adha 1447 H</h1>
-                    <p class="text-xs text-slate-500 font-medium uppercase tracking-wider" id="lastUpdated">Sinkronisasi Otomatis Spreadsheet</p>
-                </div>
-            </div>
-            <div class="flex gap-2 w-full md:w-auto">
-                <div class="relative flex-1 md:w-64">
-                    <input type="text" id="searchInput" placeholder="Cari personel/unit..." 
-                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
-                
-                <!-- Toggle Button Fitur Sembunyikan Anggota -->
-                <button id="toggleDetailsBtn" onclick="toggleDetails()" class="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-600 shadow-sm" title="Tampilkan/Sembunyikan Anggota">
-                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    <span class="hidden sm:inline" id="toggleText">Ringkas</span>
-                </button>
-
-                <button onclick="fetchData()" class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors shadow-sm" title="Refresh Data">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button onclick="fetchData()" class="p-2 bg-slate-50 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-100 active:scale-95 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                 </button>
             </div>
+            
+            <!-- Search Bar Mobile Optimized -->
+            <div class="relative w-full">
+                <input type="text" id="searchInput" placeholder="Cari nama, unit, atau seksi..." 
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm shadow-sm bg-slate-50/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3.5 top-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 py-6">
         
-        <!-- Summary Stats -->
-        <div id="statsContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-4 rounded-xl card-shadow border border-slate-100">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Staf</p>
-                <h3 id="statTotal" class="text-2xl font-bold text-slate-800 tracking-tight">-</h3>
+        <!-- Summary Stats (Responsive Grid) -->
+        <div id="statsContainer" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div class="bg-white p-4 rounded-2xl card-shadow border border-slate-100 flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Staf</p>
+                <h3 id="statTotal" class="text-xl font-bold text-slate-800 tracking-tight">-</h3>
             </div>
-            <div class="bg-white p-4 rounded-xl card-shadow border border-slate-100">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Unit Kerja</p>
-                <h3 id="statUnits" class="text-2xl font-bold text-slate-800 tracking-tight">-</h3>
+            <div class="bg-white p-4 rounded-2xl card-shadow border border-slate-100 flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Unit Kerja</p>
+                <h3 id="statUnits" class="text-xl font-bold text-slate-800 tracking-tight">-</h3>
             </div>
-            <div class="bg-white p-4 rounded-xl card-shadow border border-slate-100">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Koordinator</p>
-                <h3 id="statKoords" class="text-2xl font-bold text-slate-800 tracking-tight">-</h3>
+            <div class="bg-white p-4 rounded-2xl card-shadow border border-slate-100 flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Koordinator</p>
+                <h3 id="statKoords" class="text-xl font-bold text-slate-800 tracking-tight">-</h3>
             </div>
-            <div class="bg-white p-4 rounded-xl card-shadow border border-slate-100">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Status</p>
-                <h3 id="syncStatus" class="text-2xl font-bold text-green-600 tracking-tight italic">LIVE</h3>
+            <div class="bg-white p-4 rounded-2xl card-shadow border border-slate-100 flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Status</p>
+                <h3 id="syncStatus" class="text-xl font-bold text-green-600 tracking-tight italic">LIVE</h3>
             </div>
         </div>
 
-        <!-- Dashboard Grid -->
-        <div id="loadingState" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="skeleton h-64 rounded-2xl"></div>
-            <div class="skeleton h-64 rounded-2xl"></div>
-            <div class="skeleton h-64 rounded-2xl"></div>
+        <!-- Dashboard Grid (Mobile optimized cards) -->
+        <div id="loadingState" class="space-y-4">
+            <div class="skeleton h-24 rounded-2xl"></div>
+            <div class="skeleton h-24 rounded-2xl"></div>
+            <div class="skeleton h-24 rounded-2xl"></div>
         </div>
 
-        <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+        <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"></div>
 
         <!-- Empty State -->
         <div id="emptyState" class="hidden flex flex-col items-center justify-center py-20 text-slate-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-lg font-medium">Data tidak ditemukan</p>
+            <p class="text-sm font-medium">Data tidak ditemukan</p>
         </div>
     </main>
 
+    <!-- Floating WhatsApp Button -->
+    <div class="wa-float">
+        <a href="https://wa.me/6281355662489?text=Assalamu%27alaikum%20Kesekretariatan%2C%20saya%20ingin%20mengonfirmasi%20mengenai%20data%20panitia%20tambahan%20Idul%20Adha..." 
+           target="_blank"
+           class="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all card-shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.52.909 3.321 1.389 5.156 1.39h.005c5.485 0 9.95-4.465 9.952-9.953.001-2.659-1.034-5.159-2.915-7.04s-4.381-2.917-7.04-2.917c-5.488 0-9.954 4.465-9.956 9.956-.001 1.914.542 3.778 1.569 5.385l-1.03 3.762 3.859-1.011zm11.366-7.412c-.333-.167-1.97-.972-2.278-1.084-.308-.113-.533-.167-.758.167-.225.334-.871 1.084-1.067 1.307-.196.222-.392.25-.726.084-.333-.167-1.408-.52-2.681-1.655-1.008-.899-1.688-2.008-1.886-2.342-.196-.334-.022-.515.144-.681.15-.149.333-.389.5-.583.166-.195.222-.334.333-.556.11-.222.056-.417-.028-.583-.084-.167-.758-1.828-1.038-2.502-.274-.66-.549-.57-.758-.581-.196-.01-.421-.013-.645-.013-.225 0-.589.084-.898.417-.308.334-1.178 1.151-1.178 2.806 0 1.655 1.205 3.252 1.372 3.475.167.222 2.373 3.623 5.748 5.074.803.345 1.43.551 1.919.707.807.256 1.54.22 2.12.133.647-.097 1.97-.806 2.25-1.583.28-.778.28-1.445.197-1.583-.083-.139-.308-.222-.642-.389z"/>
+            </svg>
+            <div class="flex flex-col leading-none">
+                <span class="text-[10px] font-bold opacity-80 uppercase tracking-tighter">Kesekretariatan</span>
+                <span class="text-xs font-bold">Konfirmasi Data</span>
+            </div>
+        </a>
+    </div>
+
     <script>
-        /** * URL WEB APP GOOGLE APPS SCRIPT ANDA */
+        // --- FITUR KEAMANAN ---
+        // Menonaktifkan klik kanan
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Menonaktifkan shortcut Developer Tools (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
+            ) {
+                e.preventDefault();
+            }
+        });
+
         const DATA_SOURCE_URL = "https://script.google.com/macros/s/AKfycbxhTfqUzRl795YaSfCpXCfJ8y3zJiyotz7g1hrFH5gSnOlH8q1VeOj2BnDjJAss0bilIg/exec"; 
         
         let masterData = [];
-        let showDetailsState = true; // Status awal: tampilkan detail
+        let expandedCards = new Set();
 
         async function fetchData() {
-            if (!DATA_SOURCE_URL) {
-                console.warn("URL Sumber Data belum diisi. Menggunakan data demo.");
-                processAndRender(getDemoData());
-                return;
-            }
+            if (!DATA_SOURCE_URL) return;
 
             showLoading(true);
             try {
@@ -119,29 +166,29 @@
                 masterData = await response.json();
                 processAndRender(masterData);
             } catch (error) {
-                console.error("Gagal sinkronisasi data:", error);
+                console.error("Gagal sinkronisasi:", error);
                 document.getElementById('syncStatus').textContent = "OFFLINE";
-                document.getElementById('syncStatus').className = "text-2xl font-bold text-rose-500 italic";
-                processAndRender(getDemoData());
+                document.getElementById('syncStatus').className = "text-xl font-bold text-rose-500 italic";
             }
         }
 
-        function toggleDetails() {
-            showDetailsState = !showDetailsState;
-            
-            // Update UI Tombol
-            const text = document.getElementById('toggleText');
-            const icon = document.getElementById('eyeIcon');
-            
-            if (showDetailsState) {
-                text.textContent = "Ringkas";
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+        function toggleCard(koordName) {
+            if (expandedCards.has(koordName)) {
+                expandedCards.delete(koordName);
             } else {
-                text.textContent = "Detail";
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+                expandedCards.add(koordName);
             }
+            renderCards(groupData(getFilteredData()));
+        }
 
-            renderCards(groupData(masterData));
+        function getFilteredData() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            return masterData.filter(item => 
+                (item.Nama || "").toLowerCase().includes(term) || 
+                (item.Unit || "").toLowerCase().includes(term) ||
+                (item.Koord || "").toLowerCase().includes(term) ||
+                (item.Sie || "").toLowerCase().includes(term)
+            );
         }
 
         function processAndRender(data) {
@@ -149,7 +196,7 @@
             const grouped = groupData(data);
             renderCards(grouped);
             showLoading(false);
-            document.getElementById('lastUpdated').textContent = "Sinkronisasi: " + new Date().toLocaleTimeString();
+            document.getElementById('lastUpdated').textContent = "Update: " + new Date().toLocaleTimeString();
         }
 
         function groupData(data) {
@@ -177,29 +224,40 @@
             grid.classList.remove('hidden');
             empty.classList.add('hidden');
 
-            grid.innerHTML = groups.map(group => `
-                <div class="bg-white rounded-2xl border border-slate-100 card-shadow overflow-hidden flex flex-col transition-all">
-                    <div class="p-5 ${showDetailsState ? 'border-b border-slate-50' : ''} bg-slate-50/50">
+            grid.innerHTML = groups.map(group => {
+                const isExpanded = expandedCards.has(group.name);
+                return `
+                <div class="bg-white rounded-2xl border border-slate-100 card-shadow overflow-hidden flex flex-col transition-all h-fit">
+                    <!-- Header Kartu (Touch optimized) -->
+                    <div class="p-4 bg-slate-50/50 cursor-pointer active:bg-slate-100 transition-colors" onclick="toggleCard('${group.name.replace(/'/g, "\\'")}')">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold uppercase rounded tracking-wider">
+                            <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[9px] font-bold uppercase rounded tracking-wider">
                                 ${group.sie}
                             </span>
-                            <span class="text-[10px] text-slate-400 font-bold">${group.members.length} PERSONEL</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase">${group.members.length} Staf</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 transition-rotate ${isExpanded ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 leading-tight">${group.name}</h2>
-                        <p class="text-xs text-slate-500 mt-1 uppercase tracking-tighter font-semibold">Koordinator Utama</p>
+                        <h2 class="text-base font-bold text-slate-800 leading-tight">${group.name}</h2>
+                        <div class="flex justify-between items-center mt-1.5">
+                            <p class="text-[9px] text-slate-400 uppercase tracking-tighter font-bold">Koordinator Utama</p>
+                            <span class="text-[10px] font-bold ${isExpanded ? 'text-slate-400' : 'text-indigo-600'}">${isExpanded ? 'Tutup' : 'Buka Detail'}</span>
+                        </div>
                     </div>
                     
-                    <!-- Detail Section yang bisa disembunyikan -->
-                    <div class="p-5 flex-1 space-y-4 ${showDetailsState ? '' : 'hidden'} transition-all">
+                    <!-- Bagian Anggota -->
+                    <div class="p-4 border-t border-slate-50 space-y-4 ${isExpanded ? '' : 'hidden'} bg-white">
                         ${Object.entries(groupByUnit(group.members)).map(([unit, persons]) => `
                             <div>
-                                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-50 pb-1">${unit}</h4>
-                                <ul class="space-y-2">
+                                <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-50 pb-1 leading-none">${unit}</h4>
+                                <ul class="space-y-2.5">
                                     ${persons.map(p => `
-                                        <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
-                                            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
-                                            <span>${p.Nama}</span>
+                                        <li class="flex items-center gap-2.5 text-sm text-slate-700">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></div>
+                                            <span class="font-medium">${p.Nama}</span>
                                         </li>
                                     `).join('')}
                                 </ul>
@@ -207,7 +265,7 @@
                         `).join('')}
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function groupByUnit(members) {
@@ -232,21 +290,9 @@
             grid.classList.toggle('hidden', isLoading);
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = masterData.filter(item => 
-                (item.Nama || "").toLowerCase().includes(term) || 
-                (item.Unit || "").toLowerCase().includes(term) ||
-                (item.Koord || "").toLowerCase().includes(term)
-            );
-            renderCards(groupData(filtered));
+        document.getElementById('searchInput').addEventListener('input', () => {
+            renderCards(groupData(getFilteredData()));
         });
-
-        function getDemoData() {
-            return [
-                { Nama: "Contoh Nama", Unit: "Instruksi", Sie: "System", Koord: "Admin" }
-            ];
-        }
 
         window.onload = fetchData;
     </script>
