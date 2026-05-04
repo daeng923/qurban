@@ -13,6 +13,7 @@
         .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
         .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
         @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .transition-all { transition: all 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-[#f8fafc] min-h-screen">
@@ -27,19 +28,29 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-slate-800">Rekap Panitia Tambahan Idul Adha 1447 H / 2026 M</h1>
+                    <h1 class="text-xl font-bold text-slate-800 line-clamp-1">Rekap Panitia Tambahan Idul Adha 1447 H</h1>
                     <p class="text-xs text-slate-500 font-medium uppercase tracking-wider" id="lastUpdated">Sinkronisasi Otomatis Spreadsheet</p>
                 </div>
             </div>
-            <div class="flex gap-3 w-full md:w-auto">
+            <div class="flex gap-2 w-full md:w-auto">
                 <div class="relative flex-1 md:w-64">
                     <input type="text" id="searchInput" placeholder="Cari personel/unit..." 
-                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
-                <button onclick="fetchData()" class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors" title="Refresh Data">
+                
+                <!-- Toggle Button Fitur Sembunyikan Anggota -->
+                <button id="toggleDetailsBtn" onclick="toggleDetails()" class="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-600 shadow-sm" title="Tampilkan/Sembunyikan Anggota">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span class="hidden sm:inline" id="toggleText">Ringkas</span>
+                </button>
+
+                <button onclick="fetchData()" class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors shadow-sm" title="Refresh Data">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -66,7 +77,7 @@
             </div>
             <div class="bg-white p-4 rounded-xl card-shadow border border-slate-100">
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Status</p>
-                <h3 id="syncStatus" class="text-2xl font-bold text-green-600 tracking-tight tracking-tight tracking-tight italic">LIVE</h3>
+                <h3 id="syncStatus" class="text-2xl font-bold text-green-600 tracking-tight italic">LIVE</h3>
             </div>
         </div>
 
@@ -89,12 +100,11 @@
     </main>
 
     <script>
-        /** * PASTE URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
-         * Contoh: https://script.google.com/macros/s/AKfycb.../exec
-         */
+        /** * URL WEB APP GOOGLE APPS SCRIPT ANDA */
         const DATA_SOURCE_URL = "https://script.google.com/macros/s/AKfycbxhTfqUzRl795YaSfCpXCfJ8y3zJiyotz7g1hrFH5gSnOlH8q1VeOj2BnDjJAss0bilIg/exec"; 
         
         let masterData = [];
+        let showDetailsState = true; // Status awal: tampilkan detail
 
         async function fetchData() {
             if (!DATA_SOURCE_URL) {
@@ -106,27 +116,32 @@
             showLoading(true);
             try {
                 const response = await fetch(DATA_SOURCE_URL);
-                const contentType = response.headers.get("content-type");
-
-                if (contentType && contentType.includes("application/json")) {
-                    masterData = await response.json();
-                    processAndRender(masterData);
-                } else {
-                    const csvText = await response.text();
-                    Papa.parse(csvText, {
-                        header: true, skipEmptyLines: true,
-                        complete: (results) => {
-                            masterData = results.data;
-                            processAndRender(masterData);
-                        }
-                    });
-                }
+                masterData = await response.json();
+                processAndRender(masterData);
             } catch (error) {
                 console.error("Gagal sinkronisasi data:", error);
                 document.getElementById('syncStatus').textContent = "OFFLINE";
                 document.getElementById('syncStatus').className = "text-2xl font-bold text-rose-500 italic";
                 processAndRender(getDemoData());
             }
+        }
+
+        function toggleDetails() {
+            showDetailsState = !showDetailsState;
+            
+            // Update UI Tombol
+            const text = document.getElementById('toggleText');
+            const icon = document.getElementById('eyeIcon');
+            
+            if (showDetailsState) {
+                text.textContent = "Ringkas";
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            } else {
+                text.textContent = "Detail";
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            }
+
+            renderCards(groupData(masterData));
         }
 
         function processAndRender(data) {
@@ -163,8 +178,8 @@
             empty.classList.add('hidden');
 
             grid.innerHTML = groups.map(group => `
-                <div class="bg-white rounded-2xl border border-slate-100 card-shadow overflow-hidden flex flex-col">
-                    <div class="p-5 border-b border-slate-50 bg-slate-50/50">
+                <div class="bg-white rounded-2xl border border-slate-100 card-shadow overflow-hidden flex flex-col transition-all">
+                    <div class="p-5 ${showDetailsState ? 'border-b border-slate-50' : ''} bg-slate-50/50">
                         <div class="flex justify-between items-start mb-2">
                             <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold uppercase rounded tracking-wider">
                                 ${group.sie}
@@ -172,9 +187,11 @@
                             <span class="text-[10px] text-slate-400 font-bold">${group.members.length} PERSONEL</span>
                         </div>
                         <h2 class="text-lg font-bold text-slate-800 leading-tight">${group.name}</h2>
-                        <p class="text-xs text-slate-500 mt-1 uppercase tracking-tighter">Koordinator Utama</p>
+                        <p class="text-xs text-slate-500 mt-1 uppercase tracking-tighter font-semibold">Koordinator Utama</p>
                     </div>
-                    <div class="p-5 flex-1 space-y-4">
+                    
+                    <!-- Detail Section yang bisa disembunyikan -->
+                    <div class="p-5 flex-1 space-y-4 ${showDetailsState ? '' : 'hidden'} transition-all">
                         ${Object.entries(groupByUnit(group.members)).map(([unit, persons]) => `
                             <div>
                                 <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-50 pb-1">${unit}</h4>
@@ -227,8 +244,7 @@
 
         function getDemoData() {
             return [
-                { Nama: "Pilih Data", Unit: "Instruksi", Sie: "System", Koord: "Admin" },
-                { Nama: "Masukkan URL Apps Script", Unit: "Instruksi", Sie: "System", Koord: "Admin" }
+                { Nama: "Contoh Nama", Unit: "Instruksi", Sie: "System", Koord: "Admin" }
             ];
         }
 
