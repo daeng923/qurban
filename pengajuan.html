@@ -18,7 +18,7 @@
     <!-- Babel Standalone CDN untuk membaca JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans overflow-x-hidden">
     
     <!-- Tempat React akan dirender -->
     <div id="root"></div>
@@ -34,8 +34,14 @@
             const [data, setData] = useState([]);
             const [isLoading, setIsLoading] = useState(true);
             const [error, setError] = useState(null);
+            
+            // State untuk Filter & Sort
             const [searchTerm, setSearchTerm] = useState('');
             const [filterKab, setFilterKab] = useState('Semua');
+            const [sortBy, setSortBy] = useState('default');
+            
+            // State untuk Modal Rekap
+            const [showRecapModal, setShowRecapModal] = useState(false);
 
             // Fetch data dari Google Sheets via GAS
             useEffect(() => {
@@ -58,20 +64,59 @@
                 fetchData();
             }, []);
 
+            // Daftar Kabupaten/Kota Unik untuk Dropdown
             const uniqueKabKota = ['Semua', ...new Set(data.map(item => item.kab).filter(k => k && k.trim() !== ""))];
 
-            const filteredData = useMemo(() => {
-                return data.filter(item => {
-                const matchesSearch = 
-                    (item.pemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-                    (item.kec || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    (item.desa || '').toLowerCase().includes(searchTerm.toLowerCase());
-                
-                const matchesFilter = filterKab === 'Semua' || item.kab === filterKab;
-                
-                return matchesSearch && matchesFilter;
+            // Hitung Rekapitulasi Kecamatan untuk Pimpinan
+            const kecamatanStats = useMemo(() => {
+                const counts = {};
+                data.forEach(item => {
+                    if(item.kec && item.kec.trim() !== '') {
+                        const key = `${item.kec} (${item.kab || 'Lokasi Lain'})`;
+                        counts[key] = (counts[key] || 0) + 1;
+                    }
                 });
-            }, [data, searchTerm, filterKab]);
+                // Urutkan dari yang terbanyak ke terkecil
+                return Object.entries(counts)
+                    .map(([name, count]) => ({ name, count }))
+                    .sort((a, b) => b.count - a.count);
+            }, [data]);
+
+            // Filter & Sorting Logic Terpusat
+            const filteredData = useMemo(() => {
+                // 1. Lakukan Pencarian & Filter
+                let result = data.filter(item => {
+                    const matchesSearch = 
+                        (item.pemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        (item.kec || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (item.desa || '').toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    const matchesFilter = filterKab === 'Semua' || item.kab === filterKab;
+                    
+                    return matchesSearch && matchesFilter;
+                });
+
+                // 2. Lakukan Pengurutan (Sorting)
+                if (sortBy === 'instansi-asc') {
+                    result.sort((a, b) => (a.pemohon || '').localeCompare(b.pemohon || ''));
+                } else if (sortBy === 'instansi-desc') {
+                    result.sort((a, b) => (b.pemohon || '').localeCompare(a.pemohon || ''));
+                } else if (sortBy === 'lokasi-asc') {
+                    result.sort((a, b) => {
+                        const locA = `${a.kab || ''} ${a.kec || ''} ${a.desa || ''}`;
+                        const locB = `${b.kab || ''} ${b.kec || ''} ${b.desa || ''}`;
+                        return locA.localeCompare(locB);
+                    });
+                } else if (sortBy === 'lokasi-desc') {
+                    result.sort((a, b) => {
+                        const locA = `${a.kab || ''} ${a.kec || ''} ${a.desa || ''}`;
+                        const locB = `${b.kab || ''} ${b.kec || ''} ${b.desa || ''}`;
+                        return locB.localeCompare(locA);
+                    });
+                }
+
+                return result;
+            }, [data, searchTerm, filterKab, sortBy]);
 
             const stats = useMemo(() => {
                 return {
@@ -87,21 +132,22 @@
                 
                 const match = hpString.replace(/\D/g, '').match(/^08\d{8,11}/);
                 if (match) {
-                let clean = match[0];
-                return `https://wa.me/62${clean.substring(1)}`;
+                    let clean = match[0];
+                    return `https://wa.me/62${clean.substring(1)}`;
                 }
                 const justNumbers = hpString.replace(/\D/g, '');
                 if (justNumbers.length >= 10) {
-                if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
-                if (justNumbers.startsWith('62')) return `https://wa.me/${justNumbers}`;
-                return `https://wa.me/62${justNumbers}`;
+                    if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
+                    if (justNumbers.startsWith('62')) return `https://wa.me/${justNumbers}`;
+                    return `https://wa.me/62${justNumbers}`;
                 }
                 return null;
             };
 
             return (
                 <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-                <header className="bg-red-700 text-white shadow-md sticky top-0 z-50">
+                {/* Header Utama */}
+                <header className="bg-red-700 text-white shadow-md sticky top-0 z-40">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
                         <div className="flex items-center space-x-3">
@@ -143,9 +189,10 @@
                     </div>
                     ) : (
                     <>
-                        {/* Dashboard Summary Cards */}
+                        {/* Cards Ringkasan */}
                         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-blue-400"></div>
                             <div className="bg-blue-100 p-2 sm:p-3 rounded-lg text-blue-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                             <i className="fas fa-file-alt text-lg sm:text-xl"></i>
                             </div>
@@ -155,7 +202,8 @@
                             </div>
                         </div>
                         
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-red-400"></div>
                             <div className="bg-red-100 p-2 sm:p-3 rounded-lg text-red-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                             <i className="fas fa-building text-lg sm:text-xl"></i>
                             </div>
@@ -165,7 +213,8 @@
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-green-400"></div>
                             <div className="bg-green-100 p-2 sm:p-3 rounded-lg text-green-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                             <i className="fas fa-map-marker-alt text-lg sm:text-xl"></i>
                             </div>
@@ -175,7 +224,8 @@
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>
                             <div className="bg-orange-100 p-2 sm:p-3 rounded-lg text-orange-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                             <i className="fas fa-exclamation-circle text-lg sm:text-xl"></i>
                             </div>
@@ -186,9 +236,9 @@
                         </div>
                         </section>
 
-                        {/* Toolbar: Search and Filter */}
-                        <section className="flex flex-col md:flex-row justify-between items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 gap-3 md:gap-4">
-                        <div className="relative w-full md:w-96">
+                        {/* Toolbar: Search, Filter, Sort, Rekap */}
+                        <section className="flex flex-col xl:flex-row justify-between items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 gap-3">
+                        <div className="relative w-full xl:w-96 flex-shrink-0">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i className="fas fa-search text-gray-400"></i>
                             </div>
@@ -201,17 +251,49 @@
                             />
                         </div>
                         
-                        <div className="flex items-center w-full md:w-auto space-x-2">
-                            <i className="fas fa-filter text-gray-400 hidden sm:block px-2"></i>
-                            <select
-                            value={filterKab}
-                            onChange={(e) => setFilterKab(e.target.value)}
-                            className="block w-full md:w-auto pl-3 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                        <div className="flex flex-col md:flex-row items-center w-full xl:w-auto gap-2 md:gap-3">
+                            {/* Filter Kabupaten */}
+                            <div className="flex items-center w-full md:w-auto relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i className="fas fa-filter text-gray-400 text-xs"></i>
+                                </div>
+                                <select
+                                    value={filterKab}
+                                    onChange={(e) => setFilterKab(e.target.value)}
+                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none"
+                                >
+                                    {uniqueKabKota.map((kab, idx) => (
+                                        <option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Sort Data */}
+                            <div className="flex items-center w-full md:w-auto relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i className="fas fa-sort text-gray-400 text-xs"></i>
+                                </div>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none"
+                                >
+                                    <option value="default">Urutan Standar</option>
+                                    <option value="instansi-asc">Instansi (A - Z)</option>
+                                    <option value="instansi-desc">Instansi (Z - A)</option>
+                                    <option value="lokasi-asc">Lokasi (A - Z)</option>
+                                    <option value="lokasi-desc">Lokasi (Z - A)</option>
+                                </select>
+                            </div>
+
+                            {/* Tombol Modal Rekap Kecamatan */}
+                            <button
+                                onClick={() => setShowRecapModal(true)}
+                                className="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition flex items-center justify-center space-x-2 shadow-sm border border-indigo-700"
                             >
-                            {uniqueKabKota.map((kab, idx) => (
-                                <option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>
-                            ))}
-                            </select>
+                                <i className="fas fa-chart-pie"></i>
+                                <span>Evaluasi Kecamatan</span>
+                            </button>
                         </div>
                         </section>
 
@@ -228,7 +310,7 @@
                             </div>
                         ) : (
                             <>
-                            {/* MOBILE VIEW (CARDS) - Hidden on large screens */}
+                            {/* MOBILE VIEW (CARDS) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
                                 {filteredData.map((row, index) => {
                                 const waLink = getWaLink(row.hp);
@@ -303,7 +385,7 @@
                                 })}
                             </div>
 
-                            {/* DESKTOP VIEW (TABLE) - Hidden on small screens */}
+                            {/* DESKTOP VIEW (TABLE) */}
                             <div className="hidden lg:block overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50 border-b border-gray-200">
@@ -389,15 +471,87 @@
                                 <span className="text-xs sm:text-sm text-gray-500">
                                 Menampilkan <span className="font-medium text-gray-900">{filteredData.length}</span> dari <span className="font-medium text-gray-900">{data.length}</span> pengajuan.
                                 </span>
-                                <span className="text-[10px] sm:text-xs text-gray-400 italic">Diperbarui otomatis dari Spreadsheet</span>
+                                <span className="text-[10px] sm:text-xs text-gray-400 italic">Diurutkan berdasarkan: {sortBy.replace('-', ' ').toUpperCase()}</span>
                             </div>
                             </>
                         )}
                         </section>
                     </>
                     )}
-
                 </main>
+
+                {/* MODAL: Rekapitulasi Kecamatan */}
+                {showRecapModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-60 backdrop-blur-sm transition-opacity">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden animate-fade-in-up">
+                            
+                            {/* Header Modal */}
+                            <div className="px-6 py-4 border-b border-gray-200 bg-indigo-600 flex justify-between items-center text-white">
+                                <h3 className="text-lg font-bold flex items-center">
+                                    <i className="fas fa-chart-pie mr-2"></i> Evaluasi Kecamatan
+                                </h3>
+                                <button onClick={() => setShowRecapModal(false)} className="text-indigo-200 hover:text-white transition">
+                                    <i className="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+
+                            {/* Konten Modal */}
+                            <div className="p-6 overflow-y-auto flex-1 bg-gray-50">
+                                <p className="text-sm text-gray-600 mb-5 leading-relaxed bg-indigo-50 border border-indigo-100 p-3 rounded-lg">
+                                    <i className="fas fa-info-circle text-indigo-500 mr-1.5"></i>
+                                    Data ini diurutkan dari kecamatan dengan pengajuan terbanyak. Area dengan status <strong>"Prioritas"</strong> dapat dipertimbangkan oleh pimpinan untuk pemerataan alokasi.
+                                </p>
+                                
+                                <ul className="space-y-3">
+                                    {kecamatanStats.map((kec, idx) => {
+                                        // Highlight top 3 (Paling Banyak) and bottom ones (Prioritas)
+                                        const isTop = idx < 3;
+                                        const isBottom = idx >= kecamatanStats.length - 3 && kecamatanStats.length > 5;
+                                        
+                                        let bgClass = "bg-white border-gray-200";
+                                        let textClass = "bg-gray-100 text-gray-800";
+                                        let label = null;
+
+                                        if (isTop) {
+                                            bgClass = "bg-red-50 border-red-200";
+                                            textClass = "bg-red-200 text-red-800";
+                                            label = <span className="text-[10px] text-red-600 font-bold ml-2 uppercase">Terbanyak</span>;
+                                        } else if (isBottom) {
+                                            bgClass = "bg-green-50 border-green-200";
+                                            textClass = "bg-green-200 text-green-800";
+                                            label = <span className="text-[10px] text-green-600 font-bold ml-2 uppercase">Prioritas</span>;
+                                        }
+
+                                        return (
+                                            <li key={idx} className={`flex justify-between items-center px-4 py-3 rounded-xl border shadow-sm ${bgClass}`}>
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center">
+                                                        <span className="text-sm font-bold text-gray-800">{kec.name.split(' (')[0]}</span>
+                                                        {label}
+                                                    </div>
+                                                    <span className="text-xs text-gray-500">{kec.name.split(' (')[1].replace(')', '')}</span>
+                                                </div>
+                                                <span className={`py-1 px-3 rounded-lg text-xs font-bold ${textClass}`}>
+                                                    {kec.count} Pengajuan
+                                                </span>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+
+                            {/* Footer Modal */}
+                            <div className="px-6 py-4 border-t border-gray-200 bg-white flex justify-end">
+                                <button 
+                                    onClick={() => setShowRecapModal(false)} 
+                                    className="px-5 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition"
+                                >
+                                    Tutup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 </div>
             );
         }
@@ -406,5 +560,15 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <style>
+        /* Animasi tambahan untuk modal agar munculnya halus */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.3s ease-out forwards;
+        }
+    </style>
 </body>
 </html>
