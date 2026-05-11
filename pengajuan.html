@@ -1,381 +1,410 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Search, Filter, MessageCircle, MapPin, CheckCircle, 
-  FileText, Users, Building, AlertCircle, Phone, Loader2 
-} from 'lucide-react';
-
-// Link Google Apps Script Anda
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwmNopWKfOpsqsAu0T1FV5HwPU4L6f9aoRzBUvbK_w2GLwl4h_LQhJOsIFIfz2dDEdb/exec";
-
-export default function App() {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterKab, setFilterKab] = useState('Semua');
-
-  // Fetch data dari Google Sheets via GAS
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(GAS_WEB_APP_URL);
-        if (!response.ok) throw new Error('Gagal memuat data dari Spreadsheet');
-        
-        const result = await response.json();
-        const validData = result.filter(item => item.pemohon && item.pemohon.trim() !== "");
-        setData(validData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const uniqueKabKota = ['Semua', ...new Set(data.map(item => item.kab).filter(k => k && k.trim() !== ""))];
-
-  const filteredData = useMemo(() => {
-    return data.filter(item => {
-      const matchesSearch = 
-        (item.pemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-        (item.kec || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.desa || '').toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesFilter = filterKab === 'Semua' || item.kab === filterKab;
-      
-      return matchesSearch && matchesFilter;
-    });
-  }, [data, searchTerm, filterKab]);
-
-  const stats = useMemo(() => {
-    return {
-      total: data.length,
-      kotaMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kota malang')).length,
-      kabMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kabupaten malang')).length,
-      luarMalang: data.filter(d => (d.kab || '') && !(d.kab || '').toLowerCase().includes('malang')).length,
-    }
-  }, [data]);
-
-  const getWaLink = (hpString) => {
-    if (!hpString || hpString.toLowerCase().includes('tidak ada') || hpString.trim() === '') return null;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Qurban UMM 2026</title>
     
-    const match = hpString.replace(/\D/g, '').match(/^08\d{8,11}/);
-    if (match) {
-      let clean = match[0];
-      return `https://wa.me/62${clean.substring(1)}`;
-    }
-    const justNumbers = hpString.replace(/\D/g, '');
-    if (justNumbers.length >= 10) {
-       if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
-       if (justNumbers.startsWith('62')) return `https://wa.me/${justNumbers}`;
-       return `https://wa.me/62${justNumbers}`;
-    }
-    return null;
-  };
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React & ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone CDN untuk membaca JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    
+    <!-- Tempat React akan dirender -->
+    <div id="root"></div>
 
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      <header className="bg-red-700 text-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
-            <div className="flex items-center space-x-3">
-              <div className="bg-white p-1.5 sm:p-2 rounded-full flex-shrink-0">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-red-700" />
-              </div>
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold leading-tight line-clamp-1">Dashboard Qurban UMM 2026</h1>
-                <p className="text-xs sm:text-sm text-red-100 hidden sm:block">Data Rekapitulasi Pengajuan (Sinkronisasi Realtime)</p>
-              </div>
-            </div>
-            <div className="self-start sm:self-auto text-xs sm:text-sm font-medium bg-red-800 px-3 py-1.5 rounded-full border border-red-600 flex items-center shadow-sm w-max">
-              <span className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-400' : 'bg-green-400 animate-pulse'}`}></span>
-              {isLoading ? 'Menyinkronkan...' : 'Live Data'}
-            </div>
-          </div>
-        </div>
-      </header>
+    <!-- Script React / JSX -->
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-        
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
-            <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 text-red-600 animate-spin mb-4" />
-            <p className="text-gray-600 font-medium text-base sm:text-lg text-center px-4">Mengambil data terbaru dari Spreadsheet...</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-2">Mohon tunggu sebentar.</p>
-          </div>
-        ) : error ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 sm:px-6 py-6 sm:py-8 rounded-xl flex flex-col items-center justify-center shadow-sm text-center">
-            <AlertCircle className="w-10 h-10 sm:w-12 sm:h-12 mb-4 text-red-500" />
-            <h2 className="text-base sm:text-lg font-bold mb-1">Gagal Terhubung ke Database</h2>
-            <p className="text-xs sm:text-sm max-w-md">{error}. Pastikan URL Web App GAS Anda sudah benar.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="mt-4 px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
-            >
-              Coba Lagi
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Dashboard Summary Cards */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
-                 <div className="bg-blue-100 p-2 sm:p-3 rounded-lg text-blue-600 w-max">
-                   <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
-                 </div>
-                 <div>
-                   <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Pengajuan</p>
-                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                 </div>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
-                 <div className="bg-red-100 p-2 sm:p-3 rounded-lg text-red-600 w-max">
-                   <Building className="w-5 h-5 sm:w-6 sm:h-6" />
-                 </div>
-                 <div>
-                   <p className="text-xs sm:text-sm text-gray-500 font-medium">Kota Malang</p>
-                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kotaMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                 </div>
-              </div>
+        // Link Google Apps Script Anda
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwmNopWKfOpsqsAu0T1FV5HwPU4L6f9aoRzBUvbK_w2GLwl4h_LQhJOsIFIfz2dDEdb/exec";
 
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
-                 <div className="bg-green-100 p-2 sm:p-3 rounded-lg text-green-600 w-max">
-                   <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
-                 </div>
-                 <div>
-                   <p className="text-xs sm:text-sm text-gray-500 font-medium">Kab. Malang</p>
-                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kabMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                 </div>
-              </div>
+        function App() {
+            const [data, setData] = useState([]);
+            const [isLoading, setIsLoading] = useState(true);
+            const [error, setError] = useState(null);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [filterKab, setFilterKab] = useState('Semua');
 
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
-                 <div className="bg-orange-100 p-2 sm:p-3 rounded-lg text-orange-600 w-max">
-                   <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-                 </div>
-                 <div>
-                   <p className="text-xs sm:text-sm text-gray-500 font-medium">Luar Malang</p>
-                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.luarMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                 </div>
-              </div>
-            </section>
+            // Fetch data dari Google Sheets via GAS
+            useEffect(() => {
+                const fetchData = async () => {
+                try {
+                    setIsLoading(true);
+                    const response = await fetch(GAS_WEB_APP_URL);
+                    if (!response.ok) throw new Error('Gagal memuat data dari Spreadsheet');
+                    
+                    const result = await response.json();
+                    const validData = result.filter(item => item.pemohon && item.pemohon.trim() !== "");
+                    setData(validData);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+                };
 
-            {/* Toolbar: Search and Filter */}
-            <section className="flex flex-col md:flex-row justify-between items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 gap-3 md:gap-4">
-              <div className="relative w-full md:w-96">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Cari pemohon, desa, kecamatan..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-9 sm:pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
-                />
-              </div>
-              
-              <div className="flex items-center w-full md:w-auto space-x-2">
-                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 hidden sm:block" />
-                <select
-                  value={filterKab}
-                  onChange={(e) => setFilterKab(e.target.value)}
-                  className="block w-full md:w-auto pl-3 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer"
-                >
-                  {uniqueKabKota.map((kab, idx) => (
-                    <option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>
-                  ))}
-                </select>
-              </div>
-            </section>
+                fetchData();
+            }, []);
 
-            {/* Data Display */}
-            <section className="bg-transparent sm:bg-white sm:shadow-sm sm:border sm:border-gray-100 rounded-xl overflow-hidden">
-              
-              {filteredData.length === 0 ? (
-                <div className="px-6 py-12 text-center bg-white rounded-xl shadow-sm border border-gray-100 sm:border-0 sm:shadow-none">
-                  <div className="flex flex-col items-center justify-center text-gray-400">
-                    <Search className="w-10 h-10 mb-3 text-gray-300" />
-                    <p className="text-base sm:text-lg font-medium text-gray-500">Data tidak ditemukan</p>
-                    <p className="text-xs sm:text-sm mt-1">Coba ubah kata kunci pencarian atau filter wilayah Anda.</p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* MOBILE VIEW (CARDS) - Hidden on large screens */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-                    {filteredData.map((row, index) => {
-                      const waLink = getWaLink(row.hp);
-                      const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
-                      
-                      return (
-                        <div key={index} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col space-y-3 relative overflow-hidden">
-                          {/* Accent line for visual hierarchy */}
-                          <div className={`absolute top-0 left-0 w-1 h-full ${isHardfile ? 'bg-indigo-400' : 'bg-teal-400'}`}></div>
-                          
-                          <div className="pl-2 flex justify-between items-start">
-                            <div className="pr-2">
-                              <span className="text-xs font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">#{index + 1}</span>
-                              <h3 className="text-sm font-bold text-gray-900 mt-1.5 leading-tight">{row.pemohon || '-'}</h3>
-                            </div>
-                            {row.jenis && (
-                              <span className={`inline-flex flex-shrink-0 items-center px-2 py-0.5 rounded text-[10px] font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                                {row.jenis}
-                              </span>
-                            )}
-                          </div>
+            const uniqueKabKota = ['Semua', ...new Set(data.map(item => item.kab).filter(k => k && k.trim() !== ""))];
 
-                          <div className="pl-2 text-xs text-gray-600 flex items-center space-x-2">
-                             <FileText className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                             <span className="truncate">{row.jenisPermohonan || '-'}</span>
-                          </div>
+            const filteredData = useMemo(() => {
+                return data.filter(item => {
+                const matchesSearch = 
+                    (item.pemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    (item.kec || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (item.desa || '').toLowerCase().includes(searchTerm.toLowerCase());
+                
+                const matchesFilter = filterKab === 'Semua' || item.kab === filterKab;
+                
+                return matchesSearch && matchesFilter;
+                });
+            }, [data, searchTerm, filterKab]);
 
-                          <div className="pl-2 text-xs text-gray-600 flex items-start space-x-2">
-                             <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
-                             <div>
-                               <p className="font-medium text-gray-800">{row.kab || '-'}</p>
-                               <p className="text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</p>
-                             </div>
-                          </div>
+            const stats = useMemo(() => {
+                return {
+                total: data.length,
+                kotaMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kota malang')).length,
+                kabMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kabupaten malang')).length,
+                luarMalang: data.filter(d => (d.kab || '') && !(d.kab || '').toLowerCase().includes('malang')).length,
+                }
+            }, [data]);
 
-                          <div className="pl-2">
-                            <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-100 space-y-2 text-xs">
-                              <div>
-                                <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Rekomendasi:</span>
-                                <span className="text-gray-700">{row.rekomendasi || '-'}</span>
-                              </div>
-                              <div className="pt-2 border-t border-gray-200">
-                                <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Histori 2025:</span>
-                                <span className="text-gray-600 italic">{row.ket2025 || '-'}</span>
-                              </div>
-                            </div>
-                          </div>
+            const getWaLink = (hpString) => {
+                if (!hpString || hpString.toLowerCase().includes('tidak ada') || hpString.trim() === '') return null;
+                
+                const match = hpString.replace(/\D/g, '').match(/^08\d{8,11}/);
+                if (match) {
+                let clean = match[0];
+                return `https://wa.me/62${clean.substring(1)}`;
+                }
+                const justNumbers = hpString.replace(/\D/g, '');
+                if (justNumbers.length >= 10) {
+                if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
+                if (justNumbers.startsWith('62')) return `https://wa.me/${justNumbers}`;
+                return `https://wa.me/62${justNumbers}`;
+                }
+                return null;
+            };
 
-                          <div className="pl-2 pt-1 flex items-center justify-between mt-auto">
-                            <div className="text-sm">
-                              <span className="text-[10px] text-gray-500 uppercase font-semibold block">Kontak PIC</span>
-                              <span className="font-bold text-gray-900 text-xs">{row.pic || '-'}</span>
-                            </div>
-                            {waLink ? (
-                              <a 
-                                href={waLink} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 active:scale-95 transition-all"
-                              >
-                                <MessageCircle className="w-3.5 h-3.5 mr-1" />
-                                Hubungi
-                              </a>
-                            ) : (
-                              <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
-                                <Phone className="w-3.5 h-3.5 mr-1" />
-                                Tidak Ada
-                              </span>
-                            )}
-                          </div>
+            return (
+                <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+                <header className="bg-red-700 text-white shadow-md sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                        <div className="flex items-center space-x-3">
+                        <div className="bg-white p-1.5 sm:p-2 rounded-full flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
+                            <i className="fas fa-users text-red-700 text-sm sm:text-lg"></i>
                         </div>
-                      )
-                    })}
-                  </div>
+                        <div>
+                            <h1 className="text-lg sm:text-xl font-bold leading-tight line-clamp-1">Dashboard Qurban UMM 2026</h1>
+                            <p className="text-xs sm:text-sm text-red-100 hidden sm:block">Data Rekapitulasi Pengajuan (Sinkronisasi Realtime)</p>
+                        </div>
+                        </div>
+                        <div className="self-start sm:self-auto text-xs sm:text-sm font-medium bg-red-800 px-3 py-1.5 rounded-full border border-red-600 flex items-center shadow-sm w-max">
+                        <span className={`w-2 h-2 rounded-full mr-2 ${isLoading ? 'bg-yellow-400' : 'bg-green-400 animate-pulse'}`}></span>
+                        {isLoading ? 'Menyinkronkan...' : 'Live Data'}
+                        </div>
+                    </div>
+                    </div>
+                </header>
 
-                  {/* DESKTOP VIEW (TABLE) - Hidden on small screens */}
-                  <div className="hidden lg:block overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
-                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Instansi & Permohonan</th>
-                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
-                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[250px]">Catatan (Pimpinan & 2025)</th>
-                          <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak PIC</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-100">
-                        {filteredData.map((row, index) => {
-                          const waLink = getWaLink(row.hp);
-                          const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
-                          
-                          return (
-                            <tr key={index} className="hover:bg-red-50/30 transition-colors duration-150 group">
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 text-center">
-                                {index + 1}
-                              </td>
-                              <td className="px-6 py-4">
-                                <div className="text-sm font-bold text-gray-900">{row.pemohon || '-'}</div>
-                                <div className="text-sm text-gray-500 flex items-center mt-1 space-x-2">
-                                  {row.jenis && (
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                                      {row.jenis}
-                                    </span>
-                                  )}
-                                  <span className="text-gray-400">•</span>
-                                  <span className="truncate max-w-[200px]" title={row.jenisPermohonan}>{row.jenisPermohonan || '-'}</span>
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900 font-medium">{row.kab || '-'}</div>
-                                <div className="text-xs text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</div>
-                              </td>
-                              <td className="px-6 py-4">
-                                 <div className="flex flex-col space-y-2">
-                                   <div className="text-sm">
-                                     <span className="font-semibold text-gray-700 text-xs uppercase mr-1">Rekomendasi:</span>
-                                     <span className="text-gray-600 line-clamp-2 hover:line-clamp-none cursor-pointer group-hover:text-gray-900 transition-colors" title={row.rekomendasi}>
-                                       {row.rekomendasi || '-'}
-                                     </span>
-                                   </div>
-                                   <div className="text-sm bg-gray-50 p-2 rounded border border-gray-100 group-hover:border-red-100 transition-colors">
-                                     <span className="font-semibold text-gray-700 text-xs uppercase mr-1 block sm:inline">Histori 2025:</span>
-                                     <span className="text-gray-600 italic">
-                                       {row.ket2025 || '-'}
-                                     </span>
-                                   </div>
-                                 </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div className="flex flex-col items-end space-y-2">
-                                  <div className="text-sm text-gray-900 font-semibold">{row.pic || '-'}</div>
-                                  {waLink ? (
-                                    <a 
-                                      href={waLink} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all hover:scale-105"
-                                    >
-                                      <MessageCircle className="w-4 h-4 mr-1.5" />
-                                      Hubungi WA
-                                    </a>
-                                  ) : (
-                                    <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded text-gray-400 bg-gray-50 cursor-not-allowed">
-                                      <Phone className="w-4 h-4 mr-1.5" />
-                                      Tidak Ada WA
-                                    </span>
-                                  )}
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+                    
+                    {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <i className="fas fa-spinner fa-spin text-red-600 text-4xl sm:text-5xl mb-4"></i>
+                        <p className="text-gray-600 font-medium text-base sm:text-lg text-center px-4">Mengambil data terbaru dari Spreadsheet...</p>
+                        <p className="text-xs sm:text-sm text-gray-400 mt-2">Mohon tunggu sebentar.</p>
+                    </div>
+                    ) : error ? (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 sm:px-6 py-6 sm:py-8 rounded-xl flex flex-col items-center justify-center shadow-sm text-center">
+                        <i className="fas fa-exclamation-circle text-red-500 text-4xl sm:text-5xl mb-4"></i>
+                        <h2 className="text-base sm:text-lg font-bold mb-1">Gagal Terhubung ke Database</h2>
+                        <p className="text-xs sm:text-sm max-w-md">{error}. Pastikan URL Web App GAS Anda sudah benar.</p>
+                        <button 
+                        onClick={() => window.location.reload()} 
+                        className="mt-4 px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
+                        >
+                        Coba Lagi
+                        </button>
+                    </div>
+                    ) : (
+                    <>
+                        {/* Dashboard Summary Cards */}
+                        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                            <div className="bg-blue-100 p-2 sm:p-3 rounded-lg text-blue-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                            <i className="fas fa-file-alt text-lg sm:text-xl"></i>
+                            </div>
+                            <div>
+                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Pengajuan</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
+                            </div>
+                        </div>
+                        
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                            <div className="bg-red-100 p-2 sm:p-3 rounded-lg text-red-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                            <i className="fas fa-building text-lg sm:text-xl"></i>
+                            </div>
+                            <div>
+                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Kota Malang</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kotaMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
+                            </div>
+                        </div>
 
-                  <div className="bg-transparent sm:bg-gray-50 mt-4 sm:mt-0 px-1 sm:px-6 py-2 sm:py-4 sm:border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-                    <span className="text-xs sm:text-sm text-gray-500">
-                      Menampilkan <span className="font-medium text-gray-900">{filteredData.length}</span> dari <span className="font-medium text-gray-900">{data.length}</span> pengajuan.
-                    </span>
-                    <span className="text-[10px] sm:text-xs text-gray-400 italic">Diperbarui otomatis dari Spreadsheet</span>
-                  </div>
-                </>
-              )}
-            </section>
-          </>
-        )}
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                            <div className="bg-green-100 p-2 sm:p-3 rounded-lg text-green-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                            <i className="fas fa-map-marker-alt text-lg sm:text-xl"></i>
+                            </div>
+                            <div>
+                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Kab. Malang</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kabMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
+                            </div>
+                        </div>
 
-      </main>
-    </div>
-  );
-}
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow">
+                            <div className="bg-orange-100 p-2 sm:p-3 rounded-lg text-orange-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                            <i className="fas fa-exclamation-circle text-lg sm:text-xl"></i>
+                            </div>
+                            <div>
+                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Luar Malang</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.luarMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
+                            </div>
+                        </div>
+                        </section>
+
+                        {/* Toolbar: Search and Filter */}
+                        <section className="flex flex-col md:flex-row justify-between items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 gap-3 md:gap-4">
+                        <div className="relative w-full md:w-96">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i className="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input
+                            type="text"
+                            placeholder="Cari pemohon, desa, kecamatan..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="block w-full pl-9 sm:pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
+                            />
+                        </div>
+                        
+                        <div className="flex items-center w-full md:w-auto space-x-2">
+                            <i className="fas fa-filter text-gray-400 hidden sm:block px-2"></i>
+                            <select
+                            value={filterKab}
+                            onChange={(e) => setFilterKab(e.target.value)}
+                            className="block w-full md:w-auto pl-3 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                            >
+                            {uniqueKabKota.map((kab, idx) => (
+                                <option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>
+                            ))}
+                            </select>
+                        </div>
+                        </section>
+
+                        {/* Data Display */}
+                        <section className="bg-transparent sm:bg-white sm:shadow-sm sm:border sm:border-gray-100 rounded-xl overflow-hidden">
+                        
+                        {filteredData.length === 0 ? (
+                            <div className="px-6 py-12 text-center bg-white rounded-xl shadow-sm border border-gray-100 sm:border-0 sm:shadow-none">
+                            <div className="flex flex-col items-center justify-center text-gray-400">
+                                <i className="fas fa-search text-4xl mb-3 text-gray-300"></i>
+                                <p className="text-base sm:text-lg font-medium text-gray-500">Data tidak ditemukan</p>
+                                <p className="text-xs sm:text-sm mt-1">Coba ubah kata kunci pencarian atau filter wilayah Anda.</p>
+                            </div>
+                            </div>
+                        ) : (
+                            <>
+                            {/* MOBILE VIEW (CARDS) - Hidden on large screens */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+                                {filteredData.map((row, index) => {
+                                const waLink = getWaLink(row.hp);
+                                const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
+                                
+                                return (
+                                    <div key={index} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col space-y-3 relative overflow-hidden">
+                                    <div className={`absolute top-0 left-0 w-1 h-full ${isHardfile ? 'bg-indigo-400' : 'bg-teal-400'}`}></div>
+                                    
+                                    <div className="pl-2 flex justify-between items-start">
+                                        <div className="pr-2">
+                                        <span className="text-xs font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">#{index + 1}</span>
+                                        <h3 className="text-sm font-bold text-gray-900 mt-1.5 leading-tight">{row.pemohon || '-'}</h3>
+                                        </div>
+                                        {row.jenis && (
+                                        <span className={`inline-flex flex-shrink-0 items-center px-2 py-0.5 rounded text-[10px] font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
+                                            {row.jenis}
+                                        </span>
+                                        )}
+                                    </div>
+
+                                    <div className="pl-2 text-xs text-gray-600 flex items-center space-x-2">
+                                        <i className="fas fa-file-alt text-gray-400"></i>
+                                        <span className="truncate">{row.jenisPermohonan || '-'}</span>
+                                    </div>
+
+                                    <div className="pl-2 text-xs text-gray-600 flex items-start space-x-2">
+                                        <i className="fas fa-map-marker-alt text-gray-400 mt-0.5"></i>
+                                        <div>
+                                        <p className="font-medium text-gray-800">{row.kab || '-'}</p>
+                                        <p className="text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="pl-2">
+                                        <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-100 space-y-2 text-xs">
+                                        <div>
+                                            <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Rekomendasi:</span>
+                                            <span className="text-gray-700">{row.rekomendasi || '-'}</span>
+                                        </div>
+                                        <div className="pt-2 border-t border-gray-200">
+                                            <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Histori 2025:</span>
+                                            <span className="text-gray-600 italic">{row.ket2025 || '-'}</span>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="pl-2 pt-1 flex items-center justify-between mt-auto">
+                                        <div className="text-sm">
+                                        <span className="text-[10px] text-gray-500 uppercase font-semibold block">Kontak PIC</span>
+                                        <span className="font-bold text-gray-900 text-xs">{row.pic || '-'}</span>
+                                        </div>
+                                        {waLink ? (
+                                        <a 
+                                            href={waLink} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 active:scale-95 transition-all"
+                                        >
+                                            <i className="fab fa-whatsapp text-sm mr-1.5"></i>
+                                            Hubungi
+                                        </a>
+                                        ) : (
+                                        <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
+                                            <i className="fas fa-phone text-xs mr-1.5"></i>
+                                            Tidak Ada
+                                        </span>
+                                        )}
+                                    </div>
+                                    </div>
+                                )
+                                })}
+                            </div>
+
+                            {/* DESKTOP VIEW (TABLE) - Hidden on small screens */}
+                            <div className="hidden lg:block overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
+                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Instansi & Permohonan</th>
+                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[250px]">Catatan (Pimpinan & 2025)</th>
+                                    <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak PIC</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-100">
+                                    {filteredData.map((row, index) => {
+                                    const waLink = getWaLink(row.hp);
+                                    const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
+                                    
+                                    return (
+                                        <tr key={index} className="hover:bg-red-50/30 transition-colors duration-150 group">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 text-center">
+                                            {index + 1}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm font-bold text-gray-900">{row.pemohon || '-'}</div>
+                                            <div className="text-sm text-gray-500 flex items-center mt-1 space-x-2">
+                                            {row.jenis && (
+                                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
+                                                {row.jenis}
+                                                </span>
+                                            )}
+                                            <span className="text-gray-400">•</span>
+                                            <span className="truncate max-w-[200px]" title={row.jenisPermohonan}>{row.jenisPermohonan || '-'}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900 font-medium">{row.kab || '-'}</div>
+                                            <div className="text-xs text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex flex-col space-y-2">
+                                            <div className="text-sm">
+                                                <span className="font-semibold text-gray-700 text-xs uppercase mr-1">Rekomendasi:</span>
+                                                <span className="text-gray-600 line-clamp-2 hover:line-clamp-none cursor-pointer group-hover:text-gray-900 transition-colors" title={row.rekomendasi}>
+                                                {row.rekomendasi || '-'}
+                                                </span>
+                                            </div>
+                                            <div className="text-sm bg-gray-50 p-2 rounded border border-gray-100 group-hover:border-red-100 transition-colors">
+                                                <span className="font-semibold text-gray-700 text-xs uppercase mr-1 block sm:inline">Histori 2025:</span>
+                                                <span className="text-gray-600 italic">
+                                                {row.ket2025 || '-'}
+                                                </span>
+                                            </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="flex flex-col items-end space-y-2">
+                                            <div className="text-sm text-gray-900 font-semibold">{row.pic || '-'}</div>
+                                            {waLink ? (
+                                                <a 
+                                                href={waLink} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all hover:scale-105"
+                                                >
+                                                <i className="fab fa-whatsapp text-sm mr-1.5"></i>
+                                                Hubungi WA
+                                                </a>
+                                            ) : (
+                                                <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded text-gray-400 bg-gray-50 cursor-not-allowed">
+                                                <i className="fas fa-phone text-xs mr-1.5"></i>
+                                                Tidak Ada WA
+                                                </span>
+                                            )}
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    )
+                                    })}
+                                </tbody>
+                                </table>
+                            </div>
+
+                            <div className="bg-transparent sm:bg-gray-50 mt-4 sm:mt-0 px-1 sm:px-6 py-2 sm:py-4 sm:border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+                                <span className="text-xs sm:text-sm text-gray-500">
+                                Menampilkan <span className="font-medium text-gray-900">{filteredData.length}</span> dari <span className="font-medium text-gray-900">{data.length}</span> pengajuan.
+                                </span>
+                                <span className="text-[10px] sm:text-xs text-gray-400 italic">Diperbarui otomatis dari Spreadsheet</span>
+                            </div>
+                            </>
+                        )}
+                        </section>
+                    </>
+                    )}
+
+                </main>
+                </div>
+            );
+        }
+
+        // Render aplikasi ke dalam div id="root"
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
