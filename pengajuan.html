@@ -130,16 +130,21 @@
             const getWaLink = (hpString) => {
                 if (!hpString || hpString.toLowerCase().includes('tidak ada') || hpString.trim() === '') return null;
                 
-                const match = hpString.replace(/\D/g, '').match(/^08\d{8,11}/);
-                if (match) {
-                    let clean = match[0];
-                    return `https://wa.me/62${clean.substring(1)}`;
-                }
-                const justNumbers = hpString.replace(/\D/g, '');
-                if (justNumbers.length >= 10) {
+                // Ambil nomor pertama jika ada pemisah seperti '|', '/', atau ','
+                const firstHp = hpString.split(/[|/,]/)[0];
+                const justNumbers = firstHp.replace(/\D/g, '');
+                
+                if (justNumbers.length >= 9) {
                     if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
-                    if (justNumbers.startsWith('62')) return `https://wa.me/${justNumbers}`;
-                    return `https://wa.me/62${justNumbers}`;
+                    
+                    // Mendukung kode negara Indonesia (62) dan Filipina (63)
+                    if (justNumbers.startsWith('62') || justNumbers.startsWith('63')) return `https://wa.me/${justNumbers}`;
+                    
+                    // Jika user langsung menulis 8... (misal 812345...), otomatis jadikan 62
+                    if (justNumbers.startsWith('8')) return `https://wa.me/62${justNumbers}`;
+                    
+                    // Default untuk format luar negeri lainnya
+                    return `https://wa.me/${justNumbers}`;
                 }
                 return null;
             };
@@ -503,40 +508,46 @@
                                 </p>
                                 
                                 <ul className="space-y-3">
-                                    {kecamatanStats.map((kec, idx) => {
-                                        // Highlight top 3 (Paling Banyak) and bottom ones (Prioritas)
-                                        const isTop = idx < 3;
-                                        const isBottom = idx >= kecamatanStats.length - 3 && kecamatanStats.length > 5;
-                                        
-                                        let bgClass = "bg-white border-gray-200";
-                                        let textClass = "bg-gray-100 text-gray-800";
-                                        let label = null;
+                                    {(() => {
+                                        // MENCARI BATAS AMBANG (THRESHOLD) UNTUK HIGHLIGHT BERDASARKAN JUMLAH YANG SAMA
+                                        const topThreshold = kecamatanStats.length >= 3 ? kecamatanStats[2].count : (kecamatanStats.length > 0 ? kecamatanStats[0].count : 0);
+                                        const bottomThreshold = kecamatanStats.length >= 3 ? kecamatanStats[kecamatanStats.length - 1].count : 0;
 
-                                        if (isTop) {
-                                            bgClass = "bg-red-50 border-red-200";
-                                            textClass = "bg-red-200 text-red-800";
-                                            label = <span className="text-[10px] text-red-600 font-bold ml-2 uppercase">Terbanyak</span>;
-                                        } else if (isBottom) {
-                                            bgClass = "bg-green-50 border-green-200";
-                                            textClass = "bg-green-200 text-green-800";
-                                            label = <span className="text-[10px] text-green-600 font-bold ml-2 uppercase">Prioritas</span>;
-                                        }
+                                        return kecamatanStats.map((kec, idx) => {
+                                            // Highlight berdasarkan jumlah hitungan, bukan lagi berdasarkan indeks semata
+                                            const isTop = kec.count >= topThreshold && kec.count > 1; // Jika sama dengan urutan ke-3, maka merah. Syarat: lebih dari 1 pengajuan.
+                                            const isBottom = kec.count <= bottomThreshold && !isTop && kecamatanStats.length > 5;
+                                            
+                                            let bgClass = "bg-white border-gray-200";
+                                            let textClass = "bg-gray-100 text-gray-800";
+                                            let label = null;
 
-                                        return (
-                                            <li key={idx} className={`flex justify-between items-center px-4 py-3 rounded-xl border shadow-sm ${bgClass}`}>
-                                                <div className="flex flex-col">
-                                                    <div className="flex items-center">
-                                                        <span className="text-sm font-bold text-gray-800">{kec.name.split(' (')[0]}</span>
-                                                        {label}
+                                            if (isTop) {
+                                                bgClass = "bg-red-50 border-red-200";
+                                                textClass = "bg-red-200 text-red-800";
+                                                label = <span className="text-[10px] text-red-600 font-bold ml-2 uppercase">Terbanyak</span>;
+                                            } else if (isBottom) {
+                                                bgClass = "bg-green-50 border-green-200";
+                                                textClass = "bg-green-200 text-green-800";
+                                                label = <span className="text-[10px] text-green-600 font-bold ml-2 uppercase">Prioritas</span>;
+                                            }
+
+                                            return (
+                                                <li key={idx} className={`flex justify-between items-center px-4 py-3 rounded-xl border shadow-sm ${bgClass}`}>
+                                                    <div className="flex flex-col">
+                                                        <div className="flex items-center">
+                                                            <span className="text-sm font-bold text-gray-800">{kec.name.split(' (')[0]}</span>
+                                                            {label}
+                                                        </div>
+                                                        <span className="text-xs text-gray-500">{kec.name.split(' (')[1].replace(')', '')}</span>
                                                     </div>
-                                                    <span className="text-xs text-gray-500">{kec.name.split(' (')[1].replace(')', '')}</span>
-                                                </div>
-                                                <span className={`py-1 px-3 rounded-lg text-xs font-bold ${textClass}`}>
-                                                    {kec.count} Pengajuan
-                                                </span>
-                                            </li>
-                                        );
-                                    })}
+                                                    <span className={`py-1 px-3 rounded-lg text-xs font-bold ${textClass}`}>
+                                                        {kec.count} Pengajuan
+                                                    </span>
+                                                </li>
+                                            );
+                                        });
+                                    })()}
                                 </ul>
                             </div>
 
