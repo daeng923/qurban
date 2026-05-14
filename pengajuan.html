@@ -4,154 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Qurban UMM 2026</title>
-    
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome CDN untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- React & ReactDOM CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel Standalone CDN untuk membaca JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans overflow-x-hidden">
-    
-    <!-- Tempat React akan dirender -->
     <div id="root"></div>
 
-    <!-- Script React / JSX -->
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // Link Google Apps Script Anda
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwmNopWKfOpsqsAu0T1FV5HwPU4L6f9aoRzBUvbK_w2GLwl4h_LQhJOsIFIfz2dDEdb/exec";
 
         function App() {
-            const [data, setData] = useState([]);
+            const [dataRequestor, setDataRequestor] = useState([]);
+            const [dataRecipient, setDataRecipient] = useState([]);
             const [isLoading, setIsLoading] = useState(true);
             const [error, setError] = useState(null);
+            const [activeTab, setActiveTab] = useState('requestor');
             
-            // State untuk Filter & Sort
+            // Filter & Sort (Tab Requestor)
             const [searchTerm, setSearchTerm] = useState('');
             const [filterKab, setFilterKab] = useState('Semua');
             const [sortBy, setSortBy] = useState('default');
-            
-            // State untuk Modal Rekap
             const [showRecapModal, setShowRecapModal] = useState(false);
 
-            // Fetch data dari Google Sheets via GAS
+            // Tab Penerima
+            const [activeCampus, setActiveCampus] = useState('Kampus 3');
+            const [expandedStatus, setExpandedStatus] = useState(null);
+
             useEffect(() => {
                 const fetchData = async () => {
-                try {
-                    setIsLoading(true);
-                    const response = await fetch(GAS_WEB_APP_URL);
-                    if (!response.ok) throw new Error('Gagal memuat data dari Spreadsheet');
-                    
-                    const result = await response.json();
-                    const validData = result.filter(item => item.pemohon && item.pemohon.trim() !== "");
-                    setData(validData);
-                } catch (err) {
-                    setError(err.message);
-                } finally {
-                    setIsLoading(false);
-                }
+                    try {
+                        setIsLoading(true);
+                        const response = await fetch(GAS_WEB_APP_URL);
+                        if (!response.ok) throw new Error('Gagal memuat data dari Spreadsheet');
+                        const result = await response.json();
+                        
+                        // Filter requestor: hanya yang pemohon-nya benar-benar terisi
+                        const validRequestor = (result.requestor || []).filter(item => 
+                            item.pemohon && String(item.pemohon).trim() !== ''
+                        );
+                        setDataRequestor(validRequestor);
+                        
+                        // Filter recipient: hanya yang status-nya terisi
+                        const validRecipient = (result.recipient || []).filter(item =>
+                            item.status && String(item.status).trim() !== ''
+                        );
+                        setDataRecipient(validRecipient);
+                    } catch (err) {
+                        setError(err.message);
+                    } finally {
+                        setIsLoading(false);
+                    }
                 };
-
                 fetchData();
             }, []);
 
-            // Daftar Kabupaten/Kota Unik untuk Dropdown
-            const uniqueKabKota = ['Semua', ...new Set(data.map(item => item.kab).filter(k => k && k.trim() !== ""))];
+            // ========== REQUESTOR LOGIC ==========
+            const uniqueKabKota = ['Semua', ...new Set(dataRequestor.map(item => item.kab).filter(k => k && k.trim() !== ""))];
 
-            // Hitung Rekapitulasi Kecamatan untuk Pimpinan
             const kecamatanStats = useMemo(() => {
                 const counts = {};
-                data.forEach(item => {
+                dataRequestor.forEach(item => {
                     if(item.kec && item.kec.trim() !== '') {
                         const key = `${item.kec} (${item.kab || 'Lokasi Lain'})`;
                         counts[key] = (counts[key] || 0) + 1;
                     }
                 });
-                // Urutkan dari yang terbanyak ke terkecil
                 return Object.entries(counts)
                     .map(([name, count]) => ({ name, count }))
                     .sort((a, b) => b.count - a.count);
-            }, [data]);
+            }, [dataRequestor]);
 
-            // Filter & Sorting Logic Terpusat
-            const filteredData = useMemo(() => {
-                // 1. Lakukan Pencarian & Filter
-                let result = data.filter(item => {
+            const filteredDataRequestor = useMemo(() => {
+                let result = dataRequestor.filter(item => {
                     const matchesSearch = 
                         (item.pemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
                         (item.kec || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                         (item.desa || '').toLowerCase().includes(searchTerm.toLowerCase());
-                    
                     const matchesFilter = filterKab === 'Semua' || item.kab === filterKab;
-                    
                     return matchesSearch && matchesFilter;
                 });
 
-                // 2. Lakukan Pengurutan (Sorting)
-                if (sortBy === 'instansi-asc') {
-                    result.sort((a, b) => (a.pemohon || '').localeCompare(b.pemohon || ''));
-                } else if (sortBy === 'instansi-desc') {
-                    result.sort((a, b) => (b.pemohon || '').localeCompare(a.pemohon || ''));
-                } else if (sortBy === 'lokasi-asc') {
-                    result.sort((a, b) => {
-                        const locA = `${a.kab || ''} ${a.kec || ''} ${a.desa || ''}`;
-                        const locB = `${b.kab || ''} ${b.kec || ''} ${b.desa || ''}`;
-                        return locA.localeCompare(locB);
-                    });
-                } else if (sortBy === 'lokasi-desc') {
-                    result.sort((a, b) => {
-                        const locA = `${a.kab || ''} ${a.kec || ''} ${a.desa || ''}`;
-                        const locB = `${b.kab || ''} ${b.kec || ''} ${b.desa || ''}`;
-                        return locB.localeCompare(locA);
-                    });
-                }
+                if (sortBy === 'instansi-asc') result.sort((a, b) => (a.pemohon || '').localeCompare(b.pemohon || ''));
+                else if (sortBy === 'instansi-desc') result.sort((a, b) => (b.pemohon || '').localeCompare(a.pemohon || ''));
+                else if (sortBy === 'lokasi-asc') result.sort((a, b) => `${a.kab} ${a.kec} ${a.desa}`.localeCompare(`${b.kab} ${b.kec} ${b.desa}`));
+                else if (sortBy === 'lokasi-desc') result.sort((a, b) => `${b.kab} ${b.kec} ${b.desa}`.localeCompare(`${a.kab} ${a.kec} ${a.desa}`));
 
                 return result;
-            }, [data, searchTerm, filterKab, sortBy]);
+            }, [dataRequestor, searchTerm, filterKab, sortBy]);
 
-            const stats = useMemo(() => {
-                return {
-                total: data.length,
-                kotaMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kota malang')).length,
-                kabMalang: data.filter(d => (d.kab || '').toLowerCase().includes('kabupaten malang')).length,
-                luarMalang: data.filter(d => (d.kab || '') && !(d.kab || '').toLowerCase().includes('malang')).length,
-                }
-            }, [data]);
+            const statsRequestor = useMemo(() => ({
+                total: dataRequestor.length,
+                kotaMalang: dataRequestor.filter(d => (d.kab || '').toLowerCase().includes('kota malang')).length,
+                kabMalang: dataRequestor.filter(d => (d.kab || '').toLowerCase().includes('kabupaten malang')).length,
+                luarMalang: dataRequestor.filter(d => (d.kab || '') && !(d.kab || '').toLowerCase().includes('malang')).length,
+            }), [dataRequestor]);
+
+            // ========== PENERIMA LOGIC (FOKUS PER KAMPUS) ==========
+            const recipientStats = useMemo(() => {
+                const byCampus = {};
+                let totalPaket = 0;
+                let totalTBD = 0;
+
+                dataRecipient.forEach(item => {
+                    const campus = String(item.pegambilan_paket || item.tempat || '').trim() || 'Lainnya';
+                    const jumlah = typeof item.jumlah === 'number' ? item.jumlah : parseInt(item.jumlah) || 0;
+                    const isTBD = String(item.jumlah).trim() === '?';
+
+                    if (!byCampus[campus]) {
+                        byCampus[campus] = { total: 0, tbd: 0, rows: [] };
+                    }
+
+                    byCampus[campus].rows.push(item);
+                    if (isTBD) {
+                        byCampus[campus].tbd += 1;
+                        totalTBD += 1;
+                    } else {
+                        byCampus[campus].total += jumlah;
+                        totalPaket += jumlah;
+                    }
+                });
+
+                return { byCampus, totalPaket, totalTBD };
+            }, [dataRecipient]);
+
+            // Data untuk kampus yang sedang aktif
+            const activeCampusData = useMemo(() => {
+                const campusData = recipientStats.byCampus[activeCampus];
+                if (!campusData) return { total: 0, tbd: 0, rows: [], byStatus: {} };
+
+                // Group rows by status
+                const byStatus = {};
+                campusData.rows.forEach(item => {
+                    const status = item.status;
+                    if (!byStatus[status]) {
+                        byStatus[status] = { total: 0, tbd: 0, rows: [] };
+                    }
+                    byStatus[status].rows.push(item);
+                    const jumlah = typeof item.jumlah === 'number' ? item.jumlah : parseInt(item.jumlah) || 0;
+                    const isTBD = String(item.jumlah).trim() === '?';
+                    if (isTBD) byStatus[status].tbd += 1;
+                    else byStatus[status].total += jumlah;
+                });
+
+                return { ...campusData, byStatus };
+            }, [recipientStats, activeCampus]);
+
+            const campusList = Object.keys(recipientStats.byCampus).sort((a, b) => {
+                // Kampus 3 pertama, Kampus 2 kedua, sisanya setelahnya
+                if (a.includes('Kampus 3')) return -1;
+                if (b.includes('Kampus 3')) return 1;
+                if (a.includes('Kampus 2')) return -1;
+                if (b.includes('Kampus 2')) return 1;
+                return a.localeCompare(b);
+            });
 
             const getWaLink = (hpString) => {
                 if (!hpString || hpString.toLowerCase().includes('tidak ada') || hpString.trim() === '') return null;
-                
-                // Ambil nomor pertama jika ada pemisah seperti '|', '/', atau ','
                 const firstHp = hpString.split(/[|/,]/)[0];
                 const justNumbers = firstHp.replace(/\D/g, '');
-                
                 if (justNumbers.length >= 9) {
                     if (justNumbers.startsWith('0')) return `https://wa.me/62${justNumbers.substring(1)}`;
-                    
-                    // Mendukung kode negara Indonesia (62) dan Filipina (63)
                     if (justNumbers.startsWith('62') || justNumbers.startsWith('63')) return `https://wa.me/${justNumbers}`;
-                    
-                    // Jika user langsung menulis 8... (misal 812345...), otomatis jadikan 62
                     if (justNumbers.startsWith('8')) return `https://wa.me/62${justNumbers}`;
-                    
-                    // Default untuk format luar negeri lainnya
                     return `https://wa.me/${justNumbers}`;
                 }
                 return null;
             };
 
+            const getCampusColor = (campus) => {
+                if (campus.includes('Kampus 3')) return { bg: 'bg-red-600', light: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', icon: 'bg-red-100 text-red-600', bar: 'from-red-400 to-red-600' };
+                if (campus.includes('Kampus 2')) return { bg: 'bg-blue-600', light: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', icon: 'bg-blue-100 text-blue-600', bar: 'from-blue-400 to-blue-600' };
+                return { bg: 'bg-gray-600', light: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', icon: 'bg-gray-100 text-gray-600', bar: 'from-gray-400 to-gray-600' };
+            };
+
+            // ========== RENDER ==========
             return (
                 <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-                {/* Header Utama */}
+                {/* Header */}
                 <header className="bg-red-700 text-white shadow-md sticky top-0 z-40">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
@@ -161,7 +195,7 @@
                         </div>
                         <div>
                             <h1 className="text-lg sm:text-xl font-bold leading-tight line-clamp-1">Dashboard Qurban UMM 2026</h1>
-                            <p className="text-xs sm:text-sm text-red-100 hidden sm:block">Data Rekapitulasi Pengajuan (Sinkronisasi Realtime)</p>
+                            <p className="text-xs sm:text-sm text-red-100 hidden sm:block">Data Rekapitulasi Pengajuan & Distribusi Paket Daging</p>
                         </div>
                         </div>
                         <div className="self-start sm:self-auto text-xs sm:text-sm font-medium bg-red-800 px-3 py-1.5 rounded-full border border-red-600 flex items-center shadow-sm w-max">
@@ -185,104 +219,76 @@
                         <i className="fas fa-exclamation-circle text-red-500 text-4xl sm:text-5xl mb-4"></i>
                         <h2 className="text-base sm:text-lg font-bold mb-1">Gagal Terhubung ke Database</h2>
                         <p className="text-xs sm:text-sm max-w-md">{error}. Pastikan URL Web App GAS Anda sudah benar.</p>
-                        <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
-                        >
-                        Coba Lagi
-                        </button>
+                        <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition">Coba Lagi</button>
                     </div>
                     ) : (
                     <>
-                        {/* Cards Ringkasan */}
+                        {/* Tab Navigation */}
+                        <div className="flex gap-1 bg-white rounded-xl px-2 sm:px-4 border border-gray-100 shadow-sm">
+                            <button
+                                onClick={() => setActiveTab('requestor')}
+                                className={`px-4 sm:px-6 py-3.5 text-sm font-medium border-b-2 transition-colors ${
+                                    activeTab === 'requestor'
+                                        ? 'border-red-600 text-red-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-800'
+                                }`}
+                            >
+                                <i className="fas fa-file-alt mr-1.5 sm:mr-2"></i>Data Pengajuan
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('recipient')}
+                                className={`px-4 sm:px-6 py-3.5 text-sm font-medium border-b-2 transition-colors ${
+                                    activeTab === 'recipient'
+                                        ? 'border-red-600 text-red-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-800'
+                                }`}
+                            >
+                                <i className="fas fa-box mr-1.5 sm:mr-2"></i>Penerima Paket
+                            </button>
+                        </div>
+
+                        {/* ========== TAB: DATA PENGAJUAN ========== */}
+                        {activeTab === 'requestor' && (
+                        <>
                         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-blue-400"></div>
-                            <div className="bg-blue-100 p-2 sm:p-3 rounded-lg text-blue-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                            <i className="fas fa-file-alt text-lg sm:text-xl"></i>
+                        {[
+                            { label: 'Total Pengajuan', value: statsRequestor.total, color: 'blue', icon: 'fa-file-alt' },
+                            { label: 'Kota Malang', value: statsRequestor.kotaMalang, color: 'red', icon: 'fa-building' },
+                            { label: 'Kab. Malang', value: statsRequestor.kabMalang, color: 'green', icon: 'fa-map-marker-alt' },
+                            { label: 'Luar Malang', value: statsRequestor.luarMalang, color: 'orange', icon: 'fa-exclamation-circle' },
+                        ].map((card, idx) => (
+                            <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
+                                <div className={`absolute top-0 left-0 w-1 h-full bg-${card.color}-400`}></div>
+                                <div className={`bg-${card.color}-100 p-2 sm:p-3 rounded-lg text-${card.color}-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center`}>
+                                    <i className={`fas ${card.icon} text-lg sm:text-xl`}></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">{card.label}</p>
+                                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{card.value} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
+                                </div>
                             </div>
-                            <div>
-                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Pengajuan</p>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                            </div>
-                        </div>
-                        
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-red-400"></div>
-                            <div className="bg-red-100 p-2 sm:p-3 rounded-lg text-red-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                            <i className="fas fa-building text-lg sm:text-xl"></i>
-                            </div>
-                            <div>
-                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Kota Malang</p>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kotaMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-green-400"></div>
-                            <div className="bg-green-100 p-2 sm:p-3 rounded-lg text-green-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                            <i className="fas fa-map-marker-alt text-lg sm:text-xl"></i>
-                            </div>
-                            <div>
-                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Kab. Malang</p>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.kabMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 hover:shadow-md transition-shadow relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>
-                            <div className="bg-orange-100 p-2 sm:p-3 rounded-lg text-orange-600 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                            <i className="fas fa-exclamation-circle text-lg sm:text-xl"></i>
-                            </div>
-                            <div>
-                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Luar Malang</p>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.luarMalang} <span className="text-xs sm:text-sm font-normal text-gray-400">Instansi</span></h3>
-                            </div>
-                        </div>
+                        ))}
                         </section>
 
-                        {/* Toolbar: Search, Filter, Sort, Rekap */}
+                        {/* Toolbar */}
                         <section className="flex flex-col xl:flex-row justify-between items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 gap-3">
                         <div className="relative w-full xl:w-96 flex-shrink-0">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i className="fas fa-search text-gray-400"></i>
-                            </div>
-                            <input
-                            type="text"
-                            placeholder="Cari pemohon, desa, kecamatan..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="block w-full pl-9 sm:pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
-                            />
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i className="fas fa-search text-gray-400"></i></div>
+                            <input type="text" placeholder="Cari pemohon, desa, kecamatan..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                            className="block w-full pl-9 sm:pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 transition" />
                         </div>
-                        
                         <div className="flex flex-col md:flex-row items-center w-full xl:w-auto gap-2 md:gap-3">
-                            {/* Filter Kabupaten */}
                             <div className="flex items-center w-full md:w-auto relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i className="fas fa-filter text-gray-400 text-xs"></i>
-                                </div>
-                                <select
-                                    value={filterKab}
-                                    onChange={(e) => setFilterKab(e.target.value)}
-                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none"
-                                >
-                                    {uniqueKabKota.map((kab, idx) => (
-                                        <option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>
-                                    ))}
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i className="fas fa-filter text-gray-400 text-xs"></i></div>
+                                <select value={filterKab} onChange={(e) => setFilterKab(e.target.value)}
+                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none">
+                                    {uniqueKabKota.map((kab, idx) => (<option key={idx} value={kab}>{kab === 'Semua' ? 'Semua Wilayah' : kab}</option>))}
                                 </select>
                             </div>
-
-                            {/* Sort Data */}
                             <div className="flex items-center w-full md:w-auto relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i className="fas fa-sort text-gray-400 text-xs"></i>
-                                </div>
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none"
-                                >
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i className="fas fa-sort text-gray-400 text-xs"></i></div>
+                                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+                                    className="block w-full md:w-auto pl-8 pr-8 py-2 text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer appearance-none">
                                     <option value="default">Urutan Standar</option>
                                     <option value="instansi-asc">Instansi (A - Z)</option>
                                     <option value="instansi-desc">Instansi (Z - A)</option>
@@ -290,22 +296,16 @@
                                     <option value="lokasi-desc">Lokasi (Z - A)</option>
                                 </select>
                             </div>
-
-                            {/* Tombol Modal Rekap Kecamatan */}
-                            <button
-                                onClick={() => setShowRecapModal(true)}
-                                className="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition flex items-center justify-center space-x-2 shadow-sm border border-indigo-700"
-                            >
-                                <i className="fas fa-chart-pie"></i>
-                                <span>Evaluasi Kecamatan</span>
+                            <button onClick={() => setShowRecapModal(true)}
+                                className="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition flex items-center justify-center space-x-2 shadow-sm border border-indigo-700">
+                                <i className="fas fa-chart-pie"></i><span>Evaluasi Kecamatan</span>
                             </button>
                         </div>
                         </section>
 
-                        {/* Data Display */}
+                        {/* Requestor Table */}
                         <section className="bg-transparent sm:bg-white sm:shadow-sm sm:border sm:border-gray-100 rounded-xl overflow-hidden">
-                        
-                        {filteredData.length === 0 ? (
+                        {filteredDataRequestor.length === 0 ? (
                             <div className="px-6 py-12 text-center bg-white rounded-xl shadow-sm border border-gray-100 sm:border-0 sm:shadow-none">
                             <div className="flex flex-col items-center justify-center text-gray-400">
                                 <i className="fas fa-search text-4xl mb-3 text-gray-300"></i>
@@ -317,77 +317,38 @@
                             <>
                             {/* MOBILE VIEW (CARDS) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-                                {filteredData.map((row, index) => {
+                                {filteredDataRequestor.map((row, index) => {
                                 const waLink = getWaLink(row.hp);
                                 const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
-                                
                                 return (
                                     <div key={index} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col space-y-3 relative overflow-hidden">
                                     <div className={`absolute top-0 left-0 w-1 h-full ${isHardfile ? 'bg-indigo-400' : 'bg-teal-400'}`}></div>
-                                    
                                     <div className="pl-2 flex justify-between items-start">
                                         <div className="pr-2">
                                         <span className="text-xs font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">#{index + 1}</span>
                                         <h3 className="text-sm font-bold text-gray-900 mt-1.5 leading-tight">{row.pemohon || '-'}</h3>
                                         </div>
-                                        {row.jenis && (
-                                        <span className={`inline-flex flex-shrink-0 items-center px-2 py-0.5 rounded text-[10px] font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                                            {row.jenis}
-                                        </span>
-                                        )}
+                                        {row.jenis && (<span className={`inline-flex flex-shrink-0 items-center px-2 py-0.5 rounded text-[10px] font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>{row.jenis}</span>)}
                                     </div>
-
-                                    <div className="pl-2 text-xs text-gray-600 flex items-center space-x-2">
-                                        <i className="fas fa-file-alt text-gray-400"></i>
-                                        <span className="truncate">{row.jenisPermohonan || '-'}</span>
-                                    </div>
-
+                                    <div className="pl-2 text-xs text-gray-600 flex items-center space-x-2"><i className="fas fa-file-alt text-gray-400"></i><span className="truncate">{row.jenisPermohonan || '-'}</span></div>
                                     <div className="pl-2 text-xs text-gray-600 flex items-start space-x-2">
                                         <i className="fas fa-map-marker-alt text-gray-400 mt-0.5"></i>
-                                        <div>
-                                        <p className="font-medium text-gray-800">{row.kab || '-'}</p>
-                                        <p className="text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</p>
-                                        </div>
+                                        <div><p className="font-medium text-gray-800">{row.kab || '-'}</p><p className="text-gray-500">{(row.desa && row.kec) ? `${row.desa}, Kec. ${row.kec}` : (row.desa || row.kec || '-')}</p></div>
                                     </div>
-
                                     <div className="pl-2">
                                         <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-100 space-y-2 text-xs">
-                                        <div>
-                                            <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Rekomendasi:</span>
-                                            <span className="text-gray-700">{row.rekomendasi || '-'}</span>
-                                        </div>
-                                        <div className="pt-2 border-t border-gray-200">
-                                            <span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Histori 2025:</span>
-                                            <span className="text-gray-600 italic">{row.ket2025 || '-'}</span>
-                                        </div>
+                                        <div><span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Rekomendasi:</span><span className="text-gray-700">{row.rekomendasi || '-'}</span></div>
+                                        <div className="pt-2 border-t border-gray-200"><span className="font-semibold text-gray-700 uppercase block mb-0.5 text-[10px]">Histori 2025:</span><span className="text-gray-600 italic">{row.ket2025 || '-'}</span></div>
                                         </div>
                                     </div>
-
                                     <div className="pl-2 pt-1 flex items-center justify-between mt-auto">
-                                        <div className="text-sm">
-                                        <span className="text-[10px] text-gray-500 uppercase font-semibold block">Kontak PIC</span>
-                                        <span className="font-bold text-gray-900 text-xs">{row.pic || '-'}</span>
-                                        </div>
+                                        <div className="text-sm"><span className="text-[10px] text-gray-500 uppercase font-semibold block">Kontak PIC</span><span className="font-bold text-gray-900 text-xs">{row.pic || '-'}</span></div>
                                         {waLink ? (
-                                        <a 
-                                            href={waLink} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 active:scale-95 transition-all"
-                                        >
-                                            <i className="fab fa-whatsapp text-sm mr-1.5"></i>
-                                            Hubungi
-                                        </a>
-                                        ) : (
-                                        <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
-                                            <i className="fas fa-phone text-xs mr-1.5"></i>
-                                            Tidak Ada
-                                        </span>
-                                        )}
+                                        <a href={waLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 active:scale-95 transition-all"><i className="fab fa-whatsapp text-sm mr-1.5"></i>Hubungi</a>
+                                        ) : (<span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed"><i className="fas fa-phone text-xs mr-1.5"></i>Tidak Ada</span>)}
                                     </div>
                                     </div>
-                                )
-                                })}
+                                )})}
                             </div>
 
                             {/* DESKTOP VIEW (TABLE) */}
@@ -395,31 +356,24 @@
                                 <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50 border-b border-gray-200">
                                     <tr>
-                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
-                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Instansi & Permohonan</th>
-                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
-                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[250px]">Catatan (Pimpinan & 2025)</th>
-                                    <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak PIC</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Instansi & Permohonan</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[250px]">Catatan (Pimpinan & 2025)</th>
+                                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak PIC</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-100">
-                                    {filteredData.map((row, index) => {
+                                    {filteredDataRequestor.map((row, index) => {
                                     const waLink = getWaLink(row.hp);
                                     const isHardfile = (row.jenis || '').toLowerCase().includes('hardfile');
-                                    
                                     return (
                                         <tr key={index} className="hover:bg-red-50/30 transition-colors duration-150 group">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 text-center">
-                                            {index + 1}
-                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 text-center">{index + 1}</td>
                                         <td className="px-6 py-4">
                                             <div className="text-sm font-bold text-gray-900">{row.pemohon || '-'}</div>
                                             <div className="text-sm text-gray-500 flex items-center mt-1 space-x-2">
-                                            {row.jenis && (
-                                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                                                {row.jenis}
-                                                </span>
-                                            )}
+                                            {row.jenis && (<span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${isHardfile ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>{row.jenis}</span>)}
                                             <span className="text-gray-400">•</span>
                                             <span className="truncate max-w-[200px]" title={row.jenisPermohonan}>{row.jenisPermohonan || '-'}</span>
                                             </div>
@@ -430,135 +384,278 @@
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col space-y-2">
-                                            <div className="text-sm">
-                                                <span className="font-semibold text-gray-700 text-xs uppercase mr-1">Rekomendasi:</span>
-                                                <span className="text-gray-600 line-clamp-2 hover:line-clamp-none cursor-pointer group-hover:text-gray-900 transition-colors" title={row.rekomendasi}>
-                                                {row.rekomendasi || '-'}
-                                                </span>
-                                            </div>
-                                            <div className="text-sm bg-gray-50 p-2 rounded border border-gray-100 group-hover:border-red-100 transition-colors">
-                                                <span className="font-semibold text-gray-700 text-xs uppercase mr-1 block sm:inline">Histori 2025:</span>
-                                                <span className="text-gray-600 italic">
-                                                {row.ket2025 || '-'}
-                                                </span>
-                                            </div>
+                                            <div className="text-sm"><span className="font-semibold text-gray-700 text-xs uppercase mr-1">Rekomendasi:</span><span className="text-gray-600 line-clamp-2 hover:line-clamp-none cursor-pointer group-hover:text-gray-900 transition-colors" title={row.rekomendasi}>{row.rekomendasi || '-'}</span></div>
+                                            <div className="text-sm bg-gray-50 p-2 rounded border border-gray-100 group-hover:border-red-100 transition-colors"><span className="font-semibold text-gray-700 text-xs uppercase mr-1 block sm:inline">Histori 2025:</span><span className="text-gray-600 italic">{row.ket2025 || '-'}</span></div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex flex-col items-end space-y-2">
                                             <div className="text-sm text-gray-900 font-semibold">{row.pic || '-'}</div>
                                             {waLink ? (
-                                                <a 
-                                                href={waLink} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all hover:scale-105"
-                                                >
-                                                <i className="fab fa-whatsapp text-sm mr-1.5"></i>
-                                                Hubungi WA
-                                                </a>
-                                            ) : (
-                                                <span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded text-gray-400 bg-gray-50 cursor-not-allowed">
-                                                <i className="fas fa-phone text-xs mr-1.5"></i>
-                                                Tidak Ada WA
-                                                </span>
-                                            )}
+                                                <a href={waLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all hover:scale-105"><i className="fab fa-whatsapp text-sm mr-1.5"></i>Hubungi WA</a>
+                                            ) : (<span className="inline-flex items-center px-3 py-1.5 border border-gray-200 text-xs font-medium rounded text-gray-400 bg-gray-50 cursor-not-allowed"><i className="fas fa-phone text-xs mr-1.5"></i>Tidak Ada WA</span>)}
                                             </div>
                                         </td>
                                         </tr>
-                                    )
-                                    })}
+                                    )})}
                                 </tbody>
                                 </table>
                             </div>
 
                             <div className="bg-transparent sm:bg-gray-50 mt-4 sm:mt-0 px-1 sm:px-6 py-2 sm:py-4 sm:border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-                                <span className="text-xs sm:text-sm text-gray-500">
-                                Menampilkan <span className="font-medium text-gray-900">{filteredData.length}</span> dari <span className="font-medium text-gray-900">{data.length}</span> pengajuan.
-                                </span>
-                                <span className="text-[10px] sm:text-xs text-gray-400 italic">Diurutkan berdasarkan: {sortBy.replace('-', ' ').toUpperCase()}</span>
+                                <span className="text-xs sm:text-sm text-gray-500">Menampilkan <span className="font-medium text-gray-900">{filteredDataRequestor.length}</span> dari <span className="font-medium text-gray-900">{dataRequestor.length}</span> pengajuan.</span>
+                                <span className="text-[10px] sm:text-xs text-gray-400 italic">Diurutkan berdasarkan: {sortBy === 'default' ? 'STANDAR' : sortBy.replace('-', ' ').toUpperCase()}</span>
                             </div>
                             </>
                         )}
                         </section>
+                        </>
+                        )}
+
+                        {/* ========== TAB: PENERIMA PAKET DAGING ========== */}
+                        {activeTab === 'recipient' && (
+                        <>
+                        {/* Ringkasan Global */}
+                        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 relative overflow-hidden hover:shadow-md transition-shadow">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-purple-400"></div>
+                                <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Paket Daging</p>
+                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{recipientStats.totalPaket.toLocaleString('id-ID')}</h3>
+                                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">Seluruh lokasi (terukur)</p>
+                            </div>
+                            {campusList.slice(0, 3).map(campus => {
+                                const c = getCampusColor(campus);
+                                const data = recipientStats.byCampus[campus];
+                                return (
+                                    <div key={campus} className={`bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 relative overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${activeCampus === campus ? 'ring-2 ring-offset-1 ring-red-400' : ''}`}
+                                        onClick={() => { setActiveCampus(campus); setExpandedStatus(null); }}>
+                                        <div className={`absolute top-0 left-0 w-1 h-full ${c.bg}`}></div>
+                                        <p className="text-xs sm:text-sm text-gray-500 font-medium">{campus}</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{data.total.toLocaleString('id-ID')}</h3>
+                                        <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                                            {data.rows.length} kategori{data.tbd > 0 ? ` • ${data.tbd} TBD` : ''}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </section>
+
+                        {/* Campus Selector (kalau ada lebih dari 2 kampus) */}
+                        {campusList.length > 1 && (
+                        <div className="flex gap-2 flex-wrap">
+                            {campusList.map(campus => {
+                                const c = getCampusColor(campus);
+                                const isActive = activeCampus === campus;
+                                return (
+                                    <button key={campus}
+                                        onClick={() => { setActiveCampus(campus); setExpandedStatus(null); }}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${
+                                            isActive
+                                                ? `${c.bg} text-white border-transparent shadow-sm`
+                                                : `bg-white ${c.text} ${c.border} hover:shadow-sm`
+                                        }`}>
+                                        <i className="fas fa-map-pin mr-1.5"></i>{campus}
+                                        <span className={`ml-2 px-1.5 py-0.5 rounded text-xs font-bold ${isActive ? 'bg-white/20' : `${c.light}`}`}>
+                                            {recipientStats.byCampus[campus]?.total || 0}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        )}
+
+                        {/* Detail Kampus Aktif */}
+                        <section className="space-y-4">
+                            {/* Header Kampus */}
+                            {(() => {
+                                const c = getCampusColor(activeCampus);
+                                return (
+                                <div className={`${c.light} border ${c.border} rounded-xl p-4 sm:p-5`}>
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                        <div>
+                                            <h2 className={`text-lg sm:text-xl font-bold ${c.text} flex items-center`}>
+                                                <i className="fas fa-warehouse mr-2"></i>
+                                                Distribusi {activeCampus}
+                                            </h2>
+                                            <p className="text-xs sm:text-sm text-gray-600 mt-1">Lokasi penyembelihan & pengambilan paket daging</p>
+                                        </div>
+                                        <div className="flex gap-3 sm:gap-4">
+                                            <div className="text-center">
+                                                <div className="text-2xl sm:text-3xl font-bold text-gray-900">{activeCampusData.total.toLocaleString('id-ID')}</div>
+                                                <div className="text-[10px] sm:text-xs text-gray-500 uppercase font-semibold">Paket</div>
+                                            </div>
+                                            {activeCampusData.tbd > 0 && (
+                                                <div className="text-center border-l border-gray-300 pl-3 sm:pl-4">
+                                                    <div className="text-2xl sm:text-3xl font-bold text-yellow-600">{activeCampusData.tbd}</div>
+                                                    <div className="text-[10px] sm:text-xs text-gray-500 uppercase font-semibold">Belum Pasti</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                );
+                            })()}
+
+                            {/* Rincian per Status di Kampus Aktif */}
+                            <div className="space-y-3">
+                            {Object.entries(activeCampusData.byStatus)
+                                .sort((a, b) => b[1].total - a[1].total)
+                                .map(([status, sData]) => {
+                                const isExpanded = expandedStatus === status;
+                                const pct = activeCampusData.total > 0 ? ((sData.total / activeCampusData.total) * 100) : 0;
+                                const c = getCampusColor(activeCampus);
+
+                                return (
+                                    <div key={status} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                                        <button onClick={() => setExpandedStatus(isExpanded ? null : status)}
+                                            className="w-full px-4 sm:px-5 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                                            <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                                <div className={`${c.icon} p-2.5 rounded-lg flex-shrink-0`}>
+                                                    <i className="fas fa-users text-base"></i>
+                                                </div>
+                                                <div className="text-left min-w-0 flex-1">
+                                                    <h3 className="text-sm sm:text-base font-bold text-gray-900 truncate">{status}</h3>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <div className="flex-1 bg-gray-100 rounded-full h-1.5 max-w-[120px]">
+                                                            <div className={`h-1.5 rounded-full bg-gradient-to-r ${c.bar}`} style={{ width: `${pct}%` }}></div>
+                                                        </div>
+                                                        <span className="text-xs text-gray-500">{pct.toFixed(1)}%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center space-x-3 ml-3">
+                                                <div className="text-right">
+                                                    <div className="text-lg font-bold text-gray-900">{sData.total.toLocaleString('id-ID')}</div>
+                                                    <div className="text-[10px] text-gray-500 uppercase">Paket</div>
+                                                </div>
+                                                <i className={`fas fa-chevron-down text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}></i>
+                                            </div>
+                                        </button>
+
+                                        {isExpanded && (
+                                            <div className="px-4 sm:px-5 py-4 border-t border-gray-100 bg-gray-50 space-y-2.5">
+                                                {sData.rows.map((row, idx) => {
+                                                    const jumlah = typeof row.jumlah === 'number' ? row.jumlah : parseInt(row.jumlah) || 0;
+                                                    const isTBD = String(row.jumlah).trim() === '?';
+                                                    const asalBeda = row.tempat && row.tempat.trim() !== '' && row.tempat.trim() !== (row.pegambilan_paket || '').trim();
+
+                                                    return (
+                                                        <div key={idx} className="bg-white p-3.5 rounded-lg border border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                                            <div className="flex-1 min-w-0">
+                                                                {row.keterangan && (
+                                                                    <p className="text-sm text-gray-700">{row.keterangan}</p>
+                                                                )}
+                                                                {asalBeda && (
+                                                                    <p className="text-xs text-gray-500 mt-1 flex items-center">
+                                                                        <i className="fas fa-arrow-right-from-bracket text-gray-400 mr-1.5 text-[10px]"></i>
+                                                                        Asal: {row.tempat}
+                                                                    </p>
+                                                                )}
+                                                                {!row.keterangan && !asalBeda && (
+                                                                    <p className="text-sm text-gray-400 italic">Tidak ada keterangan</p>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-shrink-0">
+                                                                {isTBD ? (
+                                                                    <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-700 text-xs font-bold">
+                                                                        <i className="fas fa-clock mr-1.5"></i>Belum Pasti
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-sm font-bold border border-green-100">
+                                                                        {jumlah.toLocaleString('id-ID')} paket
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                            </div>
+
+                            {/* Perbandingan Antar Kampus */}
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+                                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center">
+                                    <i className="fas fa-scale-balanced mr-2 text-indigo-600"></i>
+                                    Perbandingan Seluruh Lokasi
+                                </h3>
+                                <div className="space-y-4">
+                                    {campusList.map(campus => {
+                                        const data = recipientStats.byCampus[campus];
+                                        const pct = recipientStats.totalPaket > 0 ? ((data.total / recipientStats.totalPaket) * 100) : 0;
+                                        const c = getCampusColor(campus);
+                                        const isActive = campus === activeCampus;
+                                        return (
+                                            <div key={campus} className={`rounded-lg p-3 transition-colors ${isActive ? c.light + ' border ' + c.border : ''}`}>
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className={`w-3 h-3 rounded-full bg-gradient-to-r ${c.bar}`}></span>
+                                                        <span className="text-sm font-semibold text-gray-800">{campus}</span>
+                                                        {data.tbd > 0 && (
+                                                            <span className="text-[10px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded font-medium">+{data.tbd} TBD</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <span className="text-sm font-bold text-gray-900">{data.total.toLocaleString('id-ID')} paket</span>
+                                                        <span className="text-xs text-gray-500 ml-2">({pct.toFixed(1)}%)</span>
+                                                    </div>
+                                                </div>
+                                                <div className="w-full bg-gray-100 rounded-full h-2.5">
+                                                    <div className={`h-2.5 rounded-full bg-gradient-to-r ${c.bar} transition-all duration-500`} style={{ width: `${pct}%` }}></div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </section>
+                        </>
+                        )}
                     </>
                     )}
                 </main>
 
-                {/* MODAL: Rekapitulasi Kecamatan */}
+                {/* MODAL: Evaluasi Kecamatan */}
                 {showRecapModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-60 backdrop-blur-sm transition-opacity">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-60 backdrop-blur-sm">
                         <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden animate-fade-in-up">
-                            
-                            {/* Header Modal */}
                             <div className="px-6 py-4 border-b border-gray-200 bg-indigo-600 flex justify-between items-center text-white">
-                                <h3 className="text-lg font-bold flex items-center">
-                                    <i className="fas fa-chart-pie mr-2"></i> Evaluasi Kecamatan
-                                </h3>
-                                <button onClick={() => setShowRecapModal(false)} className="text-indigo-200 hover:text-white transition">
-                                    <i className="fas fa-times text-xl"></i>
-                                </button>
+                                <h3 className="text-lg font-bold flex items-center"><i className="fas fa-chart-pie mr-2"></i> Evaluasi Kecamatan</h3>
+                                <button onClick={() => setShowRecapModal(false)} className="text-indigo-200 hover:text-white transition"><i className="fas fa-times text-xl"></i></button>
                             </div>
-
-                            {/* Konten Modal */}
                             <div className="p-6 overflow-y-auto flex-1 bg-gray-50">
                                 <p className="text-sm text-gray-600 mb-5 leading-relaxed bg-indigo-50 border border-indigo-100 p-3 rounded-lg">
                                     <i className="fas fa-info-circle text-indigo-500 mr-1.5"></i>
-                                    Data ini diurutkan dari kecamatan dengan pengajuan terbanyak. Area dengan status <strong>"Prioritas"</strong> dapat dipertimbangkan oleh pimpinan untuk pemerataan alokasi.
+                                    Data diurutkan dari kecamatan dengan pengajuan terbanyak. Area <strong>"Prioritas"</strong> dapat dipertimbangkan pimpinan untuk pemerataan alokasi.
                                 </p>
-                                
                                 <ul className="space-y-3">
                                     {(() => {
-                                        // MENCARI BATAS AMBANG (THRESHOLD) UNTUK HIGHLIGHT BERDASARKAN JUMLAH YANG SAMA
                                         const topThreshold = kecamatanStats.length >= 3 ? kecamatanStats[2].count : (kecamatanStats.length > 0 ? kecamatanStats[0].count : 0);
                                         const bottomThreshold = kecamatanStats.length >= 3 ? kecamatanStats[kecamatanStats.length - 1].count : 0;
-
                                         return kecamatanStats.map((kec, idx) => {
-                                            // Highlight berdasarkan jumlah hitungan, bukan lagi berdasarkan indeks semata
-                                            const isTop = kec.count >= topThreshold && kec.count > 1; // Jika sama dengan urutan ke-3, maka merah. Syarat: lebih dari 1 pengajuan.
+                                            const isTop = kec.count >= topThreshold && kec.count > 1;
                                             const isBottom = kec.count <= bottomThreshold && !isTop && kecamatanStats.length > 5;
-                                            
-                                            let bgClass = "bg-white border-gray-200";
-                                            let textClass = "bg-gray-100 text-gray-800";
-                                            let label = null;
-
-                                            if (isTop) {
-                                                bgClass = "bg-red-50 border-red-200";
-                                                textClass = "bg-red-200 text-red-800";
-                                                label = <span className="text-[10px] text-red-600 font-bold ml-2 uppercase">Terbanyak</span>;
-                                            } else if (isBottom) {
-                                                bgClass = "bg-green-50 border-green-200";
-                                                textClass = "bg-green-200 text-green-800";
-                                                label = <span className="text-[10px] text-green-600 font-bold ml-2 uppercase">Prioritas</span>;
-                                            }
-
+                                            let bgClass = "bg-white border-gray-200", textClass = "bg-gray-100 text-gray-800", label = null;
+                                            if (isTop) { bgClass = "bg-red-50 border-red-200"; textClass = "bg-red-200 text-red-800"; label = <span className="text-[10px] text-red-600 font-bold ml-2 uppercase">Terbanyak</span>; }
+                                            else if (isBottom) { bgClass = "bg-green-50 border-green-200"; textClass = "bg-green-200 text-green-800"; label = <span className="text-[10px] text-green-600 font-bold ml-2 uppercase">Prioritas</span>; }
                                             return (
                                                 <li key={idx} className={`flex justify-between items-center px-4 py-3 rounded-xl border shadow-sm ${bgClass}`}>
                                                     <div className="flex flex-col">
-                                                        <div className="flex items-center">
-                                                            <span className="text-sm font-bold text-gray-800">{kec.name.split(' (')[0]}</span>
-                                                            {label}
-                                                        </div>
+                                                        <div className="flex items-center"><span className="text-sm font-bold text-gray-800">{kec.name.split(' (')[0]}</span>{label}</div>
                                                         <span className="text-xs text-gray-500">{kec.name.split(' (')[1].replace(')', '')}</span>
                                                     </div>
-                                                    <span className={`py-1 px-3 rounded-lg text-xs font-bold ${textClass}`}>
-                                                        {kec.count} Pengajuan
-                                                    </span>
+                                                    <span className={`py-1 px-3 rounded-lg text-xs font-bold ${textClass}`}>{kec.count} Pengajuan</span>
                                                 </li>
                                             );
                                         });
                                     })()}
                                 </ul>
                             </div>
-
-                            {/* Footer Modal */}
                             <div className="px-6 py-4 border-t border-gray-200 bg-white flex justify-end">
-                                <button 
-                                    onClick={() => setShowRecapModal(false)} 
-                                    className="px-5 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition"
-                                >
-                                    Tutup
-                                </button>
+                                <button onClick={() => setShowRecapModal(false)} className="px-5 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition">Tutup</button>
                             </div>
                         </div>
                     </div>
@@ -567,19 +664,15 @@
             );
         }
 
-        // Render aplikasi ke dalam div id="root"
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
     <style>
-        /* Animasi tambahan untuk modal agar munculnya halus */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in-up {
-            animation: fadeInUp 0.3s ease-out forwards;
-        }
+        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
     </style>
 </body>
 </html>
